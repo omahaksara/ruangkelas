@@ -84,9 +84,14 @@ $("#gradeSummary").textContent=students.length+" siswa aktif · "+scored.length+
 $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=data.assessments.length;$("#countMaterials").textContent=data.materials.length;
 }
   let pendingStudentCsv = null;
+  function detectCsvDelimiter(input){
+    const firstLine=String(input||"").split(/\r\n|\n|\r/,1)[0]||"";const counts={",":0,";":0,"\t":0};let quoted=false;
+    for(let i=0;i<firstLine.length;i++){const ch=firstLine[i];if(quoted){if(ch==='"'&&firstLine[i+1]==='"')i++;else if(ch==='"')quoted=false;}else if(ch==='"')quoted=true;else if(Object.prototype.hasOwnProperty.call(counts,ch))counts[ch]++;}
+    return Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0];
+  }
   function parseCsvRows(text){
-    const input=String(text||"").replace(/^\uFEFF/,"");const rows=[];let row=[],field="",quoted=false;
-    for(let i=0;i<input.length;i++){const ch=input[i];if(quoted){if(ch==='"'&&input[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===","){row.push(field.trim());field="";}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&input[i+1]==="\n")i++;row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);row=[];field="";}else field+=ch;}
+    const input=String(text||"").replace(/^\uFEFF/,"");const rows=[];let row=[],field="",quoted=false;const delimiter=detectCsvDelimiter(input);
+    for(let i=0;i<input.length;i++){const ch=input[i];if(quoted){if(ch==='"'&&input[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===delimiter){row.push(field.trim());field="";}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&input[i+1]==="\n")i++;row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);row=[];field="";}else field+=ch;}
     if(quoted)throw new Error("Ada tanda kutip CSV yang belum ditutup.");if(field!==""||row.length){row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);}return rows;
   }
   function csvHeaderKey(value){return String(value||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");}
