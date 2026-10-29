@@ -19,6 +19,7 @@
       <nav class="nav" aria-label="Navigasi utama">
         <a class="nav-link active" href="#beranda" data-page="beranda"><span>⌂</span> Beranda</a>
         <a class="nav-link" href="#perangkat-ajar" data-page="perangkat-ajar"><span>▤</span> Perangkat Ajar</a>
+        <a class="nav-link" href="#cp-tp" data-page="cp-tp"><span>◎</span> CP &amp; TP</a>
         <a class="nav-link" href="#studio-ai" data-page="studio-ai"><span>✦</span> Studio AI Guru</a>
         <a class="nav-link" href="#penilaian" data-page="penilaian"><span>✓</span> Penilaian</a>
         <a class="nav-link" href="#data-kelas" data-page="data-kelas"><span>♧</span> Data Kelas</a>
@@ -95,6 +96,21 @@
 <p class="muted-note" id="aiPromptStatus" aria-live="polite">Belum ada prompt yang disusun.</p>
 <div class="ai-next-steps"><h4>Prinsip hasil yang aman</h4><ul><li>AI adalah asisten penyusun draf, bukan penentu nilai atau keputusan disiplin.</li><li>Guru wajib memeriksa akurasi, kesesuaian kurikulum, bahasa, dan tingkat kesulitan.</li><li>Deskripsi rapor harus berdasarkan bukti belajar yang sudah diverifikasi guru.</li><li>Jangan memasukkan data pribadi siswa ke layanan AI publik.</li></ul></div>
 </section></div></section>
+      <section class="page" id="page-cp-tp" data-title="CP & TP">
+        <div class="page-heading"><div><div class="eyebrow">KURIKULUM MERDEKA · FASE C</div><h1>CP &amp; TP Pembelajaran</h1><p>Rujukan capaian fase dan tujuan pembelajaran dari materi Kelas VI yang sedang digunakan.</p></div><span class="soft-label">Kelas VI · Fase C</span></div>
+        <div class="warning-strip"><span>i</span><p><strong>Penting:</strong> Ringkasan CP mengacu pada Kepka BSKAP Nomor 046/H/KR/2025. Daftar bab, tujuan, dan materi pokok mengikuti data materi yang diberikan guru; itu bukan klaim bahwa setiap rumusan TP merupakan kutipan resmi pemerintah. Cocokkan dengan ATP/KOSP sekolah.</p></div>
+        <section class="panel curriculum-filter-panel">
+          <div class="curriculum-filters">
+            <div class="field"><label for="curriculumSubject">Mata pelajaran</label><select id="curriculumSubject"><option value="">Semua mata pelajaran</option></select></div>
+            <div class="field"><label for="curriculumSearch">Cari CP, bab, TP, atau materi</label><input id="curriculumSearch" type="search" placeholder="Contoh: rasio, musyawarah, anyaman"></div>
+          </div>
+          <div class="curriculum-count" id="curriculumCount" aria-live="polite"></div>
+        </section>
+        <div id="curriculumOverview" class="curriculum-overview"></div>
+        <div class="section-heading curriculum-chapter-heading"><div><h2>Bab, tujuan, dan materi pokok</h2><p>Tujuan ditampilkan sesuai urutan dalam data materi sumber.</p></div></div>
+        <div id="curriculumChapters" class="curriculum-chapters"></div>
+        <p class="muted-note curriculum-footnote">Catatan versi: ringkasan CP merupakan alat bantu kerja, bukan pengganti dokumen keputusan resmi. Jika materi buku/ATP sekolah berbeda, guru dapat menyesuaikan pemetaan sebelum digunakan untuk perangkat ajar atau asesmen.</p>
+      </section>
       <section class="page" id="page-penilaian" data-title="Penilaian">
         <div class="page-heading"><div><div class="eyebrow">EVALUASI PEMBELAJARAN</div><h1>Penilaian</h1><p>Rancang asesmen, bank soal, kisi-kisi, dan rubrik dalam satu tempat.</p></div><button class="button button-primary" id="addAssessment">＋ Tambah perangkat</button></div>
         <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="assessmentSearch" placeholder="Cari perangkat penilaian..." type="search"></label><span class="soft-label">Contoh dokumen · dapat disesuaikan</span></div><div class="resource-grid" id="assessmentGrid"></div>
@@ -168,6 +184,7 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <dialog id="itemDialog" class="dialog"><form id="itemForm" method="dialog"><div class="dialog-head"><div><div class="eyebrow">WORKSPACE</div><h2 id="dialogTitle">Tambah item</h2></div><button type="button" class="icon-button" id="closeDialog" aria-label="Tutup">×</button></div><p class="dialog-copy" id="dialogCopy">Tambahkan item baru ke workspace Anda.</p><div class="field"><label for="itemName">Nama</label><input id="itemName" required maxlength="100" placeholder="Masukkan nama item"></div><div class="field"><label for="itemCategory">Kategori</label><select id="itemCategory"><option>Perencanaan</option><option>Semester</option><option>Evaluasi</option><option>LKPD</option><option>Bahan ajar</option><option>Referensi</option><option>Template</option><option>Catatan</option></select></div><div class="field"><label for="itemDescription">Keterangan</label><textarea id="itemDescription" rows="3" maxlength="300" placeholder="Keterangan singkat (opsional)"></textarea></div><div class="dialog-actions"><button type="button" class="button button-secondary" id="cancelDialog">Batal</button><button type="submit" class="button button-primary">Simpan item</button></div></form></dialog>
+  <script src="assets/kurikulum-kelas6.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>
