@@ -56,3 +56,15 @@ ruangkelas/
 - Identitas sekolah/wali kelas serta checklist persiapan supervisi.
 - Seluruh data administrasi kelas disimpan lokal di browser; belum ada sinkronisasi atau database sekolah.
 - Untuk data nyata, gunakan perangkat pribadi yang aman dan ikuti kebijakan perlindungan data sekolah.
+
+## Modul pelanggaran dan pembinaan
+- Catatan kejadian berbasis siswa aktif, refleksi, kesepakatan pembinaan, jadwal evaluasi, status tindak lanjut, pencarian, edit/hapus, ekspor CSV, dan cetak.
+- Tidak ada poin atau hukuman otomatis; kategori adalah label pencatatan yang dapat disesuaikan.
+- Catatan ini masih disimpan di browser/perangkat yang sama.
+
+## Rencana sinkronisasi cloud (belum aktif)
+- GitHub Pages menyajikan front-end statis; autentikasi dan database harus disediakan layanan backend.
+- Rekomendasi awal: Firebase Authentication + Cloud Firestore dengan akses per sekolah/tenant, peran pengguna, dan prinsip akses minimum.
+- Sebelum memakai data siswa nyata, pengelola perlu membuat proyek Firebase, mengaktifkan metode login, merancang struktur sekolah, menerapkan dan menguji Security Rules, serta menyiapkan cadangan dan prosedur penghapusan data.
+- Jangan menaruh service-account key, token admin, atau rahasia backend di front-end/repository.
+- Sinkronisasi cloud belum aktif sampai konfigurasi proyek, aturan keamanan, login, migrasi, dan pengujian lintas akun selesai.
