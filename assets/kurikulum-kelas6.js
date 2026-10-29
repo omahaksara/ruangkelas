@@ -7,6 +7,7 @@
 window.dataKurikulumKelas6 = [
   {
     mapel: "Bahasa Indonesia",
+    sumberUrlCP: "https://guru.kemendikdasmen.go.id/kurikulum/referensi-penerapan/capaian-pembelajaran/sd-sma/bahasa-indonesia/",
     fase: "C",
     kelas: "VI",
     sumberCP: "Ringkasan CP Fase C — Kepka BSKAP Nomor 046/H/KR/2025",
@@ -26,6 +27,7 @@ window.dataKurikulumKelas6 = [
   },
   {
     mapel: "Matematika",
+    sumberUrlCP: "https://guru.kemendikdasmen.go.id/kurikulum/referensi-penerapan/capaian-pembelajaran/sd-sma/matematika/fase-c/",
     fase: "C",
     kelas: "VI",
     sumberCP: "Ringkasan CP Fase C — Kepka BSKAP Nomor 046/H/KR/2025",
@@ -45,6 +47,7 @@ window.dataKurikulumKelas6 = [
   },
   {
     mapel: "Pendidikan Pancasila",
+    sumberUrlCP: "https://guru.kemendikdasmen.go.id/kurikulum/referensi-penerapan/capaian-pembelajaran/sd-sma/pendidikan-pancasila/",
     namaAlternatifMateri: "Pendidikan Pancasila / PPKn",
     fase: "C",
     kelas: "VI",
@@ -66,6 +69,7 @@ window.dataKurikulumKelas6 = [
   },
   {
     mapel: "Seni Rupa",
+    sumberUrlCP: "https://guru.kemendikdasmen.go.id/kurikulum/referensi-penerapan/capaian-pembelajaran/sd-sma/seni-rupa/",
     fase: "C",
     kelas: "VI",
     sumberCP: "Ringkasan CP Fase C — Kepka BSKAP Nomor 046/H/KR/2025",
