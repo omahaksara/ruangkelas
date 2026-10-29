@@ -22,6 +22,7 @@
         <a class="nav-link" href="#penilaian" data-page="penilaian"><span>✓</span> Penilaian</a>
         <a class="nav-link" href="#data-kelas" data-page="data-kelas"><span>♧</span> Data Kelas</a>
         <a class="nav-link" href="#absensi-siswa" data-page="absensi-siswa"><span>☷</span> Absensi &amp; Siswa</a>
+        <a class="nav-link" href="#pelanggaran-pembinaan" data-page="pelanggaran-pembinaan"><span>♡</span> Pelanggaran &amp; Pembinaan</a>
         <a class="nav-link" href="#pengolahan-nilai" data-page="pengolahan-nilai"><span>▥</span> Pengolahan Nilai</a>
         <a class="nav-link" href="#pusat-materi" data-page="pusat-materi"><span>▣</span> Pusat Materi</a>
       </nav>
@@ -107,6 +108,25 @@
           <label class="task-row"><input type="checkbox" data-supervision="5"><span class="task-check"></span><span><strong>Jurnal/refleksi pembelajaran</strong><small>Catatan kegiatan dan tindak lanjut</small></span></label>
         </div></section>
       </section>
+      <section class="page" id="page-pelanggaran-pembinaan" data-title="Pelanggaran & Pembinaan">
+<div class="page-heading"><div><div class="eyebrow">CATATAN EDUKATIF · PRIVAT</div><h1>Pelanggaran &amp; Pembinaan</h1><p>Catat kejadian secara faktual dan pantau tindak lanjut tanpa sistem poin.</p></div><div class="attendance-actions"><button class="button button-secondary" id="printIncidents" type="button">Cetak laporan</button><button class="button button-primary" id="exportIncidents" type="button">Ekspor CSV</button></div></div>
+<div class="warning-strip"><span>⚠</span><p>Catatan ini sensitif. Gunakan bahasa faktual dan jangan mempermalukan siswa. Data masih tersimpan lokal di browser.</p></div>
+<div class="attendance-stats incident-stats"><article class="attendance-stat"><span>Total catatan</span><strong id="incidentTotal">0</strong></article><article class="attendance-stat"><span>Perlu tindak lanjut</span><strong id="incidentPending">0</strong></article><article class="attendance-stat"><span>Selesai dipantau</span><strong id="incidentDone">0</strong></article></div>
+<section class="panel incident-entry-panel"><div class="panel-heading"><div><h3>Catat kejadian dan pembinaan</h3><p>Nama dipilih dari daftar siswa pada modul absensi.</p></div></div>
+<form id="incidentForm" class="incident-form">
+<div class="field"><label for="incidentStudent">Nama siswa</label><select id="incidentStudent" required><option value="">Pilih siswa aktif</option></select></div>
+<div class="field"><label for="incidentDate">Tanggal kejadian</label><input id="incidentDate" type="date" required></div>
+<div class="field"><label for="incidentCategory">Kategori kejadian</label><select id="incidentCategory" required><option>Ketertiban</option><option>Kehadiran</option><option>Tanggung jawab</option><option>Interaksi dengan teman</option><option>Pembelajaran</option><option>Lainnya</option></select></div>
+<div class="field"><label for="incidentDescription">Keterangan faktual</label><textarea id="incidentDescription" maxlength="1500" rows="3" required placeholder="Tuliskan apa yang terjadi secara singkat dan objektif."></textarea></div>
+<div class="field"><label for="incidentReflection">Refleksi siswa</label><textarea id="incidentReflection" maxlength="1200" rows="3" placeholder="Apa yang siswa sampaikan atau pahami?"></textarea></div>
+<div class="field"><label for="incidentAction">Pembinaan / kesepakatan</label><textarea id="incidentAction" maxlength="1200" rows="3" placeholder="Pendampingan dan langkah perbaikan yang disepakati."></textarea></div>
+<div class="field"><label for="incidentFollowUpDate">Tanggal evaluasi (opsional)</label><input id="incidentFollowUpDate" type="date"></div>
+<div class="field"><label for="incidentStatus">Status tindak lanjut</label><select id="incidentStatus"><option>Perlu tindak lanjut</option><option>Dalam pemantauan</option><option>Selesai</option></select></div>
+<div class="incident-form-actions"><button class="button button-primary" type="submit" id="saveIncident">Simpan catatan</button><button class="button button-secondary" type="button" id="cancelIncidentEdit" hidden>Batal edit</button></div>
+</form></section>
+<section class="panel table-panel incident-table-panel"><div class="panel-heading incident-list-heading"><div><h3>Riwayat kejadian dan pembinaan</h3><p>Catatan dapat diedit; penghapusan meminta konfirmasi.</p></div><div class="student-list-tools"><select id="incidentStatusFilter" aria-label="Filter status"><option value="">Semua status</option><option>Perlu tindak lanjut</option><option>Dalam pemantauan</option><option>Selesai</option></select><label class="search-box table-search"><span>⌕</span><input id="incidentSearch" type="search" placeholder="Cari nama atau kategori..."></label></div></div>
+<div class="table-wrap"><table class="incident-table"><thead><tr><th>Tanggal</th><th>Nama siswa</th><th>Kategori</th><th>Keterangan</th><th>Tindak lanjut</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="incidentBody"></tbody></table></div><div class="table-summary" id="incidentSummary">Belum ada catatan kejadian.</div></section>
+</section>
       <section class="page" id="page-pengolahan-nilai" data-title="Pengolahan Nilai">
         <div class="page-heading"><div><div class="eyebrow">REKAP DAN ANALISIS</div><h1>Pengolahan Nilai</h1><p>Simulasikan nilai dengan data fiktif. Hasil bisa diunduh sebagai CSV.</p></div><button class="button button-secondary" id="exportGrades">↓ Ekspor CSV</button></div>
         <div class="grade-controls panel"><div class="field"><label for="kkm">KKM</label><input id="kkm" type="number" min="0" max="100" value="75"></div><div class="field"><label for="maxGrade">Batas nilai otomatis</label><input id="maxGrade" type="number" min="75" max="100" value="90"></div><div class="field"><label for="subjectName">Mata pelajaran</label><input id="subjectName" value="Contoh Mata Pelajaran"></div><button class="button button-primary" id="recalculate">Hitung ulang</button></div>
