@@ -82,4 +82,5 @@ ruangkelas/
 - Bab, tujuan, dan materi pokok mengikuti data yang diberikan pengguna. Rumusan tersebut tidak otomatis diklaim sebagai TP resmi pemerintah; guru perlu memeriksa dan menyelaraskannya dengan ATP/KOSP sekolah.
 - Ringkasan CP merujuk Kepka BSKAP Nomor 046/H/KR/2025. Ringkasan di aplikasi merupakan bantuan kerja, bukan pengganti dokumen resmi. Rujukan umum dapat diverifikasi melalui [portal resmi CP & ATP](https://guru.kemendikdasmen.go.id/kurikulum-merdeka).
 - Tujuan dapat disalin dan dikirim sebagai konteks awal ke Studio AI Guru. Studio AI masih membuat prompt lokal; koneksi Gemini API belum aktif.
+- Pemetaan TP ke elemen CP dapat disimpan per browser, serta tersedia tambah/hapus TP lokal, ekspor CSV, cadangan JSON, pemulihan JSON, dan cetak/PDF browser. Data lokal tidak otomatis sinkron ke perangkat lain.
 - Dataset berada di `assets/kurikulum-kelas6.js`; antarmuka berada di `index.html`, `assets/app.js`, dan `assets/styles.css`.
