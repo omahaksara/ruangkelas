@@ -86,10 +86,10 @@ $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=d
   let pendingStudentCsv = null;
   function parseCsvRows(text){
     const input=String(text||"").replace(/^\uFEFF/,"");const rows=[];let row=[],field="",quoted=false;
-    for(let i=0;i<input.length;i++){const ch=input[i];if(quoted){if(ch==='"'&&input[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===","){row.push(field.trim());field="";}else if(ch==="\\n"||ch==="\\r"){if(ch==="\\r"&&input[i+1]==="\\n")i++;row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);row=[];field="";}else field+=ch;}
+    for(let i=0;i<input.length;i++){const ch=input[i];if(quoted){if(ch==='"'&&input[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===","){row.push(field.trim());field="";}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&input[i+1]==="\n")i++;row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);row=[];field="";}else field+=ch;}
     if(quoted)throw new Error("Ada tanda kutip CSV yang belum ditutup.");if(field!==""||row.length){row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);}return rows;
   }
-  function csvHeaderKey(value){return String(value||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[^a-z0-9]/g,"");}
+  function csvHeaderKey(value){return String(value||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");}
   function prepareStudentCsv(text){
     const rows=parseCsvRows(text);if(!rows.length)throw new Error("File CSV kosong.");
     const header=rows[0].map(csvHeaderKey);
@@ -361,7 +361,7 @@ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.cre
   $$("[data-task]").forEach(el=>el.addEventListener("change",()=>{data.tasks[Number(el.dataset.task)]=el.checked;save();$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";}));
   $("#bulkStudentForm").addEventListener("submit",e=>{e.preventDefault();const lines=$("#bulkStudentNames").value.split(String.fromCharCode(10)).map(line=>line.trim()).filter(Boolean);if(!lines.length){showToast("Tempel nama siswa terlebih dahulu.");return;}let added=0,skipped=0;const defaultClass=normalizeClass($("#bulkDefaultClass").value);lines.forEach((line,index)=>{const parts=line.split("|").map(x=>x.trim());const name=(parts[0]||"").slice(0,120);const cls=parts[1]?normalizeClass(parts[1]):defaultClass;if(!name){skipped++;return;}if(data.students.some(s=>s.name.trim().toLowerCase()===name.toLowerCase())){skipped++;return;}data.students.push({id:Date.now()+index,name,code:parts[2]||"",classLevel:cls,archived:false,attendance:{}});added++;});save();$("#bulkStudentNames").value="";renderAttendance();showToast(added+" siswa ditambahkan"+(skipped?", "+skipped+" baris dilewati (duplikat/kosong).":"."));});
   $("#studentCsvFile").addEventListener("change",e=>{const file=e.target.files&&e.target.files[0];if(!file)return;if(file.size>5*1024*1024){e.target.value="";showToast("Ukuran CSV maksimal 5 MB.");return;}importStudentCsvFile(file);});
-  $("#studentCsvTemplate").addEventListener("click",()=>{const content="Nama,NIS/Kode,Kelas\\r\\nSiti Aminah,001,1\\r\\nBudi Santoso,002,2\\r\\n";const blob=new Blob(["\\ufeff"+content],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="template-impor-siswa-ruangkelas.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  $("#studentCsvTemplate").addEventListener("click",()=>{const content="Nama,NIS/Kode,Kelas\r\nSiti Aminah,001,1\r\nBudi Santoso,002,2\r\n";const blob=new Blob(["\ufeff"+content],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="template-impor-siswa-ruangkelas.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   $("#cancelStudentCsv").addEventListener("click",()=>{pendingStudentCsv=null;renderStudentCsvPreview();showToast("Pratinjau impor dibatalkan; data belum berubah.");});
   $("#studentCsvPreview").addEventListener("click",e=>{if(e.target.closest("#confirmStudentCsv"))confirmStudentCsvImport();});
   $("#attendanceDate").value=localDate();
