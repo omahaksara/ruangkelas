@@ -43,7 +43,8 @@
       {name:"Siswa Contoh 01",raw:92},{name:"Siswa Contoh 02",raw:84},{name:"Siswa Contoh 03",raw:78},{name:"Siswa Contoh 04",raw:68},{name:"Siswa Contoh 05",raw:95}
     ],
     students:[],
-    classInfo:{schoolName:"",teacherName:"",className:"VI",semester:"1",academicYear:"2026/2027"},
+    classInfo:{schoolName:"SD INPRES 2 TINOMBALA",teacherName:"Ridwan",principalName:"Zainudin",className:"VI",semester:"1",academicYear:"2026/2027"},
+    lastPromotionYear:"",
     supervision:[false,false,false,false,false,false],
     tasks:[false,false,false,false],
     settings:{teacherName:"Guru",schoolName:"",curriculum:"Kurikulum Merdeka",academicYear:"2026/2027"}
@@ -51,7 +52,7 @@
   let data = clone(defaults);
   let currentDialogType = "ajar";
   let toastHandle;
-  try { const saved = localStorage.getItem("ruangkelas-data-v1"); if(saved) data = Object.assign(clone(defaults), JSON.parse(saved)); } catch(e) {}
+  try { const saved = localStorage.getItem("ruangkelas-data-v1"); if(saved) { const parsed=JSON.parse(saved); data = Object.assign(clone(defaults), parsed); data.classInfo=Object.assign(clone(defaults.classInfo),parsed.classInfo||{}); data.students=Array.isArray(parsed.students)?parsed.students:[]; data.students.forEach(s=>{if(!s.classLevel)s.classLevel="6";if(typeof s.archived!=="boolean")s.archived=false;}); } } catch(e) {}
   function save(){ try{localStorage.setItem("ruangkelas-data-v1",JSON.stringify(data));}catch(e){} }
   function escapeHtml(value){return String(value == null ? "" : value).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];});}
   function showToast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("show"),2600);}
