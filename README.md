@@ -84,3 +84,11 @@ ruangkelas/
 - Tujuan dapat disalin dan dikirim sebagai konteks awal ke Studio AI Guru. Studio AI masih membuat prompt lokal; koneksi Gemini API belum aktif.
 - Pemetaan TP ke elemen CP dapat disimpan per browser, serta tersedia tambah/hapus TP lokal, ekspor CSV, cadangan JSON, pemulihan JSON, dan cetak/PDF browser. Data lokal tidak otomatis sinkron ke perangkat lain.
 - Dataset berada di `assets/kurikulum-kelas6.js`; antarmuka berada di `index.html`, `assets/app.js`, dan `assets/styles.css`.
+
+
+## Studio AI Guru — pembuat prompt tanpa API
+- Studio AI hanya menyusun prompt di browser; tidak memanggil API, tidak membutuhkan API key, dan tidak menghasilkan jawaban AI di dalam RuangKelas.
+- Guru dapat mengambil konteks TP dari dataset CP & TP Kelas VI yang tersedia agar mata pelajaran, bab, dan tujuan lebih selaras.
+- Prompt menyertakan identitas workspace yang tersedia, placeholder untuk data yang kosong, aturan agar AI tidak mengarang identitas/regulasi, serta pemeriksaan konsistensi topik, tujuan, kegiatan, dan asesmen.
+- Konteks lokal sekolah dapat diisi secara manual tanpa data pribadi siswa. Guru tetap wajib memeriksa CP/TP terhadap dokumen resmi dan ATP/KOSP sekolah.
+- Tombol ChatGPT dan Gemini hanya membuka layanan terkait; guru menyalin prompt secara terpisah. Tidak ada integrasi API yang diaktifkan.
