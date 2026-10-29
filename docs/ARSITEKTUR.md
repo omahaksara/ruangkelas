@@ -25,7 +25,13 @@
 - attendance: schoolId, studentId, date, status, note, updatedBy, updatedAt.
 - grade_records: schoolId, studentId, subjectId, score, rubricVersion, updatedBy, updatedAt.
 - incidents: schoolId, studentId, date, category, factualDescription, reflection, actionPlan, followUpDate, status, updatedBy.
-- generated_documents: schoolId, ownerId, type, promptVersion, content, createdAt, reviewedAt.
+- curriculum_sets: schoolId atau scope global, curriculumName, phase, grade, academicYear, sourceVersion, sourceUrl, reviewedAt.
+- curriculum_subjects: curriculumSetId, subjectCode, subjectName, phase, cpText, sourceType (official-summary/teacher-provided), reviewedBy.
+- curriculum_elements: subjectId, elementName, cpDescription, sourceReference.
+- curriculum_chapters: subjectId, chapterCode, chapterTitle, description, orderIndex, materialSource.
+- learning_objectives: chapterId, objectiveCode, objectiveText, objectiveType (TP/ATP), orderIndex, reviewStatus.
+- learning_materials: chapterId, materialTitle, orderIndex.
+- generated_documents: schoolId, ownerId, type, promptVersion, curriculumReferences, content, createdAt, reviewedAt.
 - audit_logs: schoolId, actorId, action, entityType, entityId, timestamp.
 
 Gunakan ID acak, validasi input, minimalkan data pribadi, dan hindari menyimpan informasi sensitif yang tidak dibutuhkan. Data siswa jangan dipakai sebagai konteks Gemini secara default; gunakan contoh anonim atau agregat.
@@ -45,3 +51,11 @@ Gunakan ID acak, validasi input, minimalkan data pribadi, dan hindari menyimpan 
 - Terapkan batas permintaan, kuota, pencatatan error tanpa data sensitif, dan proteksi biaya.
 - Siapkan backup, retensi, ekspor, penghapusan, dan pemulihan.
 - Pisahkan data tiap sekolah; uji skenario akses silang secara eksplisit.
+
+
+## Modul CP & TP (fondasi awal)
+- Front-end awal menampilkan data Kelas VI/Fase C untuk Bahasa Indonesia, Matematika, Pendidikan Pancasila, dan Seni Rupa.
+- Ringkasan CP acuan merujuk Kepka BSKAP 046/H/KR/2025; materi bab dan tujuan berasal dari materi yang disediakan guru. Keduanya ditandai terpisah agar data buku/ATP lokal tidak salah diklaim sebagai kutipan resmi.
+- Dataset saat ini berupa file statis `assets/kurikulum-kelas6.js`. Belum ada editor CP/TP, impor data, versioning, atau database cloud.
+- Sebelum data ini menjadi basis produksi, perlu validasi guru terhadap ATP/KOSP, penambahan metadata sumber/versi, dan pengujian pemetaan setiap tujuan ke elemen CP yang relevan.
+- Arsitektur cloud nantinya perlu memisahkan data kurikulum acuan bersama dari ATP/penyesuaian milik sekolah, dengan status verifikasi dan riwayat perubahan.
