@@ -49,6 +49,7 @@ ruangkelas/
 
 ## Administrasi guru kelas VI
 - Daftar siswa dapat ditambahkan per kelas, nama/NIS/kelas dapat diedit, dan siswa yang keluar dapat diarsipkan atau dihapus permanen.
+- Impor siswa mendukung CSV dengan pemisah koma, titik koma, atau tab; data ditinjau terlebih dahulu dan baris duplikat/tidak valid dilewati.
 - Kenaikan kelas otomatis: kelas I–V naik satu tingkat, kelas VI masuk arsip/lulus, dan kelas I siap diisi siswa baru.
 - Identitas kepala sekolah dapat diedit untuk kop laporan.
 - Absensi per tanggal dengan status Hadir, Izin, Sakit, Alpa, atau Belum diisi.
