@@ -1,0 +1,88 @@
+(() => {
+  "use strict";
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+  const clone = (value) => JSON.parse(JSON.stringify(value));
+  const defaults = {
+    ajar: [
+      {id:1,name:"Modul Ajar",category:"Perencanaan",description:"Kerangka tujuan, langkah pembelajaran, dan refleksi.",icon:"▤"},
+      {id:2,name:"Rencana Pelaksanaan Pembelajaran",category:"Perencanaan",description:"Rencana kegiatan belajar yang dapat disesuaikan.",icon:"▤"},
+      {id:3,name:"Alur Tujuan Pembelajaran",category:"Perencanaan",description:"Pemetaan alur tujuan pembelajaran.",icon:"⌁"},
+      {id:4,name:"Program Tahunan",category:"Semester",description:"Rencana pembelajaran selama satu tahun.",icon:"▦"},
+      {id:5,name:"Program Semester",category:"Semester",description:"Pembagian program belajar per semester.",icon:"▦"},
+      {id:6,name:"Jurnal Mengajar",category:"Perencanaan",description:"Catatan proses dan refleksi pembelajaran.",icon:"✎"}
+    ],
+    assessments: [
+      {id:11,name:"Kisi-kisi Penilaian",category:"Evaluasi",description:"Pemetaan tujuan, indikator, dan bentuk soal.",icon:"✓"},
+      {id:12,name:"Bank Soal",category:"Evaluasi",description:"Kumpulan soal yang siap disusun kembali.",icon:"▤"},
+      {id:13,name:"Rubrik Penilaian",category:"Evaluasi",description:"Kriteria penilaian yang transparan.",icon:"☷"},
+      {id:14,name:"Asesmen Diagnostik",category:"Evaluasi",description:"Contoh pemetaan kebutuhan awal belajar.",icon:"◎"}
+    ],
+    materials: [
+      {id:21,name:"LKPD Pembelajaran",category:"LKPD",description:"Lembar kerja peserta didik untuk dikembangkan.",icon:"▣"},
+      {id:22,name:"Bahan Ajar",category:"Bahan ajar",description:"Ringkasan materi dan penjelasan konsep.",icon:"▣"},
+      {id:23,name:"Referensi Guru",category:"Referensi",description:"Daftar sumber untuk persiapan pembelajaran.",icon:"⌕"},
+      {id:24,name:"Template Presentasi",category:"Template",description:"Kerangka presentasi untuk materi kelas.",icon:"▧"},
+      {id:25,name:"Lembar Refleksi",category:"LKPD",description:"Panduan refleksi setelah kegiatan belajar.",icon:"✎"},
+      {id:26,name:"Glosarium",category:"Referensi",description:"Daftar istilah penting dalam pembelajaran.",icon:"A"},
+      {id:27,name:"Media Pembelajaran",category:"Bahan ajar",description:"Catatan media yang digunakan saat mengajar.",icon:"▧"},
+      {id:28,name:"Template Evaluasi",category:"Template",description:"Format evaluasi yang dapat disesuaikan.",icon:"✓"}
+    ],
+    schedules: [
+      {id:31,name:"Persiapan materi",day:"Senin",kind:"Perencanaan",status:"Direncanakan"},
+      {id:32,name:"Kegiatan pembelajaran",day:"Selasa",kind:"Pembelajaran",status:"Contoh"},
+      {id:33,name:"Penyusunan asesmen",day:"Rabu",kind:"Penilaian",status:"Direncanakan"},
+      {id:34,name:"Refleksi kelas",day:"Kamis",kind:"Refleksi",status:"Contoh"},
+      {id:35,name:"Tinjau materi pekan",day:"Jumat",kind:"Evaluasi",status:"Direncanakan"}
+    ],
+    notes: [
+      {id:41,name:"Ide pembelajaran",description:"Simpan ide aktivitas yang ingin dicoba."},
+      {id:42,name:"Tindak lanjut",description:"Catat hal yang perlu ditinjau kembali."}
+    ],
+    grades: [
+      {name:"Siswa Contoh 01",raw:92},{name:"Siswa Contoh 02",raw:84},{name:"Siswa Contoh 03",raw:78},{name:"Siswa Contoh 04",raw:68},{name:"Siswa Contoh 05",raw:95}
+    ],
+    tasks:[false,false,false,false],
+    settings:{teacherName:"Guru",schoolName:"",curriculum:"Kurikulum Merdeka",academicYear:"2026/2027"}
+  };
+  let data = clone(defaults);
+  let currentDialogType = "ajar";
+  let toastHandle;
+  try { const saved = localStorage.getItem("ruangkelas-data-v1"); if(saved) data = Object.assign(clone(defaults), JSON.parse(saved)); } catch(e) {}
+  function save(){ try{localStorage.setItem("ruangkelas-data-v1",JSON.stringify(data));}catch(e){} }
+  function escapeHtml(value){return String(value == null ? "" : value).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];});}
+  function showToast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("show"),2600);}
+  function route(page){const target=$("#page-"+page);if(!target)return;$$(".page").forEach(el=>el.classList.toggle("active",el===target));$$(".nav-link").forEach(el=>el.classList.toggle("active",el.dataset.page===page));$("#crumbCurrent").textContent=target.dataset.title||"Workspace";if(page!=="beranda")location.hash=page;else history.replaceState(null,"",location.pathname+location.search);$("#sidebar").classList.remove("open");}
+  function card(item,kind){return '<article class="resource-card"><div class="resource-card-top"><span class="resource-icon">'+escapeHtml(item.icon||"▤")+'</span><span class="resource-category">'+escapeHtml(item.category||"Catatan")+'</span></div><h3>'+escapeHtml(item.name)+'</h3><p>'+escapeHtml(item.description||"Item workspace yang bisa disesuaikan.")+'</p><div class="resource-actions"><button data-open-item="'+item.id+'" data-kind="'+kind+'">Lihat detail ↗</button><button class="delete-item" data-delete-item="'+item.id+'" data-kind="'+kind+'" aria-label="Hapus '+escapeHtml(item.name)+'">Hapus</button></div></article>';}
+  function renderAjar(){const q=$("#ajarSearch").value.toLowerCase();const f=$("#ajarFilter").value;const list=data.ajar.filter(x=>(!f||x.category===f)&&(x.name+" "+x.description+" "+x.category).toLowerCase().includes(q));$("#ajarGrid").innerHTML=list.map(x=>card(x,"ajarGrid")).join("")||'<div class="empty-state">Belum ada perangkat yang cocok.</div>';}
+  function renderAssessments(){const q=$("#assessmentSearch").value.toLowerCase();const list=data.assessments.filter(x=>(x.name+" "+x.description+" "+x.category).toLowerCase().includes(q));$("#assessmentGrid").innerHTML=list.map(x=>card(x,"assessmentGrid")).join("")||'<div class="empty-state">Belum ada perangkat penilaian yang cocok.</div>';}
+  function renderMaterials(){const q=$("#materialSearch").value.toLowerCase();const f=$("#materialFilter").value;const list=data.materials.filter(x=>(!f||x.category===f)&&(x.name+" "+x.description+" "+x.category).toLowerCase().includes(q));$("#materialGrid").innerHTML=list.map(x=>card(x,"materialGrid")).join("")||'<div class="empty-state">Belum ada materi yang cocok.</div>';}
+  function renderSchedule(){const q=$("#scheduleSearch").value.toLowerCase();const list=data.schedules.filter(x=>(x.name+" "+x.day+" "+x.kind+" "+x.status).toLowerCase().includes(q));$("#scheduleBody").innerHTML=list.map(x=>'<tr><td>'+escapeHtml(x.name)+'</td><td>'+escapeHtml(x.day)+'</td><td>'+escapeHtml(x.kind)+'</td><td><span class="status-pill">'+escapeHtml(x.status)+'</span></td><td><button class="table-action" data-delete-schedule="'+x.id+'">Hapus</button></td></tr>').join("")||'<tr><td colspan="5">Tidak ada agenda yang cocok.</td></tr>';}
+  function renderNotes(){$("#classNotes").innerHTML=data.notes.map(x=>'<article class="note-card"><strong>'+escapeHtml(x.name)+'</strong><p>'+escapeHtml(x.description||"")+'</p></article>').join("")||'<div class="empty-state">Belum ada catatan kelas.</div>';$("#classNoteCount").textContent=data.notes.length+" catatan";}
+  function clamp(n,min,max){return Math.min(max,Math.max(min,n));}
+  function renderGrades(){const kkm=clamp(Number($("#kkm").value)||75,0,100);const max=clamp(Number($("#maxGrade").value)||90,kkm,100);$("#kkm").value=kkm;$("#maxGrade").value=max;const vals=data.grades.map(x=>Object.assign({},x,{final:Math.round(kkm+(Math.max(0,Math.min(100,x.raw))* (max-kkm)/100))}));$("#gradeBody").innerHTML=vals.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+escapeHtml(x.name)+'</td><td>'+x.raw+'</td><td><strong>'+x.final+'</strong></td><td><span class="status-pill" '+(x.final<kkm?'style="background:#fff0ed;color:#bc5b4a"':"")+'>'+(x.final<kkm?"Perlu tindak lanjut":"Mencapai KKM")+'</span></td></tr>').join("");const avg=vals.reduce((s,x)=>s+x.final,0)/Math.max(vals.length,1);$("#gradeSummary").textContent=vals.length+" data contoh · Rata-rata nilai akhir: "+avg.toFixed(1)+" · KKM: "+kkm;$("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=data.assessments.length;$("#countMaterials").textContent=data.materials.length;}
+  function renderAll(){renderAjar();renderAssessments();renderMaterials();renderSchedule();renderNotes();renderGrades();$$("[data-task]").forEach(el=>el.checked=!!data.tasks[Number(el.dataset.task)]);$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";$("#teacherName").value=data.settings.teacherName||"Guru";$("#schoolName").value=data.settings.schoolName||"";$("#curriculum").value=data.settings.curriculum||"Kurikulum Merdeka";$("#academicYear").value=data.settings.academicYear||"2026/2027";const name=data.settings.teacherName||"Guru";$$(".profile-mini strong").forEach(el=>el.textContent=name);$$(".user-chip span:nth-child(2)").forEach(el=>el.textContent=name);}
+  function openDialog(type){currentDialogType=type;const titles={ajar:"Tambah perangkat ajar",assessment:"Tambah perangkat penilaian",material:"Tambah materi",note:"Tambah catatan kelas"};$("#dialogTitle").textContent=titles[type]||"Tambah item";$("#dialogCopy").textContent=type==="note"?"Tambahkan catatan singkat untuk mengingat ide atau tindak lanjut.":"Tambahkan item baru ke workspace Anda. Item tersimpan lokal di browser ini.";$("#itemName").value="";$("#itemDescription").value="";$("#itemCategory").value=type==="assessment"?"Evaluasi":type==="material"?"Bahan ajar":type==="note"?"Catatan":"Perencanaan";$("#itemCategory").closest(".field").style.display=type==="note"?"none":"grid";$("#itemDialog").showModal();setTimeout(()=>$("#itemName").focus(),60);}
+  function addItem(e){e.preventDefault();const name=$("#itemName").value.trim();if(!name)return;const description=$("#itemDescription").value.trim();const category=$("#itemCategory").value;const id=Date.now();if(currentDialogType==="note"){data.notes.unshift({id,name,description:description||"Catatan baru."});renderNotes();}else{const item={id,name,category,description:description||"Item baru yang bisa disesuaikan.",icon:currentDialogType==="material"?"▣":currentDialogType==="assessment"?"✓":"▤"};if(currentDialogType==="assessment")data.assessments.unshift(item);else if(currentDialogType==="material")data.materials.unshift(item);else data.ajar.unshift(item);renderAll();}save();$("#itemDialog").close();showToast("Item tersimpan di browser ini.");}
+  function deleteItem(id,kind){let key=kind==="assessmentGrid"?"assessments":kind==="materialGrid"?"materials":"ajar";const item=data[key].find(x=>x.id===id);if(!item||!confirm('Hapus "'+item.name+'" dari data lokal?'))return;data[key]=data[key].filter(x=>x.id!==id);save();renderAll();showToast("Item dihapus.");}
+  function exportCSV(){const kkm=clamp(Number($("#kkm").value)||75,0,100);const max=clamp(Number($("#maxGrade").value)||90,kkm,100);const rows=[["No","Nama contoh","Mata pelajaran","Nilai mentah","Nilai akhir","Keterangan"]];data.grades.forEach((x,i)=>{const final=Math.round(kkm+x.raw*(max-kkm)/100);rows.push([i+1,x.name,$("#subjectName").value,x.raw,final,final<kkm?"Perlu tindak lanjut":"Mencapai KKM"]);});const csv=rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="ruangkelas-rekap-nilai-demo.csv";a.click();URL.revokeObjectURL(url);showToast("File CSV berhasil disiapkan.");}
+  $$(".nav-link").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();route(a.dataset.page);}));
+  $$("[data-go]").forEach(b=>b.addEventListener("click",()=>route(b.dataset.go)));
+  $("#menuToggle").addEventListener("click",()=>$("#sidebar").classList.toggle("open"));
+  document.addEventListener("click",e=>{if($("#sidebar").classList.contains("open")&&!e.target.closest("#sidebar")&&!e.target.closest("#menuToggle"))$("#sidebar").classList.remove("open");});
+  $("#themeToggle").addEventListener("click",()=>{document.body.classList.toggle("dark");try{localStorage.setItem("ruangkelas-dark",document.body.classList.contains("dark")?"1":"0");}catch(e){}});
+  try{if(localStorage.getItem("ruangkelas-dark")==="1")document.body.classList.add("dark");}catch(e){}
+  $("#profileButton").addEventListener("click",()=>route("pengaturan"));
+  $(".notice-close").addEventListener("click",()=>$(".notice").remove());
+  $("#globalSearch").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const q=e.target.value.trim().toLowerCase();if(!q)return;const pages=[["perangkat-ajar",data.ajar],["penilaian",data.assessments],["pusat-materi",data.materials],["data-kelas",data.schedules]];const match=pages.find(entry=>entry[1].some(x=>(x.name+" "+(x.description||"")+" "+(x.category||"")).toLowerCase().includes(q)));if(match){route(match[0]);showToast("Bagian terkait dibuka.");}else showToast("Belum ada hasil. Coba kata kunci lain.");});
+  $("#ajarSearch").addEventListener("input",renderAjar);$("#ajarFilter").addEventListener("change",renderAjar);$("#assessmentSearch").addEventListener("input",renderAssessments);$("#materialSearch").addEventListener("input",renderMaterials);$("#materialFilter").addEventListener("change",renderMaterials);$("#scheduleSearch").addEventListener("input",renderSchedule);
+  $("#addAjar").addEventListener("click",()=>openDialog("ajar"));$("#addAssessment").addEventListener("click",()=>openDialog("assessment"));$("#addMaterial").addEventListener("click",()=>openDialog("material"));$("#addClassNote").addEventListener("click",()=>openDialog("note"));
+  $("#closeDialog").addEventListener("click",()=>$("#itemDialog").close());$("#cancelDialog").addEventListener("click",()=>$("#itemDialog").close());$("#itemForm").addEventListener("submit",addItem);
+  document.addEventListener("click",e=>{const open=e.target.closest("[data-open-item]");if(open){const kind=open.dataset.kind;const key=kind==="assessmentGrid"?"assessments":kind==="materialGrid"?"materials":"ajar";const item=data[key].find(x=>x.id===Number(open.dataset.openItem));if(item)showToast(item.name+": "+(item.description||"Item workspace"));return;}const del=e.target.closest("[data-delete-item]");if(del){deleteItem(Number(del.dataset.deleteItem),del.dataset.kind);return;}const sd=e.target.closest("[data-delete-schedule]");if(sd){const item=data.schedules.find(x=>x.id===Number(sd.dataset.deleteSchedule));if(item&&confirm('Hapus agenda "'+item.name+'"?')){data.schedules=data.schedules.filter(x=>x.id!==item.id);save();renderSchedule();showToast("Agenda dihapus.");}}});
+  $$("[data-task]").forEach(el=>el.addEventListener("change",()=>{data.tasks[Number(el.dataset.task)]=el.checked;save();$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";}));
+  $("#recalculate").addEventListener("click",()=>{renderGrades();showToast("Nilai dihitung ulang.");});$("#kkm").addEventListener("change",renderGrades);$("#maxGrade").addEventListener("change",renderGrades);$("#exportGrades").addEventListener("click",exportCSV);
+  $("#settingsForm").addEventListener("submit",e=>{e.preventDefault();data.settings={teacherName:$("#teacherName").value.trim()||"Guru",schoolName:$("#schoolName").value.trim(),curriculum:$("#curriculum").value,academicYear:$("#academicYear").value.trim()};save();renderAll();$("#settingsStatus").textContent="Pengaturan tersimpan pada browser ini.";showToast("Pengaturan tersimpan.");});
+  $("#resetDemo").addEventListener("click",()=>{if(!confirm("Kembalikan seluruh data demo ke kondisi awal?"))return;data=clone(defaults);save();renderAll();$("#settingsStatus").textContent="Data demo dikembalikan ke kondisi awal.";showToast("Data demo direset.");});
+  $("#yearNow").textContent=new Date().getFullYear();$("#todayLabel").textContent=new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
+  renderAll();const initial=location.hash.replace("#","");if(initial)route(initial);
+})();
