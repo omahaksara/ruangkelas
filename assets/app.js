@@ -249,7 +249,11 @@ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.cre
     const cpButton=e.target.closest("[data-copy-cp]");
     if(cpButton){const s=curriculumData().find(x=>x.mapel===cpButton.dataset.copyCp);if(s)copyCurriculumText(s.mapel+" — CP Fase "+s.fase+"\n"+s.cpAcuan+"\n\n"+(s.elemenCP||[]).map(x=>x.nama+": "+x.ringkasan).join("\n"),"Ringkasan CP");return;}
     const tpButton=e.target.closest("[data-copy-tp]");
-    if(tpButton){const s=curriculumData().find(x=>x.mapel===tpButton.dataset.copyTp),b=s&&s.babList.find(x=>x.bab===tpButton.dataset.chapter);if(s&&b)copyCurriculumText(s.mapel+" — "+b.bab+": "+b.judul+"\n"+b.atp.join("\n")+"\n\nMateri pokok: "+b.materiPokok.join(", "),"Daftar TP");return;}
+    if(tpButton){
+      const s=curriculumData().find(x=>x.mapel===tpButton.dataset.copyTp),b=s&&s.babList.find(x=>x.bab===tpButton.dataset.chapter);
+      if(s&&b){const rows=curriculumAllRows().filter(r=>r.subject===s.mapel&&r.chapter===b.bab);const goals=rows.map(r=>r.objective+" [Elemen CP: "+(curriculumLocal.mappings[r.key]||"belum dipetakan")+"; "+r.source+"]");copyCurriculumText(s.mapel+" — "+b.bab+": "+b.judul+"\n"+goals.join("\n")+"\n\nMateri pokok: "+b.materiPokok.join(", "),"Daftar TP dan pemetaan");}
+      return;
+    }
     const useButton=e.target.closest("[data-use-curriculum]");
     if(useButton){
       const s=curriculumData().find(x=>x.mapel===useButton.dataset.useCurriculum),b=s&&s.babList.find(x=>x.bab===useButton.dataset.chapter);
