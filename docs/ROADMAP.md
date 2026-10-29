@@ -15,7 +15,10 @@ Dokumen ini menjadi acuan jangka panjang agar fitur dibangun bertahap, konsisten
 - [x] Daftar siswa, absensi, nilai dasar, dan catatan pembinaan lokal.
 - [x] Studio AI untuk menyusun prompt dan menyalinnya ke layanan AI.
 - [x] Halaman CP & TP awal Kelas VI/Fase C untuk empat mapel, dengan ringkasan CP acuan, bab, tujuan dari materi, materi pokok, pencarian, salin, dan pengiriman konteks ke Studio AI.
+- [x] Pemetaan TP ke elemen CP dapat dipilih guru dan disimpan lokal.
+- [x] Tambah/hapus TP lokal, ekspor CSV, cadangan JSON, pemulihan JSON tervalidasi, dan cetak/PDF browser.
 - [ ] Validasi pemetaan setiap bab/TP terhadap ATP/KOSP sekolah dan uji alur CP & TP pada browser.
+- [ ] Uji pemulihan cadangan di perangkat berbeda; saat ini penyimpanan lokal belum tersinkron antarperangkat.
 - [ ] Uji alur UI nyata di browser desktop dan ponsel.
 - [ ] Tetapkan kebijakan cadangan, ekspor, dan pemulihan data lokal.
 
