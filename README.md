@@ -68,3 +68,9 @@ ruangkelas/
 - Sebelum memakai data siswa nyata, pengelola perlu membuat proyek Firebase, mengaktifkan metode login, merancang struktur sekolah, menerapkan dan menguji Security Rules, serta menyiapkan cadangan dan prosedur penghapusan data.
 - Jangan menaruh service-account key, token admin, atau rahasia backend di front-end/repository.
 - Sinkronisasi cloud belum aktif sampai konfigurasi proyek, aturan keamanan, login, migrasi, dan pengujian lintas akun selesai.
+
+
+## Fondasi pengembangan jangka panjang
+- Studio AI Guru saat ini menyusun prompt secara lokal untuk disalin ke layanan AI; integrasi Gemini API belum aktif.
+- Peta jalan dan arsitektur target: [docs/ROADMAP.md](docs/ROADMAP.md) dan [docs/ARSITEKTUR.md](docs/ARSITEKTUR.md).
+- Login, database cloud, sinkronisasi, AI server-side, PDF lanjutan, dan monetisasi adalah tahap berikutnya dan belum dinyatakan aktif.
