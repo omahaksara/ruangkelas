@@ -85,7 +85,7 @@ $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=d
 }
   let pendingStudentCsv = null;
   function parseCsvRows(text){
-    const input=String(text||"").replace(/^\\uFEFF/,"");const rows=[];let row=[],field="",quoted=false;
+    const input=String(text||"").replace(/^\uFEFF/,"");const rows=[];let row=[],field="",quoted=false;
     for(let i=0;i<input.length;i++){const ch=input[i];if(quoted){if(ch==='"'&&input[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===","){row.push(field.trim());field="";}else if(ch==="\\n"||ch==="\\r"){if(ch==="\\r"&&input[i+1]==="\\n")i++;row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);row=[];field="";}else field+=ch;}
     if(quoted)throw new Error("Ada tanda kutip CSV yang belum ditutup.");if(field!==""||row.length){row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);}return rows;
   }
@@ -95,7 +95,7 @@ $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=d
     const header=rows[0].map(csvHeaderKey);
     const find=(aliases)=>header.findIndex(h=>aliases.includes(h));
     let nameIndex=find(["nama","namasiswa","namalengkap","namapesertadidik","name","fullname"]);
-    let codeIndex=find(["nis","nisn","nomorinduksiswa","nomorinduk","studentid"]);
+    let codeIndex=find(["nis","nisn","niskode","nisnisn","kode","nomorinduksiswa","nomorinduk","studentid"]);
     let classIndex=find(["kelas","tingkat","rombel","class","classlevel","kelasrombel"]);
     let start=1;
     const headerDetected=nameIndex>=0;
