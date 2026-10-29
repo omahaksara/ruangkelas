@@ -43,6 +43,7 @@
       {name:"Siswa Contoh 01",raw:92},{name:"Siswa Contoh 02",raw:84},{name:"Siswa Contoh 03",raw:78},{name:"Siswa Contoh 04",raw:68},{name:"Siswa Contoh 05",raw:95}
     ],
     students:[],
+    incidents:[],
     classInfo:{schoolName:"SD INPRES 2 TINOMBALA",teacherName:"Ridwan",principalName:"Zainudin",className:"VI",semester:"1",academicYear:"2026/2027"},
     lastPromotionYear:"",
     supervision:[false,false,false,false,false,false],
@@ -52,7 +53,7 @@
   let data = clone(defaults);
   let currentDialogType = "ajar";
   let toastHandle;
-  try { const saved = localStorage.getItem("ruangkelas-data-v1"); if(saved) { const parsed=JSON.parse(saved); data = Object.assign(clone(defaults), parsed); data.classInfo=Object.assign(clone(defaults.classInfo),parsed.classInfo||{}); data.students=Array.isArray(parsed.students)?parsed.students:[]; data.students.forEach(s=>{if(!s.classLevel)s.classLevel="6";if(typeof s.archived!=="boolean")s.archived=false;}); } } catch(e) {}
+  try { const saved = localStorage.getItem("ruangkelas-data-v1"); if(saved) { const parsed=JSON.parse(saved); data = Object.assign(clone(defaults), parsed); data.classInfo=Object.assign(clone(defaults.classInfo),parsed.classInfo||{}); data.students=Array.isArray(parsed.students)?parsed.students:[]; data.incidents=Array.isArray(parsed.incidents)?parsed.incidents:[]; data.students.forEach(s=>{if(!s.classLevel)s.classLevel="6";if(typeof s.archived!=="boolean")s.archived=false;}); } } catch(e) {}
   function save(){ try{localStorage.setItem("ruangkelas-data-v1",JSON.stringify(data));}catch(e){} }
   function escapeHtml(value){return String(value == null ? "" : value).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];});}
   function showToast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("show"),2600);}
@@ -87,7 +88,7 @@
     $("#attendanceSummary").textContent=(filter==="archived"?"Arsip: "+visibleStudents.length+" siswa · riwayat absensi dipertahankan.":"Tanggal "+date+" · "+activeStudents.length+" siswa aktif · Hadir "+statuses.Hadir+" ("+pct+"%) · Izin "+statuses.Izin+" · Sakit "+statuses.Sakit+" · Alpa "+statuses.Alpa+" · Belum diisi "+statuses["Belum diisi"]);
     $("[data-supervision]").forEach(el=>el.checked=!!data.supervision[Number(el.dataset.supervision)]);
     $("#supervisionCount").textContent=data.supervision.filter(Boolean).length+"/6";
-    $("#promotionYear").value=data.classInfo.academicYear||"2026/2027";
+    $("#promotionYear").value=data.classInfo.academicYear||"2026/2027";renderIncidentStudentOptions();
   }
   function renderClassInfo(){const c=data.classInfo||{};$("#classSchool").value=c.schoolName||"";$("#classTeacher").value=c.teacherName||"";$("#classPrincipal").value=c.principalName||"Zainudin";$("#classLabel").value=c.className||"VI";$("#classSemester").value=c.semester||"1";$("#classYear").value=c.academicYear||data.settings.academicYear||"2026/2027";}
   function exportAttendance(){
@@ -96,7 +97,38 @@
     const csv=rows.map(row=>row.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
     const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="absensi-kelas-"+($("#classLabel").value||"VI").replace(/[^a-z0-9_-]/gi,"-")+"-"+date+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("CSV absensi disiapkan.");
   }
-  function renderAll(){renderAjar();renderAssessments();renderMaterials();renderSchedule();renderNotes();renderGrades();renderAttendance();renderClassInfo();$$("[data-task]").forEach(el=>el.checked=!!data.tasks[Number(el.dataset.task)]);$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";$("#teacherName").value=data.settings.teacherName||"Guru";$("#schoolName").value=data.settings.schoolName||"";$("#curriculum").value=data.settings.curriculum||"Kurikulum Merdeka";$("#academicYear").value=data.settings.academicYear||"2026/2027";const name=data.settings.teacherName||"Guru";$$(".profile-mini strong").forEach(el=>el.textContent=name);$$(".user-chip span:nth-child(2)").forEach(el=>el.textContent=name);}
+  function renderIncidentStudentOptions(selectedValue){
+const el=$("#incidentStudent"),current=selectedValue||el.value,students=data.students.filter(s=>!s.archived).slice().sort((a,b)=>a.name.localeCompare(b.name,"id"));
+el.innerHTML='<option value="">Pilih siswa aktif</option>'+students.map(s=>'<option value="'+s.id+'">'+escapeHtml(s.name)+' · '+escapeHtml(className(s.classLevel))+'</option>').join("");
+if(current&&students.some(s=>String(s.id)===String(current)))el.value=String(current);
+}
+function resetIncidentForm(){$("#incidentForm").reset();$("#incidentDate").value=localDate();$("#incidentStatus").value="Perlu tindak lanjut";$("#incidentForm").dataset.editId="";$("#saveIncident").textContent="Simpan catatan";$("#cancelIncidentEdit").hidden=true;renderIncidentStudentOptions("");}
+function renderIncidents(){
+renderIncidentStudentOptions();const q=($("#incidentSearch").value||"").trim().toLowerCase(),status=$("#incidentStatusFilter").value;
+const list=data.incidents.filter(x=>(!status||x.status===status)&&[x.studentName,x.category,x.description,x.action,x.reflection].join(" ").toLowerCase().includes(q)).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+$("#incidentTotal").textContent=data.incidents.length;$("#incidentPending").textContent=data.incidents.filter(x=>x.status!=="Selesai").length;$("#incidentDone").textContent=data.incidents.filter(x=>x.status==="Selesai").length;
+$("#incidentBody").innerHTML=list.map(x=>'<tr><td>'+escapeHtml(x.date||"—")+'</td><td>'+escapeHtml(x.studentName||"Siswa tidak tersedia")+'</td><td>'+escapeHtml(x.category||"Lainnya")+'</td><td class="incident-description">'+escapeHtml(x.description||"")+'</td><td class="incident-description">'+escapeHtml(x.action||"")+(x.followUpDate?'<small>Evaluasi: '+escapeHtml(x.followUpDate)+'</small>':"")+'</td><td><span class="status-pill incident-status">'+escapeHtml(x.status||"Perlu tindak lanjut")+'</span></td><td class="student-actions"><button class="table-action" type="button" data-edit-incident="'+x.id+'">Edit</button> <button class="table-action student-delete" type="button" data-delete-incident="'+x.id+'">Hapus</button></td></tr>').join("")||'<tr><td colspan="7" class="attendance-empty">Belum ada catatan yang cocok.</td></tr>';
+$("#incidentSummary").textContent=list.length+" catatan ditampilkan · "+data.incidents.length+" catatan tersimpan · tanpa sistem poin.";
+}
+function saveIncidentForm(e){
+e.preventDefault();const s=data.students.find(x=>!x.archived&&String(x.id)===$("#incidentStudent").value);if(!s){showToast("Pilih siswa aktif terlebih dahulu.");return;}
+const description=$("#incidentDescription").value.trim();if(!description){showToast("Keterangan faktual wajib diisi.");$("#incidentDescription").focus();return;}
+const payload={studentId:s.id,studentName:s.name,classLevel:normalizeClass(s.classLevel),date:$("#incidentDate").value||localDate(),category:$("#incidentCategory").value,description,reflection:$("#incidentReflection").value.trim(),action:$("#incidentAction").value.trim(),followUpDate:$("#incidentFollowUpDate").value,status:$("#incidentStatus").value,updatedAt:new Date().toISOString()};
+const id=Number($("#incidentForm").dataset.editId);if(id){const old=data.incidents.find(x=>x.id===id);if(!old){showToast("Catatan tidak ditemukan.");resetIncidentForm();return;}Object.assign(old,payload);old.id=id;}else data.incidents.unshift(Object.assign({id:Date.now(),createdAt:new Date().toISOString()},payload));
+save();renderIncidents();resetIncidentForm();showToast(id?"Catatan pembinaan diperbarui.":"Catatan kejadian disimpan.");
+}
+function editIncident(id){
+const x=data.incidents.find(i=>i.id===id);if(!x)return;renderIncidentStudentOptions(x.studentId);$("#incidentStudent").value=String(x.studentId||"");$("#incidentDate").value=x.date||localDate();
+if(!Array.from($("#incidentCategory").options).some(o=>o.value===(x.category||"Lainnya"))){const opt=document.createElement("option");opt.value=x.category;opt.textContent=x.category;$("#incidentCategory").appendChild(opt);}
+$("#incidentCategory").value=x.category||"Lainnya";$("#incidentDescription").value=x.description||"";$("#incidentReflection").value=x.reflection||"";$("#incidentAction").value=x.action||"";$("#incidentFollowUpDate").value=x.followUpDate||"";$("#incidentStatus").value=x.status||"Perlu tindak lanjut";$("#incidentForm").dataset.editId=String(id);$("#saveIncident").textContent="Simpan perubahan";$("#cancelIncidentEdit").hidden=false;$("#incidentForm").scrollIntoView({behavior:"smooth",block:"start"});$("#incidentDescription").focus();
+}
+function exportIncidents(){
+const rows=[["Tanggal","Nama siswa","Kelas saat kejadian","Kategori","Keterangan faktual","Refleksi siswa","Pembinaan / kesepakatan","Tanggal evaluasi","Status"]];
+data.incidents.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).forEach(x=>rows.push([x.date||"",x.studentName||"",className(x.classLevel||"1"),x.category||"",x.description||"",x.reflection||"",x.action||"",x.followUpDate||"",x.status||""]));
+const csv=rows.map(row=>row.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="ruangkelas-catatan-pembinaan-"+localDate()+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("CSV catatan pembinaan disiapkan.");
+}
+  function renderAll(){renderAjar();renderAssessments();renderMaterials();renderSchedule();renderNotes();renderGrades();renderAttendance();renderClassInfo();renderIncidents();$$("[data-task]").forEach(el=>el.checked=!!data.tasks[Number(el.dataset.task)]);$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";$("#teacherName").value=data.settings.teacherName||"Guru";$("#schoolName").value=data.settings.schoolName||"";$("#curriculum").value=data.settings.curriculum||"Kurikulum Merdeka";$("#academicYear").value=data.settings.academicYear||"2026/2027";const name=data.settings.teacherName||"Guru";$$(".profile-mini strong").forEach(el=>el.textContent=name);$$(".user-chip span:nth-child(2)").forEach(el=>el.textContent=name);}
   function openDialog(type){currentDialogType=type;const titles={ajar:"Tambah perangkat ajar",assessment:"Tambah perangkat penilaian",material:"Tambah materi",note:"Tambah catatan kelas"};$("#dialogTitle").textContent=titles[type]||"Tambah item";$("#dialogCopy").textContent=type==="note"?"Tambahkan catatan singkat untuk mengingat ide atau tindak lanjut.":"Tambahkan item baru ke workspace Anda. Item tersimpan lokal di browser ini.";$("#itemName").value="";$("#itemDescription").value="";$("#itemCategory").value=type==="assessment"?"Evaluasi":type==="material"?"Bahan ajar":type==="note"?"Catatan":"Perencanaan";$("#itemCategory").closest(".field").style.display=type==="note"?"none":"grid";$("#itemDialog").showModal();setTimeout(()=>$("#itemName").focus(),60);}
   function addItem(e){e.preventDefault();const name=$("#itemName").value.trim();if(!name)return;const description=$("#itemDescription").value.trim();const category=$("#itemCategory").value;const id=Date.now();if(currentDialogType==="note"){data.notes.unshift({id,name,description:description||"Catatan baru."});renderNotes();}else{const item={id,name,category,description:description||"Item baru yang bisa disesuaikan.",icon:currentDialogType==="material"?"▣":currentDialogType==="assessment"?"✓":"▤"};if(currentDialogType==="assessment")data.assessments.unshift(item);else if(currentDialogType==="material")data.materials.unshift(item);else data.ajar.unshift(item);renderAll();}save();$("#itemDialog").close();showToast("Item tersimpan di browser ini.");}
   function deleteItem(id,kind){let key=kind==="assessmentGrid"?"assessments":kind==="materialGrid"?"materials":"ajar";const item=data[key].find(x=>x.id===id);if(!item||!confirm('Hapus "'+item.name+'" dari data lokal?'))return;data[key]=data[key].filter(x=>x.id!==id);save();renderAll();showToast("Item dihapus.");}
@@ -129,6 +161,11 @@
   $("#exportAttendance").addEventListener("click",exportAttendance);
   $("#printAttendance").addEventListener("click",()=>{window.print();});
   $("[data-supervision]").forEach(el=>el.addEventListener("change",()=>{data.supervision[Number(el.dataset.supervision)]=el.checked;save();$("#supervisionCount").textContent=data.supervision.filter(Boolean).length+"/6";}));
+  $("#incidentDate").value=localDate();
+$("#incidentForm").addEventListener("submit",saveIncidentForm);$("#cancelIncidentEdit").addEventListener("click",resetIncidentForm);
+$("#incidentSearch").addEventListener("input",renderIncidents);$("#incidentStatusFilter").addEventListener("change",renderIncidents);
+$("#incidentBody").addEventListener("click",e=>{const edit=e.target.closest("[data-edit-incident]");if(edit){editIncident(Number(edit.dataset.editIncident));return;}const del=e.target.closest("[data-delete-incident]");if(!del)return;const id=Number(del.dataset.deleteIncident),item=data.incidents.find(x=>x.id===id);if(!item||!confirm("Hapus catatan kejadian untuk "+(item.studentName||"siswa ini")+"? Penghapusan tidak dapat dibatalkan."))return;data.incidents=data.incidents.filter(x=>x.id!==id);save();renderIncidents();if(Number($("#incidentForm").dataset.editId)===id)resetIncidentForm();showToast("Catatan dihapus.");});
+$("#exportIncidents").addEventListener("click",exportIncidents);$("#printIncidents").addEventListener("click",()=>{route("pelanggaran-pembinaan");window.print();});
   $("#recalculate").addEventListener("click",()=>{renderGrades();showToast("Nilai dihitung ulang.");});$("#kkm").addEventListener("change",renderGrades);$("#maxGrade").addEventListener("change",renderGrades);$("#exportGrades").addEventListener("click",exportCSV);
   $("#settingsForm").addEventListener("submit",e=>{e.preventDefault();data.settings={teacherName:$("#teacherName").value.trim()||"Guru",schoolName:$("#schoolName").value.trim(),curriculum:$("#curriculum").value,academicYear:$("#academicYear").value.trim()};save();renderAll();$("#settingsStatus").textContent="Pengaturan tersimpan pada browser ini.";showToast("Pengaturan tersimpan.");});
   $("#resetDemo").addEventListener("click",()=>{if(!confirm("Kembalikan seluruh data demo ke kondisi awal?"))return;data=clone(defaults);save();renderAll();$("#settingsStatus").textContent="Data demo dikembalikan ke kondisi awal.";showToast("Data demo direset.");});
