@@ -105,6 +105,23 @@
             <div class="field"><label for="curriculumSearch">Cari CP, bab, TP, atau materi</label><input id="curriculumSearch" type="search" placeholder="Contoh: rasio, musyawarah, anyaman"></div>
           </div>
           <div class="curriculum-count" id="curriculumCount" aria-live="polite"></div>
+          <div class="curriculum-tools">
+            <button class="button button-primary" type="button" id="curriculumAddToggle">＋ Tambah TP sekolah</button>
+            <button class="button button-secondary" type="button" id="curriculumExportCsv">Ekspor TP CSV</button>
+            <button class="button button-secondary" type="button" id="curriculumExportJson">Cadangkan JSON</button>
+            <button class="button button-secondary" type="button" id="curriculumPrint">Cetak / PDF</button>
+          </div>
+          <form id="curriculumAddForm" class="curriculum-add-form" hidden>
+            <div class="curriculum-add-title"><strong>Tambah tujuan pembelajaran lokal</strong><span>Disimpan di browser/perangkat ini</span></div>
+            <div class="curriculum-add-grid">
+              <div class="field"><label for="curriculumAddSubject">Mata pelajaran</label><select id="curriculumAddSubject" required></select></div>
+              <div class="field"><label for="curriculumAddChapter">Bab</label><select id="curriculumAddChapter" required></select></div>
+              <div class="field curriculum-add-wide"><label for="curriculumAddGoal">Rumusan TP tambahan</label><textarea id="curriculumAddGoal" rows="3" maxlength="500" required placeholder="Tuliskan tujuan yang dapat diamati dan dinilai."></textarea></div>
+            </div>
+            <div class="curriculum-tools"><button class="button button-primary" type="submit">Simpan TP lokal</button><button class="button button-secondary" type="button" id="curriculumAddCancel">Batal</button></div>
+            <p class="muted-note">TP lokal tidak mengubah data materi bawaan dan belum tersinkron ke perangkat lain. Periksa kesesuaian dengan ATP/KOSP sekolah.</p>
+          </form>
+          <div class="curriculum-storage-note">Pemetaan TP–elemen CP dan TP tambahan tersimpan secara lokal pada browser ini. Gunakan Cadangkan JSON untuk menyimpan salinan.</div>
         </section>
         <div id="curriculumOverview" class="curriculum-overview"></div>
         <div class="section-heading curriculum-chapter-heading"><div><h2>Bab, tujuan, dan materi pokok</h2><p>Tujuan ditampilkan sesuai urutan dalam data materi sumber.</p></div></div>
