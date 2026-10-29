@@ -83,6 +83,54 @@ const avg=finals.length?finals.reduce((a,b)=>a+b,0)/finals.length:0;
 $("#gradeSummary").textContent=students.length+" siswa aktif · "+scored.length+" sudah dinilai · "+(scored.length?"Rata-rata nilai akhir: "+avg.toFixed(1)+" · ":"")+"KKM: "+kkm+" · Mapel: "+(subject||"belum diisi");
 $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=data.assessments.length;$("#countMaterials").textContent=data.materials.length;
 }
+  let pendingStudentCsv = null;
+  function parseCsvRows(text){
+    const input=String(text||"").replace(/^\\uFEFF/,"");const rows=[];let row=[],field="",quoted=false;
+    for(let i=0;i<input.length;i++){const ch=input[i];if(quoted){if(ch==='"'&&input[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===","){row.push(field.trim());field="";}else if(ch==="\\n"||ch==="\\r"){if(ch==="\\r"&&input[i+1]==="\\n")i++;row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);row=[];field="";}else field+=ch;}
+    if(quoted)throw new Error("Ada tanda kutip CSV yang belum ditutup.");if(field!==""||row.length){row.push(field.trim());if(row.some(v=>v!==""))rows.push(row);}return rows;
+  }
+  function csvHeaderKey(value){return String(value||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[^a-z0-9]/g,"");}
+  function prepareStudentCsv(text){
+    const rows=parseCsvRows(text);if(!rows.length)throw new Error("File CSV kosong.");
+    const header=rows[0].map(csvHeaderKey);
+    const find=(aliases)=>header.findIndex(h=>aliases.includes(h));
+    let nameIndex=find(["nama","namasiswa","namalengkap","namapesertadidik","name","fullname"]);
+    let codeIndex=find(["nis","nisn","nomorinduksiswa","nomorinduk","studentid"]);
+    let classIndex=find(["kelas","tingkat","rombel","class","classlevel","kelasrombel"]);
+    let start=1;
+    const headerDetected=nameIndex>=0;
+    if(!headerDetected){nameIndex=0;codeIndex=2;classIndex=1;start=0;}
+    if(nameIndex<0)throw new Error("Kolom nama tidak ditemukan. Gunakan header Nama, NIS/NISN, dan Kelas.");
+    const seen=new Set(), existingNames=new Set(data.students.map(s=>String(s.name||"").trim().toLocaleLowerCase("id-ID"))),existingCodes=new Set(data.students.map(s=>String(s.code||"").trim().toLowerCase()).filter(Boolean));
+    const prepared=[];let invalid=0,duplicates=0;
+    for(let i=start;i<rows.length;i++){
+      const cols=rows[i],name=String(cols[nameIndex]||"").trim().slice(0,120),code=codeIndex>=0?String(cols[codeIndex]||"").trim().slice(0,40):"",rawClass=classIndex>=0?String(cols[classIndex]||"").trim():"";
+      if(!name){invalid++;prepared.push({line:i+1,name:"",code,classLevel:"1",status:"invalid",reason:"Nama kosong"});continue;}
+      const classLevel=normalizeClass(rawClass||$("#bulkDefaultClass").value||"1");
+      const nameKey=name.toLocaleLowerCase("id-ID"),codeKey=code.toLowerCase();
+      const duplicate=existingNames.has(nameKey)||seen.has(nameKey)||(codeKey&&(existingCodes.has(codeKey)||prepared.some(x=>x.status==="valid"&&x.code.toLowerCase()===codeKey)));
+      if(duplicate){duplicates++;prepared.push({line:i+1,name,code,classLevel,status:"duplicate",reason:"Nama atau NIS/NISN sudah ada"});continue;}
+      seen.add(nameKey);prepared.push({line:i+1,name,code,classLevel,status:"valid",reason:"Siap ditambahkan"});
+    }
+    return {rows:prepared,summary:{total:rows.length-start,valid:prepared.filter(x=>x.status==="valid").length,duplicates,invalid,headerDetected}};
+  }
+  function renderStudentCsvPreview(){
+    const host=$("#studentCsvPreview");if(!host)return;
+    if(!pendingStudentCsv){host.hidden=true;host.innerHTML="";$("#cancelStudentCsv").hidden=true;return;}
+    const p=pendingStudentCsv,summary=p.summary;
+    host.hidden=false;$("#cancelStudentCsv").hidden=false;
+    host.innerHTML='<div class="attendance-stats"><article class="attendance-stat"><span>Total baris</span><strong>'+summary.total+'</strong></article><article class="attendance-stat"><span>Siap diimpor</span><strong>'+summary.valid+'</strong></article><article class="attendance-stat"><span>Duplikat</span><strong>'+summary.duplicates+'</strong></article><article class="attendance-stat"><span>Baris bermasalah</span><strong>'+summary.invalid+'</strong></article></div><p class="muted-note">'+(summary.headerDetected?"Header CSV terdeteksi.":"Header tidak terdeteksi; digunakan urutan kolom Nama, Kelas, NIS/NISN.")+' Tidak ada data yang disimpan sebelum tombol konfirmasi ditekan.</p><div class="table-wrap"><table><thead><tr><th>Baris</th><th>Nama</th><th>NIS/NISN</th><th>Kelas</th><th>Status</th></tr></thead><tbody>'+p.rows.slice(0,100).map(r=>'<tr><td>'+r.line+'</td><td>'+escapeHtml(r.name||"—")+'</td><td>'+escapeHtml(r.code||"—")+'</td><td>'+escapeHtml(className(r.classLevel))+'</td><td>'+escapeHtml(r.reason)+'</td></tr>').join("")+'</tbody></table></div>'+(p.rows.length>100?'<p class="muted-note">Pratinjau menampilkan 100 baris pertama dari '+p.rows.length+' baris.</p>':"")+'<div class="settings-actions"><button class="button button-primary" id="confirmStudentCsv" type="button" '+(summary.valid?"":"disabled")+'>Tambahkan '+summary.valid+' siswa</button></div>';
+  }
+  function importStudentCsvFile(file){
+    const reader=new FileReader();reader.onload=()=>{try{pendingStudentCsv=prepareStudentCsv(String(reader.result||""));renderStudentCsvPreview();showToast("Pratinjau CSV siap. Periksa duplikat sebelum mengimpor.");}catch(err){pendingStudentCsv=null;renderStudentCsvPreview();showToast("CSV tidak dapat dibaca: "+err.message);}finally{$("#studentCsvFile").value="";}};reader.onerror=()=>showToast("File CSV gagal dibaca.");reader.readAsText(file,"UTF-8");
+  }
+  function confirmStudentCsvImport(){
+    if(!pendingStudentCsv)return;const ready=pendingStudentCsv.rows.filter(r=>r.status==="valid");if(!ready.length){showToast("Tidak ada siswa baru untuk ditambahkan.");return;}
+    if(!confirm("Tambahkan "+ready.length+" siswa baru? Data lama tidak ditimpa. Duplikat dan baris tanpa nama akan dilewati."))return;
+    let nextId=Math.max(Date.now(),...data.students.map(s=>Number(s.id)||0))+1;
+    ready.forEach(r=>data.students.push({id:nextId++,name:r.name,code:r.code,classLevel:r.classLevel,archived:false,attendance:{}}));
+    const count=ready.length;pendingStudentCsv=null;save();renderAttendance();renderGrades();renderIncidents();renderStudentCsvPreview();showToast(count+" siswa berhasil ditambahkan. Data lama dipertahankan.");
+  }
   function localDate(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
   function attendanceFor(student,date){if(!student.attendance)student.attendance={};if(!student.attendance[date])student.attendance[date]={status:"Belum diisi",note:""};return student.attendance[date];}
   function normalizeClass(value){const raw=String(value==null?"":value).trim().toLowerCase().replace(/^kelas\s*/,"");const roman={"i":"1","ii":"2","iii":"3","iv":"4","v":"5","vi":"6"};return roman[raw]||(/^[1-6]$/.test(raw)?raw:"1");}
@@ -312,6 +360,10 @@ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.cre
   document.addEventListener("click",e=>{const open=e.target.closest("[data-open-item]");if(open){const kind=open.dataset.kind;const key=kind==="assessmentGrid"?"assessments":kind==="materialGrid"?"materials":"ajar";const item=data[key].find(x=>x.id===Number(open.dataset.openItem));if(item)showToast(item.name+": "+(item.description||"Item workspace"));return;}const del=e.target.closest("[data-delete-item]");if(del){deleteItem(Number(del.dataset.deleteItem),del.dataset.kind);return;}const sd=e.target.closest("[data-delete-schedule]");if(sd){const item=data.schedules.find(x=>x.id===Number(sd.dataset.deleteSchedule));if(item&&confirm('Hapus agenda "'+item.name+'"?')){data.schedules=data.schedules.filter(x=>x.id!==item.id);save();renderSchedule();showToast("Agenda dihapus.");}}});
   $$("[data-task]").forEach(el=>el.addEventListener("change",()=>{data.tasks[Number(el.dataset.task)]=el.checked;save();$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";}));
   $("#bulkStudentForm").addEventListener("submit",e=>{e.preventDefault();const lines=$("#bulkStudentNames").value.split(String.fromCharCode(10)).map(line=>line.trim()).filter(Boolean);if(!lines.length){showToast("Tempel nama siswa terlebih dahulu.");return;}let added=0,skipped=0;const defaultClass=normalizeClass($("#bulkDefaultClass").value);lines.forEach((line,index)=>{const parts=line.split("|").map(x=>x.trim());const name=(parts[0]||"").slice(0,120);const cls=parts[1]?normalizeClass(parts[1]):defaultClass;if(!name){skipped++;return;}if(data.students.some(s=>s.name.trim().toLowerCase()===name.toLowerCase())){skipped++;return;}data.students.push({id:Date.now()+index,name,code:parts[2]||"",classLevel:cls,archived:false,attendance:{}});added++;});save();$("#bulkStudentNames").value="";renderAttendance();showToast(added+" siswa ditambahkan"+(skipped?", "+skipped+" baris dilewati (duplikat/kosong).":"."));});
+  $("#studentCsvFile").addEventListener("change",e=>{const file=e.target.files&&e.target.files[0];if(!file)return;if(file.size>5*1024*1024){e.target.value="";showToast("Ukuran CSV maksimal 5 MB.");return;}importStudentCsvFile(file);});
+  $("#studentCsvTemplate").addEventListener("click",()=>{const content="Nama,NIS/Kode,Kelas\\r\\nSiti Aminah,001,1\\r\\nBudi Santoso,002,2\\r\\n";const blob=new Blob(["\\ufeff"+content],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="template-impor-siswa-ruangkelas.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  $("#cancelStudentCsv").addEventListener("click",()=>{pendingStudentCsv=null;renderStudentCsvPreview();showToast("Pratinjau impor dibatalkan; data belum berubah.");});
+  $("#studentCsvPreview").addEventListener("click",e=>{if(e.target.closest("#confirmStudentCsv"))confirmStudentCsvImport();});
   $("#attendanceDate").value=localDate();
   $("#attendanceDate").addEventListener("change",renderAttendance);
   $("#studentSearch").addEventListener("input",renderAttendance);
