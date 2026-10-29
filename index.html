@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <meta name="description" content="RuangKelas — ruang kerja digital untuk guru. Kelola perangkat ajar, kelas, penilaian, dan materi dalam satu tempat.">
+  <title>RuangKelas — Workspace Guru</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#beranda" aria-label="RuangKelas beranda">
+        <span class="brand-mark">R<span>K</span></span>
+        <span><strong>RuangKelas</strong><small>TEACHER WORKSPACE</small></span>
+      </a>
+      <div class="workspace-label">WORKSPACE PRIBADI</div>
+      <nav class="nav" aria-label="Navigasi utama">
+        <a class="nav-link active" href="#beranda" data-page="beranda"><span>⌂</span> Beranda</a>
+        <a class="nav-link" href="#perangkat-ajar" data-page="perangkat-ajar"><span>▤</span> Perangkat Ajar</a>
+        <a class="nav-link" href="#penilaian" data-page="penilaian"><span>✓</span> Penilaian</a>
+        <a class="nav-link" href="#data-kelas" data-page="data-kelas"><span>♧</span> Data Kelas</a>
+        <a class="nav-link" href="#pengolahan-nilai" data-page="pengolahan-nilai"><span>▥</span> Pengolahan Nilai</a>
+        <a class="nav-link" href="#pusat-materi" data-page="pusat-materi"><span>▣</span> Pusat Materi</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><div class="help-icon">✦</div><strong>Ruang tumbuh guru</strong><p>Tempat kerja yang rapi untuk ide, materi, dan administrasi pembelajaran.</p></div>
+        <div class="profile-mini"><div class="avatar">GR</div><div><strong>Guru</strong><small>Workspace pribadi</small></div><span class="dots">•••</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" id="menuToggle" aria-label="Buka menu">☰</button>
+        <div class="breadcrumbs"><span>Workspace</span><span class="crumb-sep">/</span><strong id="crumbCurrent">Beranda</strong></div>
+        <div class="top-actions">
+          <label class="search-box"><span>⌕</span><input id="globalSearch" type="search" placeholder="Cari fitur atau materi..." aria-label="Cari fitur atau materi"></label>
+          <button class="icon-button" id="themeToggle" title="Ganti tema" aria-label="Ganti tema">◐</button>
+          <button class="user-chip" id="profileButton"><span class="avatar small">GR</span><span>Guru</span><span>⌄</span></button>
+        </div>
+      </header>
+      <section class="page active" id="page-beranda" data-title="Beranda">
+        <div class="welcome-row"><div><div class="eyebrow"><span class="eyebrow-dot"></span> RUANG KERJA ANDA</div><h1>Selamat datang di <span>RuangKelas.</span></h1><p class="subhead">Satu ruang untuk merencanakan, mengajar, dan bertumbuh.</p></div><div class="date-pill"><span>◷</span><span id="todayLabel">Hari ini</span></div></div>
+        <div class="hero-card"><div class="hero-copy"><span class="hero-tag">MULAI DARI YANG PENTING</span><h2>Ide yang baik layak<br>punya tempat yang rapi.</h2><p>Susun perangkat ajar, pantau kegiatan kelas, dan simpan materi pembelajaran dalam satu workspace.</p><button class="button button-light" data-go="perangkat-ajar">Buka perangkat ajar <span>→</span></button></div><div class="hero-art" aria-hidden="true"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-paper paper-back"></div><div class="art-paper paper-front"><div class="paper-line long"></div><div class="paper-line"></div><div class="paper-line short"></div><div class="paper-check">✓</div><div class="paper-line long"></div><div class="paper-line"></div></div><div class="art-spark spark-one">✦</div><div class="art-spark spark-two">✧</div></div></div>
+        <div class="section-heading"><div><h2>Ringkasan workspace</h2><p>Gambaran singkat aktivitas yang sedang Anda siapkan.</p></div><button class="text-button" data-go="data-kelas">Lihat workspace <span>→</span></button></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon violet">▤</span><span class="stat-trend">Workspace</span></div><div class="stat-value" id="countAjar">6</div><div class="stat-label">Jenis perangkat ajar</div><div class="stat-foot">Siap disesuaikan dengan kebutuhan</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon blue">✓</span><span class="stat-trend">Perencanaan</span></div><div class="stat-value" id="countAssessment">4</div><div class="stat-label">Perangkat penilaian</div><div class="stat-foot">Kisi-kisi, soal, asesmen, rubrik</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon amber">▣</span><span class="stat-trend">Perpustakaan</span></div><div class="stat-value" id="countMaterials">8</div><div class="stat-label">Materi contoh</div><div class="stat-foot">Data demo yang bisa ditambah</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon green">↗</span><span class="stat-trend">Tahap 1</span></div><div class="stat-value">01</div><div class="stat-label">Workspace personal</div><div class="stat-foot">Login direncanakan di tahap berikutnya</div></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel quick-panel"><div class="panel-heading"><div><h3>Akses cepat</h3><p>Langsung menuju pekerjaan Anda.</p></div><span class="panel-kebab">•••</span></div><div class="quick-grid">
+            <button class="quick-item" data-go="perangkat-ajar"><span class="quick-icon q-violet">▤</span><strong>Buat perangkat ajar</strong><small>RPP, modul, ATP</small><span class="quick-arrow">↗</span></button>
+            <button class="quick-item" data-go="penilaian"><span class="quick-icon q-blue">✓</span><strong>Siapkan penilaian</strong><small>Soal dan rubrik</small><span class="quick-arrow">↗</span></button>
+            <button class="quick-item" data-go="pengolahan-nilai"><span class="quick-icon q-amber">▥</span><strong>Olah nilai</strong><small>Hitung nilai contoh</small><span class="quick-arrow">↗</span></button>
+            <button class="quick-item" data-go="pusat-materi"><span class="quick-icon q-green">▣</span><strong>Tambah materi</strong><small>Kelola referensi</small><span class="quick-arrow">↗</span></button>
+          </div></section>
+          <section class="panel tasks-panel"><div class="panel-heading"><div><h3>Rencana berikutnya</h3><p>Checklist persiapan workspace.</p></div><span class="task-count" id="taskCount">0/4</span></div><div class="task-list">
+            <label class="task-row"><input type="checkbox" data-task="0"><span class="task-check"></span><span><strong>Sesuaikan profil guru</strong><small>Gunakan nama dan identitas Anda</small></span></label>
+            <label class="task-row"><input type="checkbox" data-task="1"><span class="task-check"></span><span><strong>Atur kurikulum</strong><small>Pilih format yang digunakan</small></span></label>
+            <label class="task-row"><input type="checkbox" data-task="2"><span class="task-check"></span><span><strong>Siapkan perangkat ajar</strong><small>Mulai dari satu dokumen</small></span></label>
+            <label class="task-row"><input type="checkbox" data-task="3"><span class="task-check"></span><span><strong>Isi pusat materi</strong><small>Simpan bahan yang sering dipakai</small></span></label>
+          </div></section>
+        </div>
+        <div class="notice"><span class="notice-icon">i</span><div><strong>Mode pengembangan</strong><p>Ini adalah prototipe front-end. Data yang ditampilkan merupakan contoh dan tersimpan di browser perangkat ini; belum ada login atau sinkronisasi antarperangkat.</p></div><button class="notice-close" aria-label="Tutup informasi">×</button></div>
+      </section>
+      <section class="page" id="page-perangkat-ajar" data-title="Perangkat Ajar">
+        <div class="page-heading"><div><div class="eyebrow">PERENCANAAN PEMBELAJARAN</div><h1>Perangkat Ajar</h1><p>Kelola dokumen perencanaan dengan format yang bisa disesuaikan.</p></div><button class="button button-primary" id="addAjar">＋ Tambah dokumen</button></div>
+        <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="ajarSearch" placeholder="Cari perangkat ajar..." type="search"></label><select id="ajarFilter" aria-label="Filter kategori"><option value="">Semua kategori</option><option>Perencanaan</option><option>Semester</option><option>Evaluasi</option></select></div><div class="resource-grid" id="ajarGrid"></div>
+      </section>
+      <section class="page" id="page-penilaian" data-title="Penilaian">
+        <div class="page-heading"><div><div class="eyebrow">EVALUASI PEMBELAJARAN</div><h1>Penilaian</h1><p>Rancang asesmen, bank soal, kisi-kisi, dan rubrik dalam satu tempat.</p></div><button class="button button-primary" id="addAssessment">＋ Tambah perangkat</button></div>
+        <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="assessmentSearch" placeholder="Cari perangkat penilaian..." type="search"></label><span class="soft-label">Contoh dokumen · dapat disesuaikan</span></div><div class="resource-grid" id="assessmentGrid"></div>
+      </section>
+      <section class="page" id="page-data-kelas" data-title="Data Kelas">
+        <div class="page-heading"><div><div class="eyebrow">PENGELOLAAN KELAS</div><h1>Data Kelas</h1><p>Catat rencana kelas menggunakan data contoh terlebih dahulu.</p></div><button class="button button-primary" id="addClassNote">＋ Catatan kelas</button></div>
+        <div class="warning-strip"><span>⚠</span><p>Jangan masukkan data pribadi siswa ke prototipe publik. Data di bawah ini hanya contoh.</p></div>
+        <div class="class-overview"><div class="class-tile"><span class="tile-icon">▦</span><div><small>Jadwal contoh</small><strong>5 agenda</strong></div></div><div class="class-tile"><span class="tile-icon">☷</span><div><small>Catatan kelas</small><strong id="classNoteCount">2 catatan</strong></div></div><div class="class-tile"><span class="tile-icon">◷</span><div><small>Status</small><strong>Workspace demo</strong></div></div></div>
+        <section class="panel table-panel"><div class="panel-heading"><div><h3>Agenda pembelajaran</h3><p>Contoh jadwal yang bisa Anda edit atau hapus.</p></div><label class="search-box table-search"><span>⌕</span><input id="scheduleSearch" placeholder="Cari agenda..." type="search"></label></div><div class="table-wrap"><table><thead><tr><th>Agenda</th><th>Hari</th><th>Jenis</th><th>Status</th><th></th></tr></thead><tbody id="scheduleBody"></tbody></table></div></section>
+        <section class="panel notes-panel"><div class="panel-heading"><div><h3>Catatan kelas</h3><p>Ide atau tindak lanjut yang ingin diingat.</p></div></div><div id="classNotes" class="notes-list"></div></section>
+      </section>
+      <section class="page" id="page-pengolahan-nilai" data-title="Pengolahan Nilai">
+        <div class="page-heading"><div><div class="eyebrow">REKAP DAN ANALISIS</div><h1>Pengolahan Nilai</h1><p>Simulasikan nilai dengan data fiktif. Hasil bisa diunduh sebagai CSV.</p></div><button class="button button-secondary" id="exportGrades">↓ Ekspor CSV</button></div>
+        <div class="grade-controls panel"><div class="field"><label for="kkm">KKM</label><input id="kkm" type="number" min="0" max="100" value="75"></div><div class="field"><label for="maxGrade">Batas nilai otomatis</label><input id="maxGrade" type="number" min="75" max="100" value="90"></div><div class="field"><label for="subjectName">Mata pelajaran</label><input id="subjectName" value="Contoh Mata Pelajaran"></div><button class="button button-primary" id="recalculate">Hitung ulang</button></div>
+        <section class="panel table-panel"><div class="panel-heading"><div><h3>Simulasi rekap nilai</h3><p>Nilai mentah dan nilai akhir dari data contoh.</p></div><span class="soft-label">Data fiktif</span></div><div class="table-wrap"><table><thead><tr><th>No.</th><th>Nama contoh</th><th>Nilai mentah</th><th>Nilai akhir</th><th>Keterangan</th></tr></thead><tbody id="gradeBody"></tbody></table></div><div class="table-summary" id="gradeSummary"></div></section>
+      </section>
+      <section class="page" id="page-pusat-materi" data-title="Pusat Materi">
+        <div class="page-heading"><div><div class="eyebrow">PERPUSTAKAAN PEMBELAJARAN</div><h1>Pusat Materi</h1><p>Simpan referensi, LKPD, bahan ajar, dan tautan yang sering digunakan.</p></div><button class="button button-primary" id="addMaterial">＋ Tambah materi</button></div>
+        <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="materialSearch" placeholder="Cari materi..." type="search"></label><select id="materialFilter" aria-label="Filter materi"><option value="">Semua jenis</option><option>LKPD</option><option>Bahan ajar</option><option>Referensi</option><option>Template</option></select></div><div class="resource-grid" id="materialGrid"></div>
+      </section>
+      <section class="page" id="page-pengaturan" data-title="Pengaturan">
+        <div class="page-heading"><div><div class="eyebrow">PREFERENSI WORKSPACE</div><h1>Pengaturan</h1><p>Siapkan identitas dan konfigurasi awal RuangKelas.</p></div></div>
+        <section class="panel settings-panel"><h3>Profil workspace</h3><p class="panel-intro">Pengaturan ini disimpan lokal di browser untuk prototipe ini.</p><form id="settingsForm" class="settings-form"><div class="field"><label for="teacherName">Nama tampilan</label><input id="teacherName" value="Guru" required></div><div class="field"><label for="schoolName">Nama sekolah (opsional)</label><input id="schoolName" placeholder="Nama sekolah"></div><div class="field"><label for="curriculum">Kurikulum</label><select id="curriculum"><option>Kurikulum Merdeka</option><option>Kurikulum 2013</option><option>Kurikulum Satuan Pendidikan</option><option>Format fleksibel / lainnya</option></select></div><div class="field"><label for="academicYear">Tahun ajaran</label><input id="academicYear" value="2026/2027"></div><div class="settings-actions"><button class="button button-primary" type="submit">Simpan pengaturan</button><button class="button button-secondary" type="button" id="resetDemo">Reset data demo</button></div></form><p class="settings-note" id="settingsStatus" role="status"></p></section>
+      </section>
+      <footer class="footer"><span>© <span id="yearNow"></span> RuangKelas</span><span>Dibuat untuk membantu guru bekerja lebih teratur.</span><button class="text-button" data-go="pengaturan">Pengaturan workspace</button></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="itemDialog" class="dialog"><form id="itemForm" method="dialog"><div class="dialog-head"><div><div class="eyebrow">WORKSPACE</div><h2 id="dialogTitle">Tambah item</h2></div><button type="button" class="icon-button" id="closeDialog" aria-label="Tutup">×</button></div><p class="dialog-copy" id="dialogCopy">Tambahkan item baru ke workspace Anda.</p><div class="field"><label for="itemName">Nama</label><input id="itemName" required maxlength="100" placeholder="Masukkan nama item"></div><div class="field"><label for="itemCategory">Kategori</label><select id="itemCategory"><option>Perencanaan</option><option>Semester</option><option>Evaluasi</option><option>LKPD</option><option>Bahan ajar</option><option>Referensi</option><option>Template</option><option>Catatan</option></select></div><div class="field"><label for="itemDescription">Keterangan</label><textarea id="itemDescription" rows="3" maxlength="300" placeholder="Keterangan singkat (opsional)"></textarea></div><div class="dialog-actions"><button type="button" class="button button-secondary" id="cancelDialog">Batal</button><button type="submit" class="button button-primary">Simpan item</button></div></form></dialog>
+  <script src="assets/app.js"></script>
+</body>
+</html>
