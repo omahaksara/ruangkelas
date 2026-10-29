@@ -9,7 +9,7 @@ Prototipe front-end tahap 1. Belum memiliki login, backend, database bersama, at
 - Dashboard responsif
 - Perangkat ajar, penilaian, dan pusat materi
 - Agenda serta catatan kelas berbasis data contoh
-- Simulasi pengolahan nilai dan ekspor CSV
+- Pengolahan nilai per siswa aktif dan mata pelajaran; nilai tersimpan per siswa dan dapat diekspor ke CSV
 - Pengaturan profil dan pilihan kurikulum
 - Pencarian, filter, tema gelap, tambah/hapus item
 - Penyimpanan lokal di browser (localStorage)
