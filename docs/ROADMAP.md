@@ -14,6 +14,8 @@ Dokumen ini menjadi acuan jangka panjang agar fitur dibangun bertahap, konsisten
 - [x] Workspace statis GitHub Pages dan navigasi modul.
 - [x] Daftar siswa, absensi, nilai dasar, dan catatan pembinaan lokal.
 - [x] Studio AI untuk menyusun prompt dan menyalinnya ke layanan AI.
+- [x] Halaman CP & TP awal Kelas VI/Fase C untuk empat mapel, dengan ringkasan CP acuan, bab, tujuan dari materi, materi pokok, pencarian, salin, dan pengiriman konteks ke Studio AI.
+- [ ] Validasi pemetaan setiap bab/TP terhadap ATP/KOSP sekolah dan uji alur CP & TP pada browser.
 - [ ] Uji alur UI nyata di browser desktop dan ponsel.
 - [ ] Tetapkan kebijakan cadangan, ekspor, dan pemulihan data lokal.
 
@@ -41,6 +43,7 @@ Arsitektur kandidat: Firebase Authentication + Cloud Firestore + Cloud Functions
 - [ ] Validasi input/output, batas panjang, rate limit, penanganan error, dan kuota per akun.
 - [ ] Hasil AI berupa draf yang bisa disunting, disalin, dan disimpan setelah persetujuan guru.
 - [ ] Template Kurikulum Merdeka menggunakan CP/tujuan yang diberikan atau sumber terverifikasi; jangan mengarang kutipan resmi.
+- [ ] Perluas dataset CP/TP per fase, kelas, mapel, versi dokumen, dan sumber; sediakan alur impor serta validasi guru.
 - [ ] Narasi rapor tidak boleh mengarang capaian; harus merujuk bukti yang diverifikasi guru.
 - [ ] Insight perilaku memakai agregat seperlunya, menghindari label diagnostik, dan tidak membuat keputusan otomatis.
 - [ ] Uji kualitas, bias, privasi, dan biaya per permintaan.
