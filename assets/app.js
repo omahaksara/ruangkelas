@@ -101,16 +101,16 @@ $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=d
     const headerDetected=nameIndex>=0;
     if(!headerDetected){nameIndex=0;codeIndex=2;classIndex=1;start=0;}
     if(nameIndex<0)throw new Error("Kolom nama tidak ditemukan. Gunakan header Nama, NIS/NISN, dan Kelas.");
-    const seen=new Set(), existingNames=new Set(data.students.map(s=>String(s.name||"").trim().toLocaleLowerCase("id-ID"))),existingCodes=new Set(data.students.map(s=>String(s.code||"").trim().toLowerCase()).filter(Boolean));
+    const seenNameClasses=new Set(),seenCodes=new Set(),existingNameClasses=new Set(data.students.map(s=>String(s.name||"").trim().toLocaleLowerCase("id-ID")+"::"+normalizeClass(s.classLevel))),existingCodes=new Set(data.students.map(s=>String(s.code||"").trim().toLowerCase()).filter(Boolean));
     const prepared=[];let invalid=0,duplicates=0;
     for(let i=start;i<rows.length;i++){
       const cols=rows[i],name=String(cols[nameIndex]||"").trim().slice(0,120),code=codeIndex>=0?String(cols[codeIndex]||"").trim().slice(0,40):"",rawClass=classIndex>=0?String(cols[classIndex]||"").trim():"";
       if(!name){invalid++;prepared.push({line:i+1,name:"",code,classLevel:"1",status:"invalid",reason:"Nama kosong"});continue;}
       const classLevel=normalizeClass(rawClass||$("#bulkDefaultClass").value||"1");
       const nameKey=name.toLocaleLowerCase("id-ID"),codeKey=code.toLowerCase();
-      const duplicate=existingNames.has(nameKey)||seen.has(nameKey)||(codeKey&&(existingCodes.has(codeKey)||prepared.some(x=>x.status==="valid"&&x.code.toLowerCase()===codeKey)));
-      if(duplicate){duplicates++;prepared.push({line:i+1,name,code,classLevel,status:"duplicate",reason:"Nama atau NIS/NISN sudah ada"});continue;}
-      seen.add(nameKey);prepared.push({line:i+1,name,code,classLevel,status:"valid",reason:"Siap ditambahkan"});
+      const classKey=nameKey+"::"+classLevel,duplicate=existingNameClasses.has(classKey)||seenNameClasses.has(classKey)||(codeKey&&(existingCodes.has(codeKey)||seenCodes.has(codeKey)));
+      if(duplicate){duplicates++;prepared.push({line:i+1,name,code,classLevel,status:"duplicate",reason:"Nama dan kelas atau NIS/NISN sudah ada"});continue;}
+      seenNameClasses.add(classKey);if(codeKey)seenCodes.add(codeKey);prepared.push({line:i+1,name,code,classLevel,status:"valid",reason:"Siap ditambahkan"});
     }
     return {rows:prepared,summary:{total:rows.length-start,valid:prepared.filter(x=>x.status==="valid").length,duplicates,invalid,headerDetected}};
   }
