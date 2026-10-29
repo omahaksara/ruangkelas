@@ -71,3 +71,20 @@
 .bulk-student-import textarea{width:100%;resize:vertical;border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--panel);color:var(--ink);font:inherit;font-size:12px}
 .bulk-student-import .button{justify-self:start}
 @media print{.bulk-student-import{display:none!important}}
+
+
+/* Roster, kepala sekolah, arsip siswa, and kenaikan kelas */
+.student-list-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.student-list-tools{display:flex;gap:8px;align-items:center}
+.student-list-tools select{max-width:190px;border:1px solid var(--line);border-radius:9px;padding:10px;background:var(--panel);color:var(--ink);font-size:11px}
+.student-class-select{min-width:105px}
+.student-actions{white-space:nowrap}
+.student-archive{color:#9a742d}
+.promotion-panel{margin-bottom:17px}
+.promotion-controls{display:flex;align-items:end;gap:12px}
+.promotion-controls .field{min-width:190px}
+.promotion-controls input{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--panel);color:var(--ink)}
+.promotion-help{font-size:10px;line-height:1.6;color:var(--muted);margin:12px 0 0}
+@media(max-width:780px){.student-list-heading{flex-direction:column}.student-list-tools{width:100%;flex-wrap:wrap}.student-list-tools select,.student-list-tools .table-search{max-width:none;flex:1;min-width:0}.promotion-controls{align-items:stretch;flex-direction:column}.promotion-controls .field{min-width:0}.promotion-controls .button{width:100%}}
+@media(max-width:650px){.student-entry-form{grid-template-columns:1fr}.class-info-form{grid-template-columns:1fr}.student-list-tools select{width:100%;flex-basis:100%}}
+@media print{.promotion-panel,.student-list-tools,.student-actions{display:none!important}}
