@@ -45,7 +45,7 @@
     students:[],
     incidents:[],
     journals:[],
-    gradeRecords:[]
+    gradeRecords:[],
     classInfo:{schoolName:"SD INPRES 2 TINOMBALA",teacherName:"Ridwan",principalName:"Zainudin",className:"VI",semester:"1",academicYear:"2026/2027"},
     lastPromotionYear:"",
     supervision:[false,false,false,false,false,false],
