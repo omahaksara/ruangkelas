@@ -45,3 +45,12 @@ ruangkelas/
 3. Rancang konfigurasi kurikulum yang fleksibel.
 4. Tambahkan backend dan autentikasi setelah kebutuhan multi-pengguna ditetapkan.
 5. Siapkan mode sekolah dan lisensi produk setelah keamanan diuji.
+
+
+## Administrasi guru kelas VI
+- Daftar siswa dapat ditambahkan, nama/NIS dapat diedit, dan data siswa dapat dihapus.
+- Absensi per tanggal dengan status Hadir, Izin, Sakit, Alpa, atau Belum diisi.
+- Rekap ringkas, ekspor CSV, dan cetak laporan absensi.
+- Identitas sekolah/wali kelas serta checklist persiapan supervisi.
+- Seluruh data administrasi kelas disimpan lokal di browser; belum ada sinkronisasi atau database sekolah.
+- Untuk data nyata, gunakan perangkat pribadi yang aman dan ikuti kebijakan perlindungan data sekolah.
