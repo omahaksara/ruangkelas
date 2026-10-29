@@ -109,7 +109,7 @@ $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=d
   function renderClassInfo(){const c=data.classInfo||{};$("#classSchool").value=c.schoolName||"";$("#classTeacher").value=c.teacherName||"";$("#classPrincipal").value=c.principalName||"Zainudin";$("#classLabel").value=c.className||"VI";$("#classSemester").value=c.semester||"1";$("#classYear").value=c.academicYear||data.settings.academicYear||"2026/2027";}
   function exportAttendance(){
     const date=$("#attendanceDate").value||localDate();const rows=[["No","Nama Siswa","NIS","Tanggal","Status Kehadiran","Catatan"]];
-    data.students.forEach((s,i)=>{const a=attendanceFor(s,date);rows.push([i+1,s.name,s.code||"",date,a.status,a.note||""]);});
+    data.students.filter(s=>!s.archived).forEach((s,i)=>{const a=attendanceFor(s,date);rows.push([i+1,s.name,s.code||"",date,a.status,a.note||""]);});
     const csv=rows.map(row=>row.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
     const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="absensi-kelas-"+($("#classLabel").value||"VI").replace(/[^a-z0-9_-]/gi,"-")+"-"+date+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast("CSV absensi disiapkan.");
   }
@@ -197,7 +197,7 @@ if(input.value===""){data.gradeRecords=data.gradeRecords.filter(r=>!(r.studentId
 const raw=Number(input.value);if(!Number.isFinite(raw)||raw<0||raw>100){showToast("Nilai mentah harus 0 sampai 100.");renderGrades();return;}
 let rec=data.gradeRecords.find(r=>r.studentId===studentId&&r.subject===subject);if(!rec){rec={studentId,subject,raw};data.gradeRecords.push(rec);}else rec.raw=raw;save();renderGrades();showToast("Nilai "+subject+" disimpan.");
 });
-  $("#recalculate").addEventListener("click",()=>{renderGrades();showToast("Nilai dihitung ulang.");});$("#kkm").addEventListener("change",renderGrades);$("#maxGrade").addEventListener("change",renderGrades);$("#exportGrades").addEventListener("click",exportCSV);
+  $("#recalculate").addEventListener("click",()=>{renderGrades();showToast("Nilai dihitung ulang.");});$("#kkm").addEventListener("change",renderGrades);$("#maxGrade").addEventListener("change",renderGrades);$("#subjectName").addEventListener("change",renderGrades);$("#exportGrades").addEventListener("click",exportCSV);
   $("#settingsForm").addEventListener("submit",e=>{e.preventDefault();data.settings={teacherName:$("#teacherName").value.trim()||"Guru",schoolName:$("#schoolName").value.trim(),curriculum:$("#curriculum").value,academicYear:$("#academicYear").value.trim()};save();renderAll();$("#settingsStatus").textContent="Pengaturan tersimpan pada browser ini.";showToast("Pengaturan tersimpan.");});
   $("#resetDemo").addEventListener("click",()=>{if(!confirm("Kembalikan seluruh data demo ke kondisi awal?"))return;data=clone(defaults);save();renderAll();$("#settingsStatus").textContent="Data demo dikembalikan ke kondisi awal.";showToast("Data demo direset.");});
   $("#yearNow").textContent=new Date().getFullYear();$("#todayLabel").textContent=new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
