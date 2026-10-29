@@ -119,7 +119,7 @@ const el=$("#incidentStudent"),current=selectedValue||el.value,students=data.stu
 el.innerHTML='<option value="">Pilih siswa aktif</option>'+students.map(s=>'<option value="'+s.id+'">'+escapeHtml(s.name)+' · '+escapeHtml(className(s.classLevel))+'</option>').join("");
 if(current&&students.some(s=>String(s.id)===String(current)))el.value=String(current);
 }
-function resetIncidentForm(){$("#incidentForm").reset();$("#incidentDate").value=localDate();$("#journalDate").value=localDate();renderJournalTpOptions();$("#incidentStatus").value="Perlu tindak lanjut";$("#incidentForm").dataset.editId="";$("#saveIncident").textContent="Simpan catatan";$("#cancelIncidentEdit").hidden=true;renderIncidentStudentOptions("");}
+function resetIncidentForm(){$("#incidentForm").reset();$("#incidentDate").value=localDate();$("#incidentStatus").value="Proses";$("#incidentForm").dataset.editId="";$("#saveIncident").textContent="Simpan catatan";$("#cancelIncidentEdit").hidden=true;renderIncidentStudentOptions("");}
 function renderIncidents(){
 renderIncidentStudentOptions();const q=($("#incidentSearch").value||"").trim().toLowerCase(),status=$("#incidentStatusFilter").value;
 const list=data.incidents.filter(x=>(!status||x.status===status)&&[x.studentName,x.category,x.description,x.action,x.reflection].join(" ").toLowerCase().includes(q)).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
@@ -324,7 +324,7 @@ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.cre
   $("#exportAttendance").addEventListener("click",exportAttendance);
   $("#printAttendance").addEventListener("click",()=>{window.print();});
   $("[data-supervision]").forEach(el=>el.addEventListener("change",()=>{data.supervision[Number(el.dataset.supervision)]=el.checked;save();$("#supervisionCount").textContent=data.supervision.filter(Boolean).length+"/6";}));
-  $("#incidentDate").value=localDate();
+  $("#incidentDate").value=localDate();$("#journalDate").value=localDate();renderJournalTpOptions();
 $("#incidentForm").addEventListener("submit",saveIncidentForm);$("#cancelIncidentEdit").addEventListener("click",resetIncidentForm);
 $("#incidentSearch").addEventListener("input",renderIncidents);$("#incidentStatusFilter").addEventListener("change",renderIncidents);
 $("#incidentBody").addEventListener("click",e=>{const edit=e.target.closest("[data-edit-incident]");if(edit){editIncident(Number(edit.dataset.editIncident));return;}const del=e.target.closest("[data-delete-incident]");if(!del)return;const id=Number(del.dataset.deleteIncident),item=data.incidents.find(x=>x.id===id);if(!item||!confirm("Hapus catatan kejadian untuk "+(item.studentName||"siswa ini")+"? Penghapusan tidak dapat dibatalkan."))return;data.incidents=data.incidents.filter(x=>x.id!==id);save();renderIncidents();if(Number($("#incidentForm").dataset.editId)===id)resetIncidentForm();showToast("Catatan dihapus.");});
