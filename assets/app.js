@@ -250,7 +250,19 @@ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.cre
     const tpButton=e.target.closest("[data-copy-tp]");
     if(tpButton){const s=curriculumData().find(x=>x.mapel===tpButton.dataset.copyTp),b=s&&s.babList.find(x=>x.bab===tpButton.dataset.chapter);if(s&&b)copyCurriculumText(s.mapel+" — "+b.bab+": "+b.judul+"\n"+b.atp.join("\n")+"\n\nMateri pokok: "+b.materiPokok.join(", "),"Daftar TP");return;}
     const useButton=e.target.closest("[data-use-curriculum]");
-    if(useButton){const s=curriculumData().find(x=>x.mapel===useButton.dataset.useCurriculum),b=s&&s.babList.find(x=>x.bab===useButton.dataset.chapter);if(s&&b){$("#aiSubject").value=s.mapel;$("#aiClass").value="Kelas VI / Fase C";$("#aiTopic").value=b.judul;$("#aiLearningGoal").value="CP acuan Fase "+s.fase+": "+s.cpAcuan+"\n\nTujuan dari materi yang digunakan:\n"+b.atp.join("\n")+"\n\nMateri pokok: "+b.materiPokok.join(", ")+"\n\nCatatan: verifikasi pemetaan terhadap ATP/KOSP sekolah.";route("studio-ai");showToast("Konteks CP dan TP dimasukkan ke Studio AI.");}return;}
+    if(useButton){
+      const s=curriculumData().find(x=>x.mapel===useButton.dataset.useCurriculum),b=s&&s.babList.find(x=>x.bab===useButton.dataset.chapter);
+      if(s&&b){
+        const rows=curriculumAllRows().filter(r=>r.subject===s.mapel&&r.chapter===b.bab);
+        const goalContext=rows.map(r=>"- "+r.objective+" [Elemen CP: "+(curriculumLocal.mappings[r.key]||"belum dipetakan")+"; sumber: "+r.source+"]").join("\n");
+        $("#aiSubject").value=s.mapel;
+        $("#aiClass").value="Kelas VI / Fase C";
+        $("#aiTopic").value=b.judul;
+        $("#aiLearningGoal").value="CP acuan Fase "+s.fase+": "+s.cpAcuan+"\n\nTujuan pembelajaran dan status pemetaan:\n"+goalContext+"\n\nMateri pokok: "+b.materiPokok.join(", ")+"\n\nSumber CP/ATP untuk verifikasi: "+(s.sumberUrlCP||"Portal resmi CP & ATP")+"\n\nCatatan: TP dari materi dan TP lokal perlu ditinjau guru serta diselaraskan dengan ATP/KOSP sekolah.";
+        route("studio-ai");showToast("CP, TP, dan status pemetaan dimasukkan ke Studio AI.");
+      }
+      return;
+    }
   });
   document.addEventListener("click",e=>{const open=e.target.closest("[data-open-item]");if(open){const kind=open.dataset.kind;const key=kind==="assessmentGrid"?"assessments":kind==="materialGrid"?"materials":"ajar";const item=data[key].find(x=>x.id===Number(open.dataset.openItem));if(item)showToast(item.name+": "+(item.description||"Item workspace"));return;}const del=e.target.closest("[data-delete-item]");if(del){deleteItem(Number(del.dataset.deleteItem),del.dataset.kind);return;}const sd=e.target.closest("[data-delete-schedule]");if(sd){const item=data.schedules.find(x=>x.id===Number(sd.dataset.deleteSchedule));if(item&&confirm('Hapus agenda "'+item.name+'"?')){data.schedules=data.schedules.filter(x=>x.id!==item.id);save();renderSchedule();showToast("Agenda dihapus.");}}});
   $$("[data-task]").forEach(el=>el.addEventListener("change",()=>{data.tasks[Number(el.dataset.task)]=el.checked;save();$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";}));
