@@ -1,0 +1,52 @@
+name: RuangKelas quality checks
+
+on:
+  push:
+    branches: ["main", "feat/**", "fix/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  syntax-and-wiring:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check JavaScript syntax
+        run: node --check assets/app.js
+      - name: Check required UI wiring
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const html = readFileSync('index.html', 'utf8');
+          const js = readFileSync('assets/app.js', 'utf8');
+          const requiredIds = [
+            'studentCsvFile',
+            'studentCsvTemplate',
+            'cancelStudentCsv',
+            'studentCsvPreview',
+            'bulkStudentForm',
+            'studentForm',
+            'attendanceBody',
+            'incidentStudent',
+            'journalForm',
+            'backupAllData',
+            'restoreAllData'
+          ];
+          const missing = requiredIds.filter(id => !html.includes(`id="${id}"`));
+          if (missing.length) {
+            console.error('Missing required UI ids:', missing.join(', '));
+            process.exit(1);
+          }
+          for (const id of requiredIds.slice(0, 4)) {
+            if (!js.includes(`#${id}`)) {
+              console.error('Missing JavaScript wiring for:', id);
+              process.exit(1);
+            }
+          }
+          console.log('RuangKelas UI wiring smoke check passed.');
+          NODE
