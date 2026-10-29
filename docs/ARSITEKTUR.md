@@ -57,7 +57,7 @@ Gunakan ID acak, validasi input, minimalkan data pribadi, dan hindari menyimpan 
 - Front-end awal menampilkan data Kelas VI/Fase C untuk Bahasa Indonesia, Matematika, Pendidikan Pancasila, dan Seni Rupa.
 - Ringkasan CP acuan merujuk Kepka BSKAP 046/H/KR/2025; materi bab dan tujuan berasal dari materi yang disediakan guru. Keduanya ditandai terpisah agar data buku/ATP lokal tidak salah diklaim sebagai kutipan resmi.
 - Dataset acuan saat ini berupa file statis `assets/kurikulum-kelas6.js`. TP tambahan dan pemetaan elemen CP dapat dikelola di browser melalui `localStorage` dengan kunci `ruangkelas-curriculum-local-v1`.
-- Modul lokal mendukung tambah/hapus TP, pemetaan elemen CP, ekspor CSV, ekspor JSON dan pemulihan JSON yang divalidasi terhadap mapel/bab dataset saat ini.
+- Modul lokal mendukung tambah/hapus TP, pemetaan elemen CP, ekspor CSV, ekspor JSON dan pemulihan JSON yang divalidasi terhadap mapel/bab dataset saat ini. Konteks TP bawaan/lokal beserta status pemetaannya diteruskan ke Studio AI saat guru memilih Gunakan di Studio AI.
 - Perubahan lokal belum mempunyai versioning, sinkronisasi lintas perangkat, akun, atau database cloud.
 - Sebelum data ini menjadi basis produksi, perlu validasi guru terhadap ATP/KOSP, penambahan metadata sumber/versi, dan pengujian pemetaan setiap tujuan ke elemen CP yang relevan.
 - Arsitektur cloud nantinya perlu memisahkan data kurikulum acuan bersama dari ATP/penyesuaian milik sekolah, dengan status verifikasi dan riwayat perubahan.
