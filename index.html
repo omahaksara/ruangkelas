@@ -19,6 +19,7 @@
       <nav class="nav" aria-label="Navigasi utama">
         <a class="nav-link active" href="#beranda" data-page="beranda"><span>⌂</span> Beranda</a>
         <a class="nav-link" href="#perangkat-ajar" data-page="perangkat-ajar"><span>▤</span> Perangkat Ajar</a>
+        <a class="nav-link" href="#studio-ai" data-page="studio-ai"><span>✦</span> Studio AI Guru</a>
         <a class="nav-link" href="#penilaian" data-page="penilaian"><span>✓</span> Penilaian</a>
         <a class="nav-link" href="#data-kelas" data-page="data-kelas"><span>♧</span> Data Kelas</a>
         <a class="nav-link" href="#absensi-siswa" data-page="absensi-siswa"><span>☷</span> Absensi &amp; Siswa</a>
@@ -72,6 +73,28 @@
         <div class="page-heading"><div><div class="eyebrow">PERENCANAAN PEMBELAJARAN</div><h1>Perangkat Ajar</h1><p>Kelola dokumen perencanaan dengan format yang bisa disesuaikan.</p></div><button class="button button-primary" id="addAjar">＋ Tambah dokumen</button></div>
         <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="ajarSearch" placeholder="Cari perangkat ajar..." type="search"></label><select id="ajarFilter" aria-label="Filter kategori"><option value="">Semua kategori</option><option>Perencanaan</option><option>Semester</option><option>Evaluasi</option></select></div><div class="resource-grid" id="ajarGrid"></div>
       </section>
+      <section class="page" id="page-studio-ai" data-title="Studio AI Guru">
+<div class="page-heading"><div><div class="eyebrow">RUANGKELAS · AI WORKSPACE</div><h1>Studio AI Guru</h1><p>Siapkan instruksi yang terarah untuk menyusun perangkat ajar dan asesmen.</p></div><span class="soft-label">Fondasi AI</span></div>
+<div class="warning-strip"><span>i</span><p><strong>Mode fondasi:</strong> halaman ini menyusun prompt yang dapat disalin ke asisten AI pilihan Bapak. Koneksi Gemini API belum aktif; halaman ini tidak mengaku menghasilkan jawaban AI secara langsung. Jangan masukkan nama, NISN, nilai individual, atau data sensitif siswa.</p></div>
+<div class="ai-studio-layout">
+<section class="panel"><div class="panel-heading"><div><h3>Rancang kebutuhan</h3><p>Lengkapi konteks agar hasil AI lebih relevan.</p></div></div>
+<form id="aiPromptForm" class="ai-prompt-form">
+<div class="field"><label for="aiOutputType">Jenis dokumen</label><select id="aiOutputType"><option value="Modul Ajar">Modul Ajar</option><option value="RPP ringkas">RPP ringkas</option><option value="Bank soal dan kunci jawaban">Bank soal dan kunci jawaban</option><option value="Kisi-kisi dan rubrik asesmen">Kisi-kisi dan rubrik asesmen</option><option value="LKPD">LKPD</option><option value="Deskripsi capaian rapor">Deskripsi capaian rapor (tanpa identitas siswa)</option><option value="Rencana pembinaan kelas">Rencana pembinaan kelas</option></select></div>
+<div class="field"><label for="aiSubject">Mata pelajaran</label><input id="aiSubject" maxlength="100" required placeholder="Contoh: Bahasa Indonesia"></div>
+<div class="field"><label for="aiClass">Kelas / fase</label><select id="aiClass"><option>Kelas I / Fase A</option><option>Kelas II / Fase A</option><option>Kelas III / Fase B</option><option>Kelas IV / Fase B</option><option>Kelas V / Fase C</option><option selected>Kelas VI / Fase C</option><option>Lintas kelas</option></select></div>
+<div class="field"><label for="aiTopic">Topik / materi</label><input id="aiTopic" maxlength="180" required placeholder="Contoh: Ide pokok dalam teks eksplanasi"></div>
+<div class="field"><label for="aiLearningGoal">Tujuan / CP / kompetensi (opsional)</label><textarea id="aiLearningGoal" maxlength="1200" rows="3" placeholder="Tempelkan tujuan belajar atau CP yang relevan; periksa kembali sumber resminya."></textarea></div>
+<div class="field"><label for="aiLevel">Tingkat kognitif</label><select id="aiLevel"><option value="Campuran LOTS dan HOTS">Campuran LOTS dan HOTS</option><option>LOTS — pemahaman dasar</option><option>HOTS — analisis dan penalaran</option></select></div>
+<div class="field"><label for="aiCount">Jumlah soal (untuk dokumen asesmen)</label><select id="aiCount"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select></div>
+<div class="field"><label for="aiExtra">Instruksi tambahan (opsional)</label><textarea id="aiExtra" maxlength="1000" rows="3" placeholder="Contoh: kontekstual dengan lingkungan sekitar sekolah."></textarea></div>
+<div class="ai-actions"><button class="button button-primary" type="submit">Susun prompt</button><button class="button button-secondary" type="button" id="aiPromptReset">Reset</button></div>
+</form></section>
+<section class="panel ai-output-panel"><div class="panel-heading"><div><h3>Prompt siap disalin</h3><p>Periksa isi sebelum digunakan pada layanan AI.</p></div></div>
+<textarea id="aiPromptOutput" rows="20" readonly aria-label="Prompt yang disusun" placeholder="Isi formulir lalu tekan Susun prompt."></textarea>
+<div class="ai-actions"><button class="button button-primary" type="button" id="copyAiPrompt">Salin prompt</button><button class="button button-secondary" type="button" id="openGemini">Buka Gemini</button></div>
+<p class="muted-note" id="aiPromptStatus" aria-live="polite">Belum ada prompt yang disusun.</p>
+<div class="ai-next-steps"><h4>Prinsip hasil yang aman</h4><ul><li>AI adalah asisten penyusun draf, bukan penentu nilai atau keputusan disiplin.</li><li>Guru wajib memeriksa akurasi, kesesuaian kurikulum, bahasa, dan tingkat kesulitan.</li><li>Deskripsi rapor harus berdasarkan bukti belajar yang sudah diverifikasi guru.</li><li>Jangan memasukkan data pribadi siswa ke layanan AI publik.</li></ul></div>
+</section></div></section>
       <section class="page" id="page-penilaian" data-title="Penilaian">
         <div class="page-heading"><div><div class="eyebrow">EVALUASI PEMBELAJARAN</div><h1>Penilaian</h1><p>Rancang asesmen, bank soal, kisi-kisi, dan rubrik dalam satu tempat.</p></div><button class="button button-primary" id="addAssessment">＋ Tambah perangkat</button></div>
         <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="assessmentSearch" placeholder="Cari perangkat penilaian..." type="search"></label><span class="soft-label">Contoh dokumen · dapat disesuaikan</span></div><div class="resource-grid" id="assessmentGrid"></div>
