@@ -94,6 +94,15 @@ Gunakan ID stabil untuk school, academicPeriod, class, student, subject, learnin
 
 Semua input impor melewati staging: file → pemetaan kolom → preview → validasi → konfirmasi → catat hasil. Tidak boleh menimpa seluruh data tanpa pratinjau dan backup.
 
+## Implementasi integrasi awal (2026-11)
+
+- Navigasi dan halaman **Pusat Data Terpadu** sudah ditambahkan ke aplikasi.
+- Fondasi `workspace` menyimpan profil acuan, identitas periode akademik, dan versi skema.
+- Data siswa lama diberi `studentKey` stabil saat disimpan, tanpa mengganti ID lama atau menghapus riwayat.
+- Ringkasan pusat data membaca langsung daftar siswa, absensi, jurnal, dan rekaman nilai dari store aplikasi yang sama.
+- Formulir profil dan identitas kelas diselaraskan melalui jembatan kompatibilitas agar modul lama tetap berjalan.
+- Ini merupakan integrasi lokal satu browser. Belum ada sinkronisasi cloud, konflik multi-perangkat, autentikasi, atau pembagian akses pengguna.
+
 ## 6. Status implementasi saat ini
 
 - Front-end HTML/CSS/JavaScript statis.
