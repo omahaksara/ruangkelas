@@ -179,6 +179,7 @@ return '<tr><td>'+(i+1)+'</td><td>'+escapeHtml(s.name)+'</td><td><input class="a
 const scored=students.filter(s=>data.gradeRecords.some(r=>r.studentId===s.id&&r.subject===subject&&r.periodId===activeReportPeriod().id&&r.raw!==""&&r.raw!=null));
 const finals=scored.map(s=>{const r=data.gradeRecords.find(x=>x.studentId===s.id&&x.subject===subject&&x.periodId===activeReportPeriod().id);return Math.round(kkm+(Math.max(0,Math.min(100,Number(r.raw)||0))*(max-kkm)/100));});
 const avg=finals.length?finals.reduce((a,b)=>a+b,0)/finals.length:0;
+$("#gradeStudentCount").textContent=students.length;$("#gradeScoredCount").textContent=scored.length;$("#gradePendingCount").textContent=Math.max(0,students.length-scored.length);$("#gradeAverage").textContent=scored.length?avg.toFixed(1):"—";
 $("#gradeSummary").textContent=students.length+" siswa aktif · "+scored.length+" sudah dinilai · "+(scored.length?"Rata-rata nilai akhir: "+avg.toFixed(1)+" · ":"")+"KKM: "+kkm+" · Mapel: "+(subject||"belum diisi");
 $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=data.assessments.length;$("#countMaterials").textContent=data.materials.length;
 }
