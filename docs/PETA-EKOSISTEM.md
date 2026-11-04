@@ -202,3 +202,18 @@ flowchart TD
 - **Belum tersedia:** database cloud, login multi-peran, sinkronisasi lintas perangkat, revisi snapshot terkunci, dan audit trail penuh.
 
 Skema ini harus diperbarui setiap kali kontrak data atau alur modul berubah. Tampilan visual yang dapat diklik tersedia pada halaman **Pusat Data Terpadu** di dalam aplikasi.
+
+
+## 10. Panduan visual per modul
+
+Halaman inti menggunakan pola panduan tiga langkah agar urutan kerja terlihat konsisten tanpa mengubah aturan penyimpanan:
+
+| Modul | Urutan kerja yang ditampilkan | Makna status / batas |
+|---|---|---|
+| Absensi & Siswa | Pastikan daftar → pilih tanggal → lengkapi status | “Belum diisi” berarti status siswa untuk tanggal terpilih belum ditetapkan |
+| Jurnal Mengajar | Catat pelaksanaan → tautkan siswa bila relevan → tulis bukti/refleksi | Siswa terkait bersifat opsional; jurnal kelas tidak otomatis menjadi bukti individual |
+| Pengolahan Nilai | Tentukan mapel/periode → isi nilai mentah → tinjau bukti | Nilai akhir adalah hasil rumus tampilan; guru tetap memeriksa dan bertanggung jawab atas nilai |
+| E-Rapor | Pastikan periode → buat/periksa draf → kunci | Draf merupakan salinan; snapshot terkunci tidak berubah otomatis |
+| Pembinaan | Catat fakta → sepakati tindakan → pantau status | Data terbatas; tidak dikirim otomatis ke rapor |
+
+Panduan ini bersifat penjelas, bukan validasi tambahan. Tidak ada langkah baru yang menghalangi guru menggunakan modul. Kontrol yang sudah ada tetap menjadi sumber kebenaran; panduan tidak membuat status data baru.
