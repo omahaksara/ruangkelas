@@ -108,7 +108,7 @@ Semua input impor melewati staging: file → pemetaan kolom → preview → vali
 - Front-end HTML/CSS/JavaScript statis.
 - Sebagian data siswa, absensi, nilai, pembinaan, jurnal, dan CP/TP disimpan di localStorage.
 - Studio AI baru menyusun prompt lokal; tidak ada API AI aktif.
-- Belum ada database cloud, login, sinkronisasi lintas perangkat, E-Rapor penuh, atau arsip snapshot final.
+- Belum ada database cloud, login, atau sinkronisasi lintas perangkat. E-Rapor tahap awal sudah tersedia; fitur rapor final dan revisi arsip masih dalam pengembangan.
 - Jangan masukkan data siswa nyata ke demo publik. Uji fitur dengan data sintetis sampai keamanan dan backup tervalidasi.
 
 ## 7. Tahap implementasi yang disarankan
