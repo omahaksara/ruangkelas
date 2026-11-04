@@ -253,3 +253,13 @@ Angka ringkasan dihitung dari data yang sudah tersimpan dan mengikuti filter kon
 - Bab V baru memiliki pengantar tema yang terpotong. Karena itu deskripsi tema dan TP Bab V di aplikasi diberi status sebagai ringkasan kerja sementara, bukan kutipan lengkap dari buku.
 - Fokus kebahasaan tampil terpisah dari TP/urutan tujuan dan materi pokok. Pencarian kurikulum juga mencakup fokus kebahasaan agar guru dapat menemukan bab berdasarkan istilah materi.
 - Penambahan ini hanya memperkaya referensi CP/TP lokal kelas VI. Tidak mengubah nilai, rapor, absensi, jurnal, maupun data siswa. Guru tetap dapat menyunting TP dan pemetaan elemen CP sesuai ATP/KOSP sekolah.
+
+
+## 14. Integrasi otomatis CP → TP → materi → perangkat ajar → asesmen
+
+- Data `assets/kurikulum-kelas6.js` menjadi sumber bersama untuk CP, bab, TP, materi pokok, dan fokus kebahasaan. Perangkat Ajar, Penilaian, dan Pusat Materi menampilkan kartu bab yang terhubung langsung ke Studio AI; kartu bersifat dinamis dan tidak menggandakan data kurikulum ke store administrasi.
+- Tombol **Susun dari kurikulum** mengisi jenis dokumen, mapel, kelas/fase, topik, CP, seluruh TP pada bab, pemetaan elemen CP otomatis, materi pokok, dan fokus kebahasaan ke Studio AI. Guru tidak perlu memilih TP satu per satu.
+- Jika guru mengetik mapel dan topik langsung di Studio AI, sistem mencocokkan topik dengan judul bab, uraian, materi pokok, fokus kebahasaan, dan TP. Jika tidak ditemukan kecocokan memadai, sistem tidak memaksakan bab dan memberi catatan bahwa konteks CP/TP perlu dilengkapi.
+- Pemetaan elemen CP menggunakan aturan kata kunci sesuai mata pelajaran. Hasilnya rekomendasi awal, bukan keputusan kurikulum final. Pemetaan manual lama yang tersimpan tetap dihormati sebagai override; guru tetap meninjau kesesuaian dengan ATP/KOSP.
+- Kartu kurikulum bukan dokumen hasil AI dan tidak otomatis disimpan sebagai dokumen final. Kartu membuka Studio AI untuk menyusun prompt; keluaran AI tetap perlu ditinjau dan disimpan oleh guru.
+- Integrasi ini tidak membaca atau menyalin catatan pembinaan, identitas siswa, nilai individual, absensi, maupun snapshot rapor. Tidak ada perubahan pada kontrak data siswa/penilaian/rapor.
