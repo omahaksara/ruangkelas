@@ -30,6 +30,7 @@
         <a class="nav-link" href="#pusat-materi" data-page="pusat-materi"><span>▣</span> Pusat Materi</a>
         <a class="nav-link" href="#pengembangan-profesi" data-page="pengembangan-profesi"><span>✦</span> Pengembangan Profesi</a>
         <a class="nav-link" href="#laboratorium-media" data-page="laboratorium-media"><span>🎮</span> Laboratorium Media</a>
+        <a class="nav-link" href="#pusat-data" data-page="pusat-data"><span>◈</span> Pusat Data Terpadu</a>
       </nav>
       <div class="sidebar-bottom">
         <div class="help-card"><div class="help-icon">✦</div><strong>Ruang tumbuh guru</strong><p>Tempat kerja yang rapi untuk ide, materi, dan administrasi pembelajaran.</p></div>
@@ -232,6 +233,28 @@
           <article class="workshop-resource-card workshop-resource-wide"><span class="workshop-number">DOKUMEN KERJA</span><h3>Rencana Tindak Lanjut</h3><p>Dokumen untuk merumuskan langkah penerapan hasil workshop setelah kegiatan pelatihan.</p><a href="https://docs.google.com/presentation/d/1f3aEjALU7Hr4oGEKrZQZNlrex-hM6CHG/edit?usp=sharing&ouid=109349127435393462591&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">Buka dokumen ↗</a></article>
         </div>
         <div class="notice workshop-note"><span class="notice-icon">i</span><div><strong>Catatan integrasi</strong><p>RuangKelas menyimpan tautan dan dokumentasi portofolio ini. Materi asli, formulir refleksi, dan penyimpanan jawaban tetap berada di portal workshop serta layanan eksternal pemiliknya. Data refleksi peserta tidak disalin ke data siswa atau administrasi kelas.</p></div></div>
+      </section>
+      <section class="page" id="page-pusat-data" data-title="Pusat Data Terpadu">
+        <div class="page-heading"><div><div class="eyebrow">SATU SUMBER DATA · RUANGKELAS</div><h1>Pusat Data Terpadu</h1><p>Data sekolah, periode, siswa, kehadiran, jurnal, pembinaan, dan nilai dikelola dalam satu ruang kerja.</p></div><span class="soft-label">Mode lokal</span></div>
+        <div class="warning-strip"><span>i</span><p><strong>Status sinkronisasi:</strong> seluruh modul pada browser ini membaca penyimpanan RuangKelas yang sama. Sinkronisasi antarperangkat/cloud belum aktif. Jangan gunakan demo publik untuk menyimpan data siswa nyata.</p></div>
+        <div class="stats-grid data-hub-stats">
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon violet">♧</span><span class="stat-trend">Master</span></div><div class="stat-value" id="hubStudents">0</div><div class="stat-label">Siswa aktif</div><div class="stat-foot">Satu daftar siswa bersama</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon blue">✓</span><span class="stat-trend">Kehadiran</span></div><div class="stat-value" id="hubAttendance">0</div><div class="stat-label">Catatan absensi</div><div class="stat-foot">Bersumber dari modul absensi</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon amber">✎</span><span class="stat-trend">Pembelajaran</span></div><div class="stat-value" id="hubJournals">0</div><div class="stat-label">Jurnal mengajar</div><div class="stat-foot">Terhubung dengan catatan kelas</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon green">▥</span><span class="stat-trend">Asesmen</span></div><div class="stat-value" id="hubGrades">0</div><div class="stat-label">Rekaman nilai</div><div class="stat-foot">Sumber pengolahan nilai</div></article>
+        </div>
+        <section class="panel"><div class="panel-heading"><div><h3>Identitas data bersama</h3><p>Profil yang dipakai sebagai acuan lintas modul.</p></div><button class="button button-secondary" data-go="pengaturan">Ubah profil</button></div>
+          <div class="class-info-grid"><div><span class="muted-note">Sekolah</span><strong id="hubSchool">Belum diatur</strong></div><div><span class="muted-note">Guru</span><strong id="hubTeacher">Belum diatur</strong></div><div><span class="muted-note">Kelas</span><strong id="hubClass">—</strong></div><div><span class="muted-note">Tahun ajaran</span><strong id="hubYear">—</strong></div><div><span class="muted-note">Semester</span><strong id="hubSemester">—</strong></div><div><span class="muted-note">Kurikulum</span><strong id="hubCurriculum">—</strong></div></div>
+        </section>
+        <section class="panel"><div class="panel-heading"><div><h3>Peta hubungan modul</h3><p>Perubahan data sumber akan dibaca modul terkait pada penyimpanan yang sama.</p></div></div><div class="quick-grid">
+          <button class="quick-item" data-go="data-kelas"><span class="quick-icon q-violet">♧</span><strong>Master siswa &amp; kelas</strong><small>Identitas siswa dan rombel</small></button>
+          <button class="quick-item" data-go="absensi-siswa"><span class="quick-icon q-blue">☷</span><strong>Absensi</strong><small>Riwayat kehadiran</small></button>
+          <button class="quick-item" data-go="jurnal-mengajar"><span class="quick-icon q-green">✎</span><strong>Jurnal mengajar</strong><small>Pelaksanaan pembelajaran</small></button>
+          <button class="quick-item" data-go="pengolahan-nilai"><span class="quick-icon q-amber">▥</span><strong>Pengolahan nilai</strong><small>Nilai per siswa dan mapel</small></button>
+          <button class="quick-item" data-go="pelanggaran-pembinaan"><span class="quick-icon q-blue">♡</span><strong>Pembinaan</strong><small>Catatan terbatas wali kelas</small></button>
+          <button class="quick-item" data-go="cp-tp"><span class="quick-icon q-violet">◎</span><strong>CP &amp; TP</strong><small>Rujukan tujuan pembelajaran</small></button>
+        </div></section>
+        <section class="panel"><div class="panel-heading"><div><h3>Aturan integritas data</h3></div></div><ul class="curriculum-source-list"><li>Identitas siswa menggunakan ID stabil; perubahan nama tidak membuat siswa baru.</li><li>Data lama dipertahankan dan diselaraskan secara bertahap, bukan dihapus.</li><li>Nilai dan absensi harus terikat pada periode yang benar sebelum dipakai untuk rapor.</li><li>Catatan pembinaan bersifat terbatas dan tidak otomatis masuk rapor.</li><li>Backup sebelum impor massal, kenaikan kelas, atau pemulihan data.</li></ul></section>
       </section>
       <section class="page" id="page-pengaturan" data-title="Pengaturan">
         <div class="page-heading"><div><div class="eyebrow">PREFERENSI WORKSPACE</div><h1>Pengaturan</h1><p>Siapkan identitas dan konfigurasi awal RuangKelas.</p></div></div>
