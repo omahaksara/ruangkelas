@@ -74,3 +74,27 @@ Arsitektur kandidat: Firebase Authentication + Cloud Firestore + Cloud Functions
 
 ## Status saat ini
 Studio AI hanya menyusun prompt di browser dan membuka Gemini untuk penggunaan manual. Belum ada panggilan Gemini API, autentikasi, database cloud, sinkronisasi, billing, atau PDF server-side.
+
+
+## Tahap 1B — Ekosistem kerja guru dan E-Rapor (prioritas produk)
+Tujuan: satu alur kerja guru dari perencanaan sampai pelaporan, tanpa input ulang dan tanpa menghilangkan arsip.
+- [ ] Tetapkan identitas periode: schoolId, academicYear, semester, classId/rombel, curriculumSetId.
+- [ ] Jadikan data siswa aktif/arsip sebagai master; semua modul merujuk studentId stabil, bukan nama siswa.
+- [ ] Hubungkan CP/TP → perangkat ajar → jurnal mengajar → asesmen → bukti nilai → pengolahan nilai → E-Rapor.
+- [ ] E-Rapor menjadi modul mandiri dengan halaman, navigasi, pengaturan, pratinjau, dan cetak sendiri.
+- [ ] E-Rapor: konfigurasi mapel, komponen/bobot penilaian, nilai per tujuan/asesmen, deskripsi capaian berbasis bukti, absensi, ekstrakurikuler, prestasi, catatan wali kelas, pengesahan, dan cetak individual/kelas.
+- [ ] Impor XLSX/CSV dengan pemetaan kolom, pratinjau, validasi, deteksi duplikat, dan laporan kesalahan; jangan menimpa data sebelum guru mengonfirmasi.
+- [ ] Simpan snapshot rapor per siswa/per semester; perubahan nilai atau kenaikan kelas tidak boleh mengubah rapor semester yang sudah dikunci.
+- [ ] Sediakan status draf → diperiksa → disahkan/dikunci; koreksi setelah pengesahan harus tercatat dalam riwayat.
+- [ ] Tambahkan pusat dokumen guru: daftar pekerjaan yang perlu disiapkan, status kelengkapan, tanggal, sumber data, dan tautan ke modul terkait.
+- [ ] Buat checklist verifikasi sebelum dokumen diserahkan: identitas, periode, kelengkapan nilai, absensi, deskripsi berbukti, tanda tangan, dan format cetak.
+- [ ] Uji dengan dataset sintetis; file rapor contoh hanya dipakai sebagai acuan struktur setelah pemeriksaan format dan hak akses.
+
+## Prinsip satu ekosistem
+- Satu profil sekolah dan guru menjadi sumber identitas dokumen seluruh modul.
+- Satu master siswa dan satu kalender/periode akademik digunakan lintas absensi, jurnal, asesmen, pembinaan, dan rapor.
+- CP/TP dan mapel menjadi referensi bersama bagi perangkat ajar, bank soal, LKPD, asesmen, dan deskripsi rapor.
+- Nilai tidak disalin manual antarhalaman: E-Rapor membaca bukti nilai yang dipetakan dan menampilkan asal datanya.
+- Dokumen keluaran menyimpan metadata sumber, periode, versi, status pemeriksaan, dan waktu cetak.
+- Fitur AI hanya menyusun draf. Guru tetap memverifikasi dan menyetujui; AI tidak mengisi nilai atau mengesahkan rapor otomatis.
+- Selama masih mode localStorage, tampilkan jelas bahwa data hanya ada di perangkat/browser itu. Jangan menjanjikan sinkronisasi.
