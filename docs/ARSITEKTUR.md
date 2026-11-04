@@ -157,3 +157,21 @@ RuangKelas adalah **workspace pribadi guru pada tahap sekarang**, dengan fondasi
 - Belum ada bukti uji browser end-to-end atau verifikasi deployment pada audit ini.
 
 Urutan kerja yang aman: (1) backup/restore dan validasi skema lokal, (2) satukan layanan master profile/period/student tanpa menghapus kompatibilitas, (3) rapikan aliran data jurnal–asesmen–nilai–E-Rapor, (4) bangun Pusat Kesiapan Dokumen, (5) uji browser desktop/ponsel, baru (6) rancang backend multi-sekolah.
+
+
+## Implementasi jembatan data bersama (2026-11-04)
+
+File `assets/app.js` kini menyediakan API baca-saja `window.RuangKelasData` sebagai kontrak awal antarmodul. API ini bersifat aditif dan tidak mengganti `ruangkelas-data-v1` maupun struktur data lama.
+
+- `getSnapshot()`: profil workspace, ID periode aktif, dan daftar siswa.
+- `getStudents({ includeArchived: true })`: daftar siswa; secara default hanya siswa aktif.
+- `getStudent(idOrKey)`: mencari siswa menggunakan ID lama atau `studentKey`.
+- `getActivePeriod()`: identitas periode aktif.
+- `getCurriculum()`: dataset CP/TP yang dimuat pada halaman.
+- `subscribe(callback)`: mendengarkan event `ruangkelas:data-changed`; fungsi hasil pemanggilan dapat digunakan untuk berhenti berlangganan.
+
+Event perubahan hanya mengirim metadata ringkas (ID periode dan jumlah siswa), bukan seluruh data pribadi. API mengembalikan salinan data untuk mencegah modul lain mengubah state utama tanpa melalui alur penyimpanan aplikasi. Pemanggil harus membaca ulang data melalui API setelah menerima event.
+
+Ekspor rekap Penilaian juga sudah diselaraskan dengan periode aktif, sama seperti tampilan nilai dan E-Rapor. Nilai lintas semester/tahun ajaran tidak boleh tercampur dalam satu ekspor periode.
+
+Status: kontrak baca dan notifikasi perubahan tersedia; integrasi konsumen antarmodul tetap harus dilakukan dan diuji per modul.
