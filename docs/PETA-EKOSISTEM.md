@@ -217,3 +217,15 @@ Halaman inti menggunakan pola panduan tiga langkah agar urutan kerja terlihat ko
 | Pembinaan | Catat fakta → sepakati tindakan → pantau status | Data terbatas; tidak dikirim otomatis ke rapor |
 
 Panduan ini bersifat penjelas, bukan validasi tambahan. Tidak ada langkah baru yang menghalangi guru menggunakan modul. Kontrol yang sudah ada tetap menjadi sumber kebenaran; panduan tidak membuat status data baru.
+
+
+## 11. Ringkasan operasional jurnal
+
+Jurnal mengajar menampilkan empat angka ringkas yang dihitung dari catatan tersimpan:
+
+- **Total jurnal:** seluruh catatan jurnal yang tersedia pada perangkat.
+- **Jurnal periode aktif:** catatan yang memiliki `periodId` sama dengan periode aktif. Catatan lama tanpa penanda periode tidak dihitung ke angka ini.
+- **Bukti individual:** catatan yang memiliki relasi siswa melalui `studentKey` atau `studentId`.
+- **Catatan seluruh kelas:** total jurnal dikurangi catatan individual.
+
+Angka ini adalah ringkasan navigasi, bukan penilaian kinerja siswa. Jurnal yang tidak memiliki periode tetap tersedia pada riwayat, tetapi tidak otomatis dianggap sebagai bukti periode berjalan.
