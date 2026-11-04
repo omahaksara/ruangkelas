@@ -123,3 +123,15 @@ Semua input impor melewati staging: file → pemetaan kolom → preview → vali
 ## 8. Prinsip hak cipta dan sumber
 
 Referensi eksternal boleh dipelajari sesuai izin dan lisensi yang berlaku. Catat nama proyek, URL, pemilik, lisensi, bagian yang digunakan, perubahan, dan atribusi. Jangan memasukkan dataset siswa, dokumen, gambar, atau aset pihak lain tanpa hak penggunaan yang jelas.
+
+
+## Implementasi E-Rapor awal (2026-11)
+
+- Halaman E-Rapor berdiri sendiri pada navigasi RuangKelas.
+- Draf per siswa menyalin identitas, periode, nilai yang sudah terikat periode, dan rekap kehadiran.
+- Catatan wali kelas pada draf dapat diedit; catatan pembinaan privat tidak diambil.
+- Snapshot dapat dikunci per siswa dan periode agar tidak ikut berubah ketika nilai sumber diedit.
+- Nilai lama yang belum memiliki penanda periode tidak dimasukkan otomatis. Guru perlu memeriksa dan menyimpan ulang nilai pada periode yang benar.
+- Pengolahan nilai kini memisahkan rekaman berdasarkan periode aktif.
+- Cetak daftar rapor tersedia melalui dialog cetak browser. Format ini masih kerangka awal, bukan pengganti format rapor resmi sekolah.
+- Belum tersedia revisi snapshot terkunci, impor XLSX/CSV rapor, komponen bobot fleksibel, deskripsi capaian berbasis CP/TP, serta cetak PDF individual final.
