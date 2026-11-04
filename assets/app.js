@@ -435,7 +435,7 @@ $("#exportIncidents").addEventListener("click",exportIncidents);$("#printInciden
  $("#backupAllData").addEventListener("click",exportAllBackup);$("#restoreAllData").addEventListener("click",()=>$("#restoreAllFile").click());$("#restoreAllFile").addEventListener("change",e=>{if(e.target.files&&e.target.files[0])restoreAllBackup(e.target.files[0]);});
   $("#gradeBody").addEventListener("change",e=>{
 const input=e.target.closest("[data-grade-student]");if(!input)return;const studentId=Number(input.dataset.gradeStudent),subject=($("#subjectName").value||"Mata Pelajaran").trim();
-if(input.value===""){data.gradeRecords=data.gradeRecords.filter(r=>!(r.studentId===studentId&&r.subject===subject));save();renderGrades();showToast("Nilai dikosongkan.");return;}
+if(input.value===""){data.gradeRecords=data.gradeRecords.filter(r=>!(r.studentId===studentId&&r.subject===subject&&r.periodId===activeReportPeriod().id));save();renderGrades();renderReportCards();showToast("Nilai dikosongkan.");return;}
 const raw=Number(input.value);if(!Number.isFinite(raw)||raw<0||raw>100){showToast("Nilai mentah harus 0 sampai 100.");renderGrades();return;}
 let rec=data.gradeRecords.find(r=>r.studentId===studentId&&r.subject===subject&&r.periodId===activeReportPeriod().id);if(!rec){rec={studentId,subject,raw,periodId:activeReportPeriod().id};data.gradeRecords.push(rec);}else{rec.raw=raw;rec.periodId=activeReportPeriod().id;}save();renderGrades();renderReportCards();showToast("Nilai "+subject+" disimpan.");
 });
