@@ -173,3 +173,14 @@
 
 /* Keep the expanded navigation usable on shorter screens. */
 .sidebar .nav{overflow-y:auto;min-height:0;}
+
+
+/* Persistent third-party rights warning for Laboratorium Media */
+.lab-rights-warning{margin:0 0 20px;border:1px solid #d89b36;background:linear-gradient(120deg,rgba(255,190,70,.13),rgba(255,244,220,.42));color:var(--ink);padding:16px 18px}
+.lab-rights-warning .notice-icon{color:#a76608;font-size:20px}
+.lab-rights-warning strong{display:block;font-size:12px;letter-spacing:.025em;color:#925b0b;margin-bottom:7px}
+.lab-rights-warning p{font-size:11px;line-height:1.75;margin:0;color:var(--ink)}
+.lab-rights-status{display:inline-block;margin-top:10px;border-radius:6px;padding:5px 8px;background:rgba(173,111,19,.12);color:#88580e;font-size:9px;font-weight:800;letter-spacing:.035em}
+.workshop-resource-card .workshop-number{font-size:9px;line-height:1.5}
+.dark .lab-rights-warning{background:rgba(164,112,33,.13);border-color:#8f672d}
+.dark .lab-rights-warning strong,.dark .lab-rights-warning .notice-icon,.dark .lab-rights-status{color:#f0bd68}
