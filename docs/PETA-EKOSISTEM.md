@@ -151,3 +151,54 @@ Referensi eksternal boleh dipelajari sesuai izin dan lisensi yang berlaku. Catat
 - Pusat Data Terpadu membaca data lokal dari store aplikasi dan menjadi ringkasan/kompatibilitas; belum menjadi layanan database atau sinkronisasi cloud.
 - Semua modul yang telah ada dipertahankan. Modul katalog seperti Perangkat Ajar, Penilaian, dan Pusat Materi belum seluruhnya berupa editor dokumen lengkap.
 - Status implementasi, kontrak localStorage, dan aturan migrasi aman yang lebih rinci mengikuti [ARSITEKTUR.md](ARSITEKTUR.md).
+
+
+## 9. Skema visual aliran data dan batas integrasi
+
+Diagram berikut menjelaskan arah aliran data saat ini. Panah menunjukkan sumber yang dibaca atau hasil yang disalin, bukan berarti seluruh modul sudah memakai satu layanan backend.
+
+```mermaid
+flowchart TD
+  A["Profil sekolah & periode"] --> B["Master siswa<br/>ID stabil"]
+  A --> C["Absensi"]
+  A --> D["Jurnal mengajar"]
+  B --> C
+  B --> D
+  B --> E["Riwayat pembinaan<br/>akses terbatas"]
+  F["CP & TP"] --> G["Perencanaan & perangkat asesmen"]
+  D --> H["Bukti jurnal terkait siswa"]
+  B --> H
+  A --> H
+  H --> I["Pengolahan nilai"]
+  F -. "rujukan guru; belum otomatis" .-> I
+  I --> J["Draf E-Rapor"]
+  C --> J
+  A --> J
+  J --> K["Pemeriksaan & penguncian"]
+  K --> L["Snapshot rapor per periode"]
+  E -. "tidak disalin otomatis" .-> J
+  D -. "isi jurnal tidak disalin otomatis" .-> J
+```
+
+### Cara membaca skema
+
+| Kelompok | Fungsi | Batas saat ini |
+|---|---|---|
+| Profil & periode | Acuan sekolah, guru, kelas, semester, tahun ajaran | Tersimpan lokal pada browser |
+| Master siswa | Identitas tunggal dan relasi histori | ID lama dipertahankan; `studentKey` dipakai untuk relasi baru |
+| Absensi | Rekap kehadiran per siswa/periode | Data harus diperiksa dan sesuai periode sebelum masuk rapor |
+| Jurnal mengajar | Catatan pelaksanaan pembelajaran | Bisa umum atau ditautkan ke seorang siswa |
+| CP & TP | Rujukan kurikulum dan tujuan | Guru memilih dan memvalidasi; belum otomatis mengubah nilai |
+| Penilaian | Nilai mapel per siswa/periode dan tinjauan bukti jurnal | Nilai tetap ditetapkan guru; bukti jurnal tidak menghasilkan angka otomatis |
+| Pembinaan | Catatan privat dan tindak lanjut | Tidak otomatis menjadi isi rapor |
+| E-Rapor | Draf, pemeriksaan, dan snapshot | Menyalin ringkasan nilai/kehadiran; isi jurnal dan pembinaan tidak disalin otomatis |
+
+### Status hubungan
+
+- **Terhubung langsung:** modul yang membaca/menulis store utama yang sama pada browser ini.
+- **Terhubung sebagai referensi:** CP/TP dan perangkat asesmen menjadi rujukan guru, bukan sumber nilai otomatis.
+- **Tinjauan manual:** guru membuka bukti jurnal, memeriksa relevansi, lalu menetapkan nilai atau deskripsi.
+- **Snapshot:** rapor yang dikunci menyimpan keadaan pada saat dikunci dan tidak mengikuti perubahan data sumber.
+- **Belum tersedia:** database cloud, login multi-peran, sinkronisasi lintas perangkat, revisi snapshot terkunci, dan audit trail penuh.
+
+Skema ini harus diperbarui setiap kali kontrak data atau alur modul berubah. Tampilan visual yang dapat diklik tersedia pada halaman **Pusat Data Terpadu** di dalam aplikasi.
