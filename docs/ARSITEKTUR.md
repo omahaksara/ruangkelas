@@ -61,3 +61,46 @@ Gunakan ID acak, validasi input, minimalkan data pribadi, dan hindari menyimpan 
 - Perubahan lokal belum mempunyai versioning, sinkronisasi lintas perangkat, akun, atau database cloud.
 - Sebelum data ini menjadi basis produksi, perlu validasi guru terhadap ATP/KOSP, penambahan metadata sumber/versi, dan pengujian pemetaan setiap tujuan ke elemen CP yang relevan.
 - Arsitektur cloud nantinya perlu memisahkan data kurikulum acuan bersama dari ATP/penyesuaian milik sekolah, dengan status verifikasi dan riwayat perubahan.
+
+
+## Ekosistem data terpadu — target desain
+Semua modul menggunakan identitas dan referensi yang konsisten. Ini target skema; belum berarti database cloud telah aktif.
+
+### Master dan referensi
+- school_profiles: schoolId, identitas sekolah, alamat, logo, kepala sekolah, konfigurasi dokumen.
+- academic_periods: periodId, schoolId, academicYear, semester, startDate, endDate, status.
+- classes: classId, schoolId, gradeLevel, phase, className, academicPeriodId, homeroomTeacherId.
+- students: studentId stabil, schoolId, identitas minimum, status aktif/arsip, enrollment history.
+- subjects: subjectId, schoolId/scope, subjectName, phase, gradeLevel.
+- curriculum_sets / learning_objectives: versi CP/TP dan metadata sumber/verifikasi.
+
+### Alur pembelajaran dan bukti
+- lesson_plans: planId, periodId, classId, subjectId, curriculumReferences, objectives, activities, assessmentPlan, status.
+- teaching_journals: journalId, lessonPlanId, date, implementationNotes, reflection.
+- assessments: assessmentId, planId, subjectId, objectiveIds, type, rubricVersion, assessmentDate.
+- assessment_results: resultId, assessmentId, studentId, score, evidenceReference, reviewedBy, reviewedAt.
+- attendance: attendanceId, studentId, classId, periodId, date, status, source.
+- student_support_notes: noteId, studentId, date, factualObservation, teacherAction, followUp, visibility, status.
+
+### E-Rapor mandiri tetapi terhubung
+- report_cards: reportId, studentId, classId, periodId, templateVersion, status (draft/reviewed/locked), generatedAt, lockedAt.
+- report_subjects: reportSubjectId, reportId, subjectId, scoreSummary, achievementDescription, evidenceRefs.
+- report_attendance: reportId, presentCount, sickCount, permissionCount, absentCount, sourceRefs.
+- report_extracurricular: reportId, activity, achievement, description, verifiedBy.
+- report_notes: reportId, homeroomNote, verifiedBy.
+- report_signatures: reportId, signerRole, signerName, signedAt, signatureMethod.
+- report_snapshots: immutable snapshot payload and checksum/version for each finalized report.
+
+### Aturan integritas
+1. Gunakan ID stabil; nama siswa bukan kunci relasi.
+2. Semua catatan dan nilai terikat pada periode akademik dan kelas saat kejadian.
+3. Kenaikan kelas mengubah enrollment aktif, bukan memindahkan atau menulis ulang arsip periode lama.
+4. Rapor yang dikunci menjadi snapshot; koreksi dibuat sebagai revisi dengan jejak audit.
+5. Deskripsi capaian harus memiliki referensi bukti/asesmen dan dapat diedit guru; tanpa bukti, sistem meminta tinjauan, bukan mengarang.
+6. Impor data selalu melalui staging, preview, validasi, dan konfirmasi; sediakan ekspor serta rollback.
+7. Batasi akses catatan pembinaan; jangan otomatis menampilkan catatan privat ke rapor.
+8. Untuk data cloud: tenant isolation, default-deny, role-based access, audit log, backup, retensi, dan uji akses silang wajib.
+9. Saat mode lokal, tandai data sebagai lokal dan sediakan backup yang dapat dipulihkan; jangan mengklaim sinkronisasi.
+
+### Pusat kesiapan dokumen guru
+Dashboard kelengkapan menggabungkan status perangkat ajar, jurnal, asesmen, absensi, nilai, rapor, dan dokumen supervisi. Setiap item menunjuk ke sumber data aslinya dan menampilkan periode serta status verifikasi. Checklist membantu guru memeriksa permintaan administrasi sewaktu-waktu tanpa menganggap semua dokumen sudah lengkap.
