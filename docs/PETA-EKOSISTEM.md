@@ -134,7 +134,7 @@ Referensi eksternal boleh dipelajari sesuai izin dan lisensi yang berlaku. Catat
 - Nilai lama yang belum memiliki penanda periode tidak dimasukkan otomatis. Guru perlu memeriksa dan menyimpan ulang nilai pada periode yang benar.
 - Pengolahan nilai kini memisahkan rekaman berdasarkan periode aktif.
 - Cetak daftar rapor tersedia melalui dialog cetak browser. Format ini masih kerangka awal, bukan pengganti format rapor resmi sekolah.
-- Belum tersedia revisi snapshot terkunci, impor XLSX/CSV rapor, komponen bobot fleksibel, deskripsi capaian berbasis CP/TP, serta cetak PDF individual final.
+- Belum tersedia revisi snapshot terkunci, impor XLSX langsung, komponen bobot fleksibel, deskripsi capaian berbasis CP/TP, serta cetak PDF individual final.
 
 
 ### Impor nilai E-Rapor (tahap awal)
@@ -144,3 +144,10 @@ Referensi eksternal boleh dipelajari sesuai izin dan lisensi yang berlaku. Catat
 - Rekaman nilai yang sudah ada pada siswa, mapel, dan periode yang sama tidak ditimpa. Baris duplikat/invalid dilewati.
 - XLSX langsung, pemetaan nilai berbobot, dan uji browser masih menjadi pekerjaan berikutnya. Untuk file Excel, simpan/ekspor dahulu sebagai CSV UTF-8.
 - Data tetap tersimpan lokal di browser; lakukan cadangan data sebelum impor besar.
+
+
+## Pembaruan status audit (2026-11-04)
+- E-Rapor tahap awal telah memiliki impor CSV dengan pemetaan kolom, pratinjau, validasi dasar, pencocokan nama/kode siswa, dan perlindungan dari overwrite. Impor XLSX langsung belum tersedia.
+- Pusat Data Terpadu membaca data lokal dari store aplikasi dan menjadi ringkasan/kompatibilitas; belum menjadi layanan database atau sinkronisasi cloud.
+- Semua modul yang telah ada dipertahankan. Modul katalog seperti Perangkat Ajar, Penilaian, dan Pusat Materi belum seluruhnya berupa editor dokumen lengkap.
+- Status implementasi, kontrak localStorage, dan aturan migrasi aman yang lebih rinci mengikuti [ARSITEKTUR.md](ARSITEKTUR.md).
