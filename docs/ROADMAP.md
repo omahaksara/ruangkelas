@@ -112,3 +112,10 @@ Tujuan: satu alur kerja guru dari perencanaan sampai pelaporan, tanpa input ulan
 - [ ] Deskripsi capaian berbasis CP/TP dan bukti belajar.
 - [ ] Cetak rapor individual dan satu kelas sesuai format sekolah.
 - [ ] Uji browser, backup/restore, dan penguncian arsip.
+
+
+### E-Rapor — impor nilai CSV
+- [x] Pemetaan kolom CSV dan pratinjau sebelum simpan.
+- [x] Pencocokan siswa dengan nama atau kode/NISN; validasi rentang 0–100.
+- [x] Lewati duplikat dan lindungi nilai yang sudah ada (tanpa overwrite).
+- [ ] Dukungan XLSX langsung, komponen/bobot asesmen, revisi snapshot, format rapor individual, dan uji browser.
