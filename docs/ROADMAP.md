@@ -98,3 +98,17 @@ Tujuan: satu alur kerja guru dari perencanaan sampai pelaporan, tanpa input ulan
 - Dokumen keluaran menyimpan metadata sumber, periode, versi, status pemeriksaan, dan waktu cetak.
 - Fitur AI hanya menyusun draf. Guru tetap memverifikasi dan menyetujui; AI tidak mengisi nilai atau mengesahkan rapor otomatis.
 - Selama masih mode localStorage, tampilkan jelas bahwa data hanya ada di perangkat/browser itu. Jangan menjanjikan sinkronisasi.
+
+
+## Tahap E-Rapor awal — sudah dimulai
+- [x] Halaman E-Rapor mandiri dan navigasi.
+- [x] Draf per siswa memakai master siswa dan periode bersama.
+- [x] Nilai baru dipisahkan menurut periode akademik.
+- [x] Snapshot rapor dapat dikunci agar tidak berubah otomatis.
+- [x] Catatan wali kelas terpisah dari catatan pembinaan privat.
+- [ ] Revisi snapshot dengan audit trail.
+- [ ] Impor nilai XLSX/CSV dengan pemetaan kolom, pratinjau, validasi, dan deteksi duplikat.
+- [ ] Komponen penilaian dan bobot yang dapat dikonfigurasi.
+- [ ] Deskripsi capaian berbasis CP/TP dan bukti belajar.
+- [ ] Cetak rapor individual dan satu kelas sesuai format sekolah.
+- [ ] Uji browser, backup/restore, dan penguncian arsip.
