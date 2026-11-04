@@ -261,3 +261,12 @@ button.flow-node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,
 .table-wrap:focus-within{outline:2px solid color-mix(in srgb,var(--primary) 35%,transparent);outline-offset:2px}
 .table-wrap table{min-width:680px}
 @media(max-width:760px){.journal-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Dashboard ringkas penilaian per mapel dan periode aktif */
+.grade-stats{grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 14px}
+.grade-stats .attendance-stat{position:relative;overflow:hidden}
+.grade-stats .attendance-stat:after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:#438bd0;opacity:.75}
+.grade-stats .attendance-stat:nth-child(2):after{background:#299c82}
+.grade-stats .attendance-stat:nth-child(3):after{background:#c58b36}
+.grade-stats .attendance-stat:nth-child(4):after{background:#8270d8}
+@media(max-width:760px){.grade-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
