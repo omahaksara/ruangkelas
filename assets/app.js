@@ -396,8 +396,8 @@ function renderAiCurriculumOptions(){
     curriculumChapterOptions();
     const q=$("#curriculumSearch").value.trim().toLowerCase(),chosen=select.value;
     const matches=subjects.filter(s=>!chosen||s.mapel===chosen).map(s=>{
-      const chapters=s.babList.map(b=>{const custom=curriculumLocal.customGoals.filter(g=>g.subject===s.mapel&&g.chapter===b.bab);return Object.assign({},b,{allGoals:b.atp.map((text,index)=>({text,index,custom:false,key:curriculumKey(s.mapel,b.bab,index)})).concat(custom.map(g=>({text:g.text,index:null,custom:true,id:g.id,key:"custom::"+g.id})))});}).filter(b=>!q||(s.mapel+" "+s.cpAcuan+" "+(s.elemenCP||[]).map(e=>e.nama+" "+e.ringkasan).join(" ")+" "+b.bab+" "+b.judul+" "+b.tentang+" "+(b.kebahasaan||[]).join(" ")+" "+b.allGoals.map(g=>g.text).join(" ")+" "+b.materiPokok.join(" ")).toLowerCase().includes(q));
-      const showCP=!q||(s.mapel+" "+s.cpAcuan+" "+(s.elemenCP||[]).map(e=>e.nama+" "+e.ringkasan).join(" ")).toLowerCase().includes(q);
+      const chapters=s.babList.map(b=>{const custom=curriculumLocal.customGoals.filter(g=>g.subject===s.mapel&&g.chapter===b.bab);return Object.assign({},b,{allGoals:b.atp.map((text,index)=>({text,index,custom:false,key:curriculumKey(s.mapel,b.bab,index)})).concat(custom.map(g=>({text:g.text,index:null,custom:true,id:g.id,key:"custom::"+g.id})))});}).filter(b=>!q||(s.mapel+" "+s.cpAcuan+" "+(s.uraianCP||[]).map(e=>e.nama+" "+e.deskripsi).join(" ")+" "+(s.elemenCP||[]).map(e=>e.nama+" "+e.ringkasan).join(" ")+" "+b.bab+" "+b.judul+" "+b.tentang+" "+(b.kebahasaan||[]).join(" ")+" "+b.allGoals.map(g=>g.text).join(" ")+" "+b.materiPokok.join(" ")).toLowerCase().includes(q));
+      const showCP=!q||(s.mapel+" "+s.cpAcuan+" "+(s.uraianCP||[]).map(e=>e.nama+" "+e.deskripsi).join(" ")+" "+(s.elemenCP||[]).map(e=>e.nama+" "+e.ringkasan).join(" ")).toLowerCase().includes(q);
       return Object.assign({},s,{chapters,showCP});
     }).filter(s=>s.showCP||s.chapters.length);
     const totalChapters=matches.reduce((n,s)=>n+s.chapters.length,0),totalGoals=matches.reduce((n,s)=>n+s.chapters.reduce((m,b)=>m+b.allGoals.length,0),0);
