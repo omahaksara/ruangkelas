@@ -238,3 +238,14 @@ button.flow-node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,
  .flow-node strong{font-size:12px}
  .flow-node small{font-size:10px}
 }
+
+/* Panduan kerja ringkas pada setiap modul inti */
+.module-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.module-guide-step{display:flex;align-items:flex-start;gap:10px;min-width:0;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.module-guide-step>b{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border-radius:8px;background:var(--bg);color:var(--primary);font-size:11px;font-weight:800}
+.module-guide-step>span{display:grid;gap:4px;min-width:0}
+.module-guide-step strong{font-size:11px;line-height:1.35;color:var(--ink)}
+.module-guide-step small{font-size:10px;line-height:1.5;color:var(--muted)}
+.compact-guide{margin-bottom:13px}
+.dark .module-guide-step{background:var(--panel);border-color:var(--line)}
+@media(max-width:760px){.module-guide{grid-template-columns:1fr;gap:8px}.module-guide-step{padding:11px}.module-guide-step small{font-size:10px}}
