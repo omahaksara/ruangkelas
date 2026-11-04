@@ -104,3 +104,56 @@ Semua modul menggunakan identitas dan referensi yang konsisten. Ini target skema
 
 ### Pusat kesiapan dokumen guru
 Dashboard kelengkapan menggabungkan status perangkat ajar, jurnal, asesmen, absensi, nilai, rapor, dan dokumen supervisi. Setiap item menunjuk ke sumber data aslinya dan menampilkan periode serta status verifikasi. Checklist membantu guru memeriksa permintaan administrasi sewaktu-waktu tanpa menganggap semua dokumen sudah lengkap.
+
+---
+
+## Audit arsitektur dan kontrak integrasi (2026-11-04)
+
+### Keputusan produk
+RuangKelas adalah **workspace pribadi guru pada tahap sekarang**, dengan fondasi yang disiapkan untuk menjadi **platform multi-sekolah**. Semua modul tetap dipertahankan. Pengembangan dilakukan bertahap tanpa memaksa aktivasi login/cloud sebelum model data, backup, dan kontrol akses siap.
+
+### Peta implementasi nyata
+| Area | Kondisi kode saat audit | Sumber/penyimpanan |
+|---|---|---|
+| Dashboard dan navigasi | Ada | `index.html`, `assets/app.js` |
+| Perangkat Ajar, Penilaian, Pusat Materi | Katalog kerja lokal; sebagian berupa item/template, bukan editor dokumen penuh | store aplikasi |
+| Data Kelas, Absensi & Siswa | CRUD siswa, arsip/kenaikan kelas, absensi dan rekap dasar | `ruangkelas-data-v1` |
+| Jurnal Mengajar | Pencatatan jurnal lokal | `ruangkelas-data-v1` |
+| Catatan Siswa & Pembinaan | Catatan faktual, tindak lanjut, status, riwayat; tidak otomatis menjadi rapor | `ruangkelas-data-v1` |
+| CP & TP | Dataset awal kelas VI/Fase C; TP tambahan dan pemetaan tersimpan lokal | `assets/kurikulum-kelas6.js`, `ruangkelas-curriculum-local-v1` |
+| Studio AI Guru | Pembuat prompt lokal; layanan AI dibuka terpisah oleh guru | browser; belum ada API |
+| Pengolahan Nilai | Rekaman nilai dasar terikat periode; ekspor CSV | `ruangkelas-data-v1` |
+| E-Rapor | Draf per siswa, catatan wali kelas, snapshot terkunci, impor CSV dengan preview dan proteksi duplikat; belum rapor final lengkap | `ruangkelas-data-v1` |
+| Pengembangan Profesi | Portofolio dan referensi | konten statis |
+| Laboratorium Media | Dua aktivitas interaktif; skor terpisah | `ruangkelas-lab-score-v1` |
+| Pusat Data Terpadu | Ringkasan workspace lokal dan jembatan kompatibilitas; bukan database terpisah/cloud | `ruangkelas-data-v1` |
+| Pusat Kesiapan Dokumen Guru | Target desain; belum menjadi modul operasional mandiri | belum ada |
+
+### Kontrak data lokal yang wajib dipertahankan
+- `ruangkelas-data-v1` adalah store utama aplikasi saat ini. Perubahan skema harus bersifat additive dan memiliki default untuk data lama.
+- Properti lama seperti `students[].id`, `students[].studentKey`, `classInfo`, `settings`, `gradeRecords`, `reportCards`, `incidents`, dan `journals` tidak boleh diganti nama atau dibuang tanpa migrasi eksplisit.
+- `studentKey` adalah identitas stabil tambahan; jangan mengganti relasi lama berbasis `studentId` dalam satu langkah.
+- `workspace` adalah lapisan master lokal yang diselaraskan oleh `syncWorkspaceMaster()`; saat ini `schoolId`, `teacherId`, dan `academicPeriodId` masih identitas lokal sederhana, bukan identitas akun/tenant cloud.
+- CP/TP dan skor Laboratorium Media mempunyai key localStorage terpisah. Jangan menganggap backup store utama otomatis mencakup keduanya.
+- Data lama pada nilai yang belum memiliki `periodId` dipertahankan, tetapi tidak otomatis dimasukkan ke E-Rapor periode aktif.
+- Snapshot rapor terkunci tidak boleh ikut berubah saat nilai sumber berubah. Catatan pembinaan privat tidak boleh disalin ke rapor.
+
+### Aturan perubahan yang aman
+1. Audit pemakaian key dan bentuk data sebelum mengubah fungsi penyimpanan.
+2. Jangan menghapus, menimpa, atau menggabungkan data lokal saat aplikasi dibuka.
+3. Migrasi harus idempotent: aman dijalankan lebih dari sekali, membuat backup sebelum transformasi, dan mempertahankan properti yang tidak dikenal.
+4. Impor harus melalui file → pemetaan → preview → validasi → konfirmasi; default-nya tidak menimpa rekaman yang sudah ada.
+5. Gunakan ID stabil untuk relasi baru; nama siswa hanya untuk tampilan/pencarian, bukan primary key.
+6. Pisahkan data privat pembinaan, data pembelajaran, bukti penilaian, dan keluaran rapor.
+7. Setiap modul boleh memiliki UI dan fungsi sendiri, tetapi membaca referensi master yang sama melalui fungsi layanan bersama.
+8. Jangan mengaktifkan cloud/login sampai skema tenant, aturan akses, backup, pemulihan, dan migrasi lokal diuji.
+
+### Temuan audit dan pekerjaan berikutnya
+- README sebelumnya belum mencerminkan E-Rapor tahap awal dan beberapa modul yang telah ditambahkan.
+- Roadmap memiliki status impor CSV yang saling bertentangan; CSV sudah tersedia, sedangkan XLSX langsung belum.
+- Pusat Data Terpadu adalah lapisan ringkasan/kompatibilitas lokal, bukan bukti sinkronisasi lintas perangkat.
+- Katalog Perangkat Ajar, Penilaian, dan Pusat Materi belum boleh dipasarkan sebagai editor dokumen lengkap.
+- E-Rapor belum memiliki bobot asesmen fleksibel, narasi capaian berbasis bukti CP/TP, revisi snapshot/audit trail, ekstrakurikuler/prestasi, dan cetak individual final.
+- Belum ada bukti uji browser end-to-end atau verifikasi deployment pada audit ini.
+
+Urutan kerja yang aman: (1) backup/restore dan validasi skema lokal, (2) satukan layanan master profile/period/student tanpa menghapus kompatibilitas, (3) rapikan aliran data jurnal–asesmen–nilai–E-Rapor, (4) bangun Pusat Kesiapan Dokumen, (5) uji browser desktop/ponsel, baru (6) rancang backend multi-sekolah.
