@@ -127,3 +127,30 @@
 
 .print-school-header{display:none;text-align:center;margin:0 0 18px;color:#111;font-family:Arial,sans-serif}.print-school-name{font-weight:800;font-size:17px;text-transform:uppercase;letter-spacing:.3px;border-bottom:2px solid #111;padding:0 0 8px;margin-bottom:7px}.print-school-meta{font-size:11px;margin-bottom:24px}.print-school-signatures{display:flex;justify-content:space-between;text-align:center;font-size:10px;line-height:1.7;margin:22px 4% 12px}.print-school-signatures span{min-width:180px}
 @media print{.print-school-header{display:block!important}.print-school-signatures{break-inside:avoid}body:has(#page-absensi-siswa.active) .print-school-header,body:has(#page-pelanggaran-pembinaan.active) .print-school-header,body:has(#page-jurnal-mengajar.active) .print-school-header{display:block!important}}
+
+
+/* Pengembangan profesi — portofolio workshop pemateri */
+.workshop-feature{padding:clamp(20px,3vw,30px);background:linear-gradient(135deg,var(--panel),var(--bg));border:1px solid var(--line);margin-bottom:22px}
+.workshop-feature-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.workshop-kicker,.workshop-number{font-size:10px;letter-spacing:1px;font-weight:800;color:var(--blue)}
+.workshop-status{font-size:10px;color:var(--muted);padding:6px 9px;border:1px solid var(--line);border-radius:20px}
+.workshop-feature h2{font-size:clamp(21px,3vw,29px);line-height:1.25;margin:17px 0 9px;color:var(--ink)}
+.workshop-lead{max-width:780px;color:var(--muted);font-size:13px;line-height:1.8;margin:0}
+.workshop-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}
+.workshop-meta>div{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);display:grid;gap:5px}
+.workshop-meta small{font-size:10px;color:var(--muted)}
+.workshop-meta strong{font-size:12px;color:var(--ink)}
+.workshop-actions{display:flex;gap:9px;flex-wrap:wrap}
+.workshop-actions a,.workshop-resource-card a{text-decoration:none}
+.workshop-section-heading{margin-top:25px}
+.workshop-resource-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.workshop-resource-card{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:19px;border:1px solid var(--line);border-radius:13px;background:var(--panel);box-shadow:var(--shadow)}
+.workshop-resource-card h3{font-size:14px;line-height:1.5;margin:11px 0 7px;color:var(--ink)}
+.workshop-resource-card p{font-size:11px;line-height:1.7;color:var(--muted);margin:0 0 15px}
+.workshop-resource-card a{margin-top:auto;color:var(--blue);font-size:11px;font-weight:800}
+.workshop-resource-card a:hover{text-decoration:underline}
+.workshop-resource-wide{grid-column:1/-1}
+.workshop-note{margin-top:18px}
+.dark .workshop-feature{background:linear-gradient(135deg,#17233b,#111b30)}
+@media(max-width:650px){.workshop-meta{grid-template-columns:1fr}.workshop-resource-grid{grid-template-columns:1fr}.workshop-resource-wide{grid-column:auto}.workshop-actions a{width:100%;justify-content:center}}
+@media print{body:has(#page-pengembangan-profesi.active) .sidebar,body:has(#page-pengembangan-profesi.active) .topbar,body:has(#page-pengembangan-profesi.active) .footer{display:none!important}body:has(#page-pengembangan-profesi.active) .main{margin:0;padding:0;max-width:none}body:has(#page-pengembangan-profesi.active) .page{display:none!important}body:has(#page-pengembangan-profesi.active) #page-pengembangan-profesi{display:block!important}body:has(#page-pengembangan-profesi.active) .workshop-resource-card{break-inside:avoid;box-shadow:none}}
