@@ -186,7 +186,47 @@
 .dark .lab-rights-warning strong,.dark .lab-rights-warning .notice-icon,.dark .lab-rights-status{color:#f0bd68}
 
 .report-period-panel{margin-bottom:18px}.report-stats{margin:16px 0}.report-note-input{min-width:180px;width:100%;max-width:260px;border:1px solid var(--line);border-radius:9px;padding:8px;color:var(--ink);background:#fff;resize:vertical;font:inherit;font-size:12px}.report-note-input:disabled{background:#f2f4f8;color:#68738a}.report-period-panel .class-info-grid>div{padding:12px;background:#f8f9fc;border-radius:10px}.report-period-panel .class-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}@media(max-width:700px){.report-period-panel .class-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-note-input{min-width:140px}}
-@media print{body:has(#page-e-rapor.active) .sidebar,body:has(#page-e-rapor.active) .topbar,body:has(#page-e-rapor.active) .page-heading button,body:has(#page-e-rapor.active) .warning-strip,body:has(#page-e-rapor.active) .report-period-panel,body:has(#page-e-rapor.active) .report-stats,body:has(#page-e-rapor.active) .panel:not(.table-panel){display:none!important}body:has(#page-e-rapor.active) .main{margin:0;padding:0}body:has(#page-e-rapor.active) .page{display:none!important}body:has(#page-e-rapor.active) #page-e-rapor{display:block!important}body:has(#page-e-rapor.active) .report-note-input{border:0;min-width:0}body:has(#page-e-rapor.active) .table-panel{box-shadow:none;border:0}}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  body:has(#page-e-rapor.active){background:#fff!important;color:#172033!important}
+  body:has(#page-e-rapor.active) .sidebar,
+  body:has(#page-e-rapor.active) .topbar,
+  body:has(#page-e-rapor.active) .page-heading button,
+  body:has(#page-e-rapor.active) .warning-strip,
+  body:has(#page-e-rapor.active) .module-guide,
+  body:has(#page-e-rapor.active) .report-import-panel,
+  body:has(#page-e-rapor.active) .panel:not(.table-panel):not(.report-period-panel),
+  body:has(#page-e-rapor.active) .report-status,
+  body:has(#page-e-rapor.active) .table-action{display:none!important}
+  body:has(#page-e-rapor.active) .main{margin:0!important;padding:0!important;max-width:none!important}
+  body:has(#page-e-rapor.active) .page{display:none!important;padding:0!important}
+  body:has(#page-e-rapor.active) #page-e-rapor{display:block!important}
+  body:has(#page-e-rapor.active) #page-e-rapor .page-heading{display:block!important;margin:0 0 10px!important;padding:0!important}
+  body:has(#page-e-rapor.active) #page-e-rapor .page-heading h1{font-size:20px!important;color:#172033!important}
+  body:has(#page-e-rapor.active) #page-e-rapor .page-heading p{font-size:9px!important;color:#596579!important}
+  body:has(#page-e-rapor.active) .report-period-panel{display:block!important;margin:0 0 10px!important;padding:10px!important;box-shadow:none!important;border:1px solid #cbd2dc!important;break-inside:avoid}
+  body:has(#page-e-rapor.active) .report-period-panel .panel-heading{margin-bottom:6px!important}
+  body:has(#page-e-rapor.active) .report-period-panel .class-info-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
+  body:has(#page-e-rapor.active) .report-period-panel .class-info-grid>div{padding:5px!important;background:#f7f8fa!important}
+  body:has(#page-e-rapor.active) .report-period-panel strong{font-size:9px!important;color:#172033!important}
+  body:has(#page-e-rapor.active) .report-period-panel .muted-note{font-size:8px!important}
+  body:has(#page-e-rapor.active) .report-stats{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important;margin:0 0 9px!important}
+  body:has(#page-e-rapor.active) .report-stats .attendance-stat{padding:6px!important;border:1px solid #d7dce4!important;box-shadow:none!important;break-inside:avoid}
+  body:has(#page-e-rapor.active) .report-stats .attendance-stat span{font-size:8px!important}
+  body:has(#page-e-rapor.active) .report-stats .attendance-stat strong{font-size:13px!important;color:#172033!important}
+  body:has(#page-e-rapor.active) .table-panel{display:block!important;margin:0!important;padding:0!important;box-shadow:none!important;border:0!important}
+  body:has(#page-e-rapor.active) .table-panel .panel-heading{padding:0 0 7px!important}
+  body:has(#page-e-rapor.active) .table-panel .panel-heading h3{font-size:12px!important;color:#172033!important}
+  body:has(#page-e-rapor.active) .table-panel .panel-heading p{font-size:8px!important;color:#596579!important}
+  body:has(#page-e-rapor.active) .table-wrap{overflow:visible!important}
+  body:has(#page-e-rapor.active) table{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important}
+  body:has(#page-e-rapor.active) th,
+  body:has(#page-e-rapor.active) td{padding:5px 4px!important;border:1px solid #cbd2dc!important;color:#172033!important;font-size:8px!important;vertical-align:top!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  body:has(#page-e-rapor.active) th{background:#f0f2f5!important;font-weight:700!important}
+  body:has(#page-e-rapor.active) .report-note-input{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:30px!important;padding:2px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#172033!important;font-size:8px!important;resize:none!important;overflow:visible!important}
+  body:has(#page-e-rapor.active) .status-pill{padding:2px 4px!important;background:#eef2f6!important;color:#172033!important;border:1px solid #cbd2dc!important;font-size:7px!important}
+  body:has(#page-e-rapor.active) #reportStatus{font-size:8px!important;color:#596579!important}
+}
 
 /* E-Rapor CSV import and mapping */
 .report-import-panel{margin:0 0 18px}.report-csv-mapping{margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:11px;background:var(--bg)}.report-csv-mapping .field{display:grid;gap:7px}.report-csv-mapping label{font-size:11px;font-weight:700;color:var(--muted)}.report-csv-mapping select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--panel);color:var(--ink);font:inherit;font-size:12px}.report-csv-preview{margin-top:15px}.report-csv-preview .attendance-stats{margin:12px 0}.report-csv-preview .table-wrap{margin:12px 0}.report-csv-preview table{min-width:650px}
