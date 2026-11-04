@@ -68,7 +68,17 @@
     data.classInfo=Object.assign({},c,profile);
     data.settings=Object.assign({},p,profile);
   }
-  function save(){ try{syncWorkspaceMaster();localStorage.setItem("ruangkelas-data-v1",JSON.stringify(data));}catch(e){} }
+  function save(){ try{syncWorkspaceMaster();localStorage.setItem("ruangkelas-data-v1",JSON.stringify(data));if(window.dispatchEvent&&typeof CustomEvent!=="undefined")window.dispatchEvent(new CustomEvent("ruangkelas:data-changed",{detail:{periodId:data.workspace.academicPeriodId,studentCount:data.students.length}}));return true;}catch(e){return false;} }
+  // Read-only bridge for modules that need the same master data.
+  // Existing localStorage keys and legacy object shapes remain unchanged.
+  window.RuangKelasData=Object.freeze({
+    getSnapshot:function(){syncWorkspaceMaster();return clone({profile:data.workspace.profile,academicPeriodId:data.workspace.academicPeriodId,students:data.students});},
+    getStudents:function(options){const includeArchived=!!(options&&options.includeArchived);return clone(data.students.filter(s=>includeArchived||!s.archived));},
+    getStudent:function(idOrKey){const s=data.students.find(x=>String(x.id)===String(idOrKey)||String(x.studentKey||"")===String(idOrKey));return s?clone(s):null;},
+    getActivePeriod:function(){return clone(activeReportPeriod());},
+    getCurriculum:function(){return clone(Array.isArray(window.dataKurikulumKelas6)?window.dataKurikulumKelas6:[]);},
+    subscribe:function(callback){if(typeof callback!=="function")return function(){};const handler=function(event){callback(event.detail||{});};window.addEventListener("ruangkelas:data-changed",handler);return function(){window.removeEventListener("ruangkelas:data-changed",handler);};}
+  });
   function activeReportPeriod(){const p=data.workspace&&data.workspace.profile?data.workspace.profile:{};return {id:data.workspace.academicPeriodId||"period-unknown",school:p.schoolName||"",className:p.className||"VI",academicYear:p.academicYear||"2026/2027",semester:String(p.semester||"1"),teacher:p.teacherName||"",principal:p.principalName||""};}
   function reportAttendance(s){const p=activeReportPeriod(),y=Number(String(p.academicYear).split("/")[0])||new Date().getFullYear(),from=p.semester==="2"?new Date(y+1,0,1):new Date(y,6,1),to=p.semester==="2"?new Date(y+1,6,1):new Date(y+1,0,1),c={Hadir:0,Izin:0,Sakit:0,Alpa:0};Object.entries(s.attendance||{}).forEach(([d,r])=>{const x=new Date(d+"T00:00:00");if(x>=from&&x<to&&Object.prototype.hasOwnProperty.call(c,r.status))c[r.status]++;});return c;}
   function reportScores(s,p){return data.gradeRecords.filter(r=>String(r.studentId)===String(s.id)&&r.periodId===p.id&&r.raw!==""&&r.raw!=null).map(r=>({subject:r.subject,raw:Number(r.raw)}));}
