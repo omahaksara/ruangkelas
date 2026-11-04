@@ -175,3 +175,13 @@ Event perubahan hanya mengirim metadata ringkas (ID periode dan jumlah siswa), b
 Ekspor rekap Penilaian juga sudah diselaraskan dengan periode aktif, sama seperti tampilan nilai dan E-Rapor. Nilai lintas semester/tahun ajaran tidak boleh tercampur dalam satu ekspor periode.
 
 Status: kontrak baca dan notifikasi perubahan tersedia; integrasi konsumen antarmodul tetap harus dilakukan dan diuji per modul.
+
+## Relasi siswa dan jurnal pembelajaran (2026-11-04)
+
+Data siswa baru dari formulir, input massal, dan impor CSV kini langsung memperoleh `studentKey` stabil dengan pola kompatibel `stu-<id>`. Data lama tetap dipertahankan; proses pemuatan aplikasi sebelumnya juga mengisi `studentKey` yang belum tersedia.
+
+Catatan Pembinaan menyimpan `studentKey` bersama `studentId` lama. Tautan riwayat siswa dapat dicari melalui kunci stabil maupun ID lama, sehingga catatan lama tetap terbaca dan perubahan nama tidak memutus relasi.
+
+Jurnal Mengajar baru menyimpan metadata konteks saat dibuat atau diedit: `periodId`, tahun ajaran, semester, sekolah, kelas, guru, `schoolId`, dan `teacherId`. Jurnal lama tidak dipaksa diberi periode secara massal karena tanggal/periode historisnya belum diverifikasi. Jurnal tetap dapat dibuka dan diedit; saat disimpan ulang, metadata periode aktif akan dicatat.
+
+Batas integrasi saat ini: jurnal masih merupakan catatan pembelajaran tingkat kelas, belum menjadi bukti capaian individual siswa. Pengaitan jurnal ke bukti belajar per siswa memerlukan alur pemilihan siswa dan validasi guru sebelum dapat memberi kontribusi ke Penilaian atau E-Rapor.
