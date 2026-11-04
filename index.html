@@ -264,6 +264,39 @@
           <button class="quick-item" data-go="pelanggaran-pembinaan"><span class="quick-icon q-blue">♡</span><strong>Pembinaan</strong><small>Catatan terbatas wali kelas</small></button>
           <button class="quick-item" data-go="cp-tp"><span class="quick-icon q-violet">◎</span><strong>CP &amp; TP</strong><small>Rujukan tujuan pembelajaran</small></button>
         </div></section>
+
+        <section class="panel data-flow-panel">
+          <div class="panel-heading"><div><h3>Skema alur kerja RuangKelas</h3><p>Ikuti perjalanan data dari identitas kelas sampai dokumen hasil belajar. Pilih salah satu tahap untuk membuka modulnya.</p></div><span class="soft-label">Peta operasional</span></div>
+          <div class="flow-legend" aria-label="Keterangan jenis modul">
+            <span><i class="flow-dot master"></i>Data induk</span><span><i class="flow-dot activity"></i>Aktivitas belajar</span><span><i class="flow-dot reference"></i>Rujukan kurikulum</span><span><i class="flow-dot output"></i>Hasil &amp; arsip</span><span><i class="flow-dot private"></i>Data terbatas</span>
+          </div>
+          <div class="data-flow">
+            <div class="flow-stage">
+              <div class="flow-stage-label">01 · LANDASAN</div>
+              <button class="flow-node master-node" data-go="pengaturan"><span class="flow-node-icon">⌂</span><span><strong>Profil sekolah &amp; periode</strong><small>Sekolah · guru · kelas · semester</small></span><b>DATA INDUK</b></button>
+              <button class="flow-node master-node" data-go="absensi-siswa"><span class="flow-node-icon">♧</span><span><strong>Master siswa</strong><small>ID siswa tetap · status aktif · riwayat</small></span><b>DATA INDUK</b></button>
+            </div>
+            <div class="flow-connector"><span>Identitas dan periode menjadi acuan bersama</span><i>↓</i></div>
+            <div class="flow-stage flow-stage-two">
+              <div class="flow-stage-label">02 · PROSES PEMBELAJARAN</div>
+              <button class="flow-node activity-node" data-go="jurnal-mengajar"><span class="flow-node-icon">✎</span><span><strong>Jurnal mengajar</strong><small>Materi · tujuan · hasil · refleksi</small></span><b>AKTIVITAS</b></button>
+              <button class="flow-node reference-node" data-go="cp-tp"><span class="flow-node-icon">◎</span><span><strong>CP &amp; TP</strong><small>Rujukan capaian dan tujuan belajar</small></span><b>RUJUKAN</b></button>
+              <button class="flow-node activity-node" data-go="absensi-siswa"><span class="flow-node-icon">✓</span><span><strong>Absensi</strong><small>Hadir · izin · sakit · alpa</small></span><b>AKTIVITAS</b></button>
+              <button class="flow-node private-node" data-go="pelanggaran-pembinaan"><span class="flow-node-icon">♡</span><span><strong>Pembinaan</strong><small>Riwayat privat dan tindak lanjut</small></span><b>TERBATAS</b></button>
+            </div>
+            <div class="flow-connector"><span>Guru meninjau bukti dan memilih data yang relevan</span><i>↓</i></div>
+            <div class="flow-stage flow-stage-two">
+              <button class="flow-node activity-node" data-go="pengolahan-nilai"><span class="flow-node-icon">▥</span><span><strong>Penilaian &amp; pengolahan nilai</strong><small>Nilai per siswa · mapel · periode</small></span><b>PROSES GURU</b></button>
+              <button class="flow-node reference-node" data-go="perangkat-ajar"><span class="flow-node-icon">▤</span><span><strong>Perangkat ajar &amp; asesmen</strong><small>Rencana, kisi-kisi, rubrik, instrumen</small></span><b>PERENCANAAN</b></button>
+            </div>
+            <div class="flow-connector"><span>Nilai dan kehadiran yang sudah diperiksa disalin ke draf</span><i>↓</i></div>
+            <div class="flow-stage">
+              <button class="flow-node output-node" data-go="e-rapor"><span class="flow-node-icon">▣</span><span><strong>E-Rapor</strong><small>Draf → pemeriksaan → kunci snapshot</small></span><b>HASIL</b></button>
+              <div class="flow-node output-node flow-archive"><span class="flow-node-icon">▧</span><span><strong>Arsip periode</strong><small>Salinan hasil saat rapor dikunci</small></span><b>ARSIP</b></div>
+            </div>
+          </div>
+          <div class="flow-rules"><article><strong>Yang terhubung</strong><p>Master siswa, profil/periode, jurnal terkait siswa, absensi, nilai, dan ringkasan bukti jurnal.</p></article><article><strong>Yang tetap diputuskan guru</strong><p>Validasi bukti, pemilihan CP/TP, pemberian nilai, deskripsi capaian, dan pengesahan rapor.</p></article><article><strong>Yang tidak otomatis dibagikan</strong><p>Catatan pembinaan privat, refleksi pribadi, serta isi jurnal tidak disalin begitu saja ke rapor.</p></article></div>
+        </section>
         <section class="panel"><div class="panel-heading"><div><h3>Aturan integritas data</h3></div></div><ul class="curriculum-source-list"><li>Identitas siswa menggunakan ID stabil; perubahan nama tidak membuat siswa baru.</li><li>Data lama dipertahankan dan diselaraskan secara bertahap, bukan dihapus.</li><li>Nilai dan absensi harus terikat pada periode yang benar sebelum dipakai untuk rapor.</li><li>Catatan pembinaan bersifat terbatas dan tidak otomatis masuk rapor.</li><li>Backup sebelum impor massal, kenaikan kelas, atau pemulihan data.</li></ul></section>
       </section>
       <section class="page" id="page-pengaturan" data-title="Pengaturan">
