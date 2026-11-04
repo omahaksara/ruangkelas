@@ -185,3 +185,11 @@ Catatan Pembinaan menyimpan `studentKey` bersama `studentId` lama. Tautan riwaya
 Jurnal Mengajar baru menyimpan metadata konteks saat dibuat atau diedit: `periodId`, tahun ajaran, semester, sekolah, kelas, guru, `schoolId`, dan `teacherId`. Jurnal lama tidak dipaksa diberi periode secara massal karena tanggal/periode historisnya belum diverifikasi. Jurnal tetap dapat dibuka dan diedit; saat disimpan ulang, metadata periode aktif akan dicatat.
 
 Batas integrasi saat ini: jurnal masih merupakan catatan pembelajaran tingkat kelas, belum menjadi bukti capaian individual siswa. Pengaitan jurnal ke bukti belajar per siswa memerlukan alur pemilihan siswa dan validasi guru sebelum dapat memberi kontribusi ke Penilaian atau E-Rapor.
+
+## Jurnal sebagai bukti belajar terkait siswa (2026-11-04)
+
+Form Jurnal Mengajar kini memiliki pilihan siswa terkait yang bersifat opsional. Pilihan kosong berarti jurnal pembelajaran tingkat kelas; pilihan siswa menyimpan `studentId`, `studentKey`, dan nama sebagai snapshot tampilan. Relasi utamanya memakai `studentKey`, sedangkan `studentId` lama tetap disimpan untuk kompatibilitas.
+
+Riwayat siswa menggabungkan catatan pembinaan dan jurnal yang ditautkan langsung kepada siswa. Jurnal kelas umum tidak otomatis disalin ke riwayat setiap siswa. Ini mencegah bukti belajar kelas dianggap sebagai bukti individual tanpa verifikasi guru.
+
+Jurnal terkait siswa merupakan catatan bukti deskriptif, bukan nilai angka otomatis. Guru tetap menentukan apakah hasil belajar tersebut layak menjadi bukti asesmen dan memasukkannya ke Penilaian.
