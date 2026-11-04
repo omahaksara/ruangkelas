@@ -322,3 +322,7 @@ button.flow-node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,
 .curriculum-language-tags{margin-bottom:12px}
 @media(max-width:520px){.curriculum-detailed-cp-grid{grid-template-columns:1fr}}
 @media print{body:has(#page-cp-tp.active) .curriculum-detailed-cp-grid{grid-template-columns:1fr 1fr}body:has(#page-cp-tp.active) .curriculum-detailed-cp,body:has(#page-cp-tp.active) .curriculum-detailed-cp-grid article{break-inside:avoid}}
+
+
+/* Automatic curriculum links across teacher workspaces */
+.curriculum-auto-map{display:flex;flex-direction:column;gap:3px;padding:8px 10px;border:1px solid var(--line,#e5e7eb);border-radius:10px;background:var(--surface-soft,rgba(120,130,150,.07));min-width:0}.curriculum-auto-map span{font-size:.72rem;color:var(--muted,#687386)}.curriculum-auto-map strong{font-size:.84rem;font-weight:650}.curriculum-linked-resource{border-style:dashed}.curriculum-linked-resource .resource-category{letter-spacing:.04em}.curriculum-auto-notice{padding:12px 14px;border:1px solid var(--line,#e5e7eb);border-radius:12px;background:var(--surface-soft,rgba(120,130,150,.07));margin-bottom:12px}.curriculum-auto-notice strong{display:block;margin-bottom:4px}.curriculum-auto-notice p{margin:0;color:var(--muted,#687386);font-size:.88rem;line-height:1.5}
