@@ -93,3 +93,13 @@ ruangkelas/
 - Prompt menyertakan identitas workspace yang tersedia, placeholder untuk data yang kosong, aturan agar AI tidak mengarang identitas/regulasi, serta pemeriksaan konsistensi topik, tujuan, kegiatan, dan asesmen.
 - Konteks lokal sekolah dapat diisi secara manual tanpa data pribadi siswa. Guru tetap wajib memeriksa CP/TP terhadap dokumen resmi dan ATP/KOSP sekolah.
 - Tombol ChatGPT dan Gemini hanya membuka layanan terkait; guru menyalin prompt secara terpisah. Tidak ada integrasi API yang diaktifkan.
+
+
+## Ekosistem kerja guru terpadu
+RuangKelas dirancang sebagai satu alur kerja: CP/TP → perangkat ajar (RPP/Modul Ajar, ATP, Prota/Promes) → LKPD/bahan/media → jurnal mengajar → asesmen/bank soal/rubrik → bukti nilai → pengolahan nilai → E-Rapor → arsip dan laporan.
+- E-Rapor direncanakan sebagai modul mandiri yang terhubung ke master siswa, kelas, mapel, periode, absensi, dan bukti penilaian.
+- Rapor final harus disimpan sebagai snapshot per siswa/per semester; perubahan kelas atau nilai berikutnya tidak boleh mengubah arsip yang sudah disahkan.
+- Pusat kesiapan dokumen guru akan menampilkan kelengkapan, periode, sumber data, dan status verifikasi agar dokumen yang diminta sewaktu-waktu mudah ditemukan.
+- AI hanya membantu menyusun draf. Guru memeriksa sumber, isi, nilai, dan mengesahkan dokumen.
+- Rancangan data dan aturan integrasi: [docs/PETA-EKOSISTEM.md](docs/PETA-EKOSISTEM.md).
+- Fitur E-Rapor penuh, penguncian snapshot, impor XLSX, autentikasi, database cloud, dan sinkronisasi belum aktif sampai implementasi serta pengujiannya selesai.
