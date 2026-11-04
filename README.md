@@ -97,7 +97,7 @@ ruangkelas/
 
 ## Ekosistem kerja guru terpadu
 RuangKelas dirancang sebagai satu alur kerja: CP/TP → perangkat ajar (RPP/Modul Ajar, ATP, Prota/Promes) → LKPD/bahan/media → jurnal mengajar → asesmen/bank soal/rubrik → bukti nilai → pengolahan nilai → E-Rapor → arsip dan laporan.
-- E-Rapor direncanakan sebagai modul mandiri yang terhubung ke master siswa, kelas, mapel, periode, absensi, dan bukti penilaian.
+- E-Rapor sudah memiliki halaman mandiri tahap awal dan membaca master siswa, periode, absensi, serta rekaman nilai lokal; kelengkapan rapor final masih dikembangkan.
 - Rapor final harus disimpan sebagai snapshot per siswa/per semester; perubahan kelas atau nilai berikutnya tidak boleh mengubah arsip yang sudah disahkan.
 - Pusat kesiapan dokumen guru akan menampilkan kelengkapan, periode, sumber data, dan status verifikasi agar dokumen yang diminta sewaktu-waktu mudah ditemukan.
 - AI hanya membantu menyusun draf. Guru memeriksa sumber, isi, nilai, dan mengesahkan dokumen.
