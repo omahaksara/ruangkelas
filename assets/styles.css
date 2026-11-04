@@ -249,3 +249,15 @@ button.flow-node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,
 .compact-guide{margin-bottom:13px}
 .dark .module-guide-step{background:var(--panel);border-color:var(--line)}
 @media(max-width:760px){.module-guide{grid-template-columns:1fr;gap:8px}.module-guide-step{padding:11px}.module-guide-step small{font-size:10px}}
+
+/* Ringkasan jurnal: total, periode, dan jenis relasi */
+.journal-stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:0}
+.journal-stats .attendance-stat{position:relative;overflow:hidden}
+.journal-stats .attendance-stat:after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:#299c82;opacity:.7}
+.journal-stats .attendance-stat:nth-child(2):after{background:#438bd0}
+.journal-stats .attendance-stat:nth-child(3):after{background:#8270d8}
+.journal-stats .attendance-stat:nth-child(4):after{background:#c58b36}
+.table-wrap{max-width:100%;overscroll-behavior-x:contain;scrollbar-width:thin}
+.table-wrap:focus-within{outline:2px solid color-mix(in srgb,var(--primary) 35%,transparent);outline-offset:2px}
+.table-wrap table{min-width:680px}
+@media(max-width:760px){.journal-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
