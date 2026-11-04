@@ -229,3 +229,10 @@ Jurnal mengajar menampilkan empat angka ringkas yang dihitung dari catatan tersi
 - **Catatan seluruh kelas:** total jurnal dikurangi catatan individual.
 
 Angka ini adalah ringkasan navigasi, bukan penilaian kinerja siswa. Jurnal yang tidak memiliki periode tetap tersedia pada riwayat, tetapi tidak otomatis dianggap sebagai bukti periode berjalan.
+
+
+## 11. Ringkasan operasional di dashboard
+
+Modul Jurnal Mengajar menampilkan total jurnal tersimpan, jumlah jurnal pada periode aktif, jumlah catatan yang tertaut ke siswa, dan catatan tingkat kelas. Pengolahan Nilai menampilkan jumlah siswa aktif, jumlah yang sudah memiliki nilai pada mapel/periode terpilih, jumlah yang belum dinilai, serta rata-rata nilai akhir.
+
+Angka ringkasan dihitung dari data yang sudah tersimpan dan mengikuti filter konteks modul. Ringkasan tidak membuat atau mengubah rekaman nilai/jurnal. Jika guru mengganti mapel atau periode, ringkasan penilaian mengikuti konteks aktif saat modul dirender.
