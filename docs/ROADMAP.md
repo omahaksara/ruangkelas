@@ -107,7 +107,8 @@ Tujuan: satu alur kerja guru dari perencanaan sampai pelaporan, tanpa input ulan
 - [x] Snapshot rapor dapat dikunci agar tidak berubah otomatis.
 - [x] Catatan wali kelas terpisah dari catatan pembinaan privat.
 - [ ] Revisi snapshot dengan audit trail.
-- [ ] Impor nilai XLSX/CSV dengan pemetaan kolom, pratinjau, validasi, dan deteksi duplikat.
+- [x] Impor nilai CSV dengan pemetaan kolom, pratinjau, validasi dasar, dan deteksi duplikat.
+- [ ] Impor XLSX langsung.
 - [ ] Komponen penilaian dan bobot yang dapat dikonfigurasi.
 - [ ] Deskripsi capaian berbasis CP/TP dan bukti belajar.
 - [ ] Cetak rapor individual dan satu kelas sesuai format sekolah.
@@ -119,3 +120,15 @@ Tujuan: satu alur kerja guru dari perencanaan sampai pelaporan, tanpa input ulan
 - [x] Pencocokan siswa dengan nama atau kode/NISN; validasi rentang 0–100.
 - [x] Lewati duplikat dan lindungi nilai yang sudah ada (tanpa overwrite).
 - [ ] Dukungan XLSX langsung, komponen/bobot asesmen, revisi snapshot, format rapor individual, dan uji browser.
+
+
+## Keputusan arah produk dan urutan kerja audit (2026-11-04)
+- [x] Arah produk ditetapkan: workspace pribadi guru sekarang, fondasi siap berkembang menjadi platform sekolah.
+- [x] Cakupan modul: semua modul dipertahankan; integrasi dilakukan melalui referensi master dan kontrak data bersama.
+- [x] Dokumentasi kontrak data lokal, batas implementasi, dan aturan perubahan aman ditambahkan ke [ARSITEKTUR.md](ARSITEKTUR.md).
+- [ ] Buat backup/restore menyeluruh yang mencakup store utama, CP/TP, dan skor Laboratorium Media.
+- [ ] Tambahkan validasi skema dan migrasi additive/idempotent tanpa menghapus properti lama.
+- [ ] Pisahkan layanan master profil/periode/siswa dari event dan data tiap modul sambil mempertahankan API kompatibilitas.
+- [ ] Hubungkan asesmen dan bukti belajar ke pengolahan nilai dan E-Rapor tanpa input ulang.
+- [ ] Bangun Pusat Kesiapan Dokumen Guru sebagai indeks status, bukan duplikasi dokumen.
+- [ ] Uji skenario migrasi, impor, penguncian rapor, arsip kenaikan kelas, backup/restore, dan UI desktop/ponsel.
