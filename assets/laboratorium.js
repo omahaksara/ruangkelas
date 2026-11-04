@@ -8,16 +8,17 @@ const showScore=()=>{if(scoreEl)scoreEl.textContent="Poin pribadi: "+score};
 const addScore=n=>{score+=n;try{localStorage.setItem(scoreKey,String(score))}catch(e){}showScore()};
 showScore();
 let equation={a:3,b:4,x:5,c:19};
+let equationSolved=false;
 const fmt=n=>n<0?" - "+Math.abs(n):" + "+n;
 function nextEquation(){
  const a=1+Math.floor(Math.random()*6),x=-3+Math.floor(Math.random()*13),b=-9+Math.floor(Math.random()*19);
- equation={a,b,x,c:a*x+b};$("labEquation").textContent=a+"x"+fmt(b)+" = "+equation.c;
+ equation={a,b,x,c:a*x+b};equationSolved=false;$("labEquation").textContent=a+"x"+fmt(b)+" = "+equation.c;
  $("labAnswer").value="";$("labFeedback").textContent="Temukan x dengan operasi kebalikan.";$("labFeedback").dataset.state="";$("labAnswer").focus();
 }
 $("labCheck").addEventListener("click",()=>{
  const raw=$("labAnswer").value.trim(),f=$("labFeedback");
  if(raw===""){f.textContent="Masukkan nilai x terlebih dahulu.";f.dataset.state="error";return}
- if(Number(raw)===equation.x){f.textContent="Benar! Brankas terbuka. +5 poin. Coba soal berikutnya.";f.dataset.state="success";addScore(5)}
+ if(Number(raw)===equation.x){if(equationSolved){f.textContent="Soal ini sudah berhasil diselesaikan. Buat soal berikutnya untuk mendapat poin lagi.";f.dataset.state="success";return}equationSolved=true;f.textContent="Benar! Brankas terbuka. +5 poin. Coba soal berikutnya.";f.dataset.state="success";addScore(5)}
  else{f.textContent="Belum tepat. Kurangi konstanta di kedua ruas, lalu bagi dengan koefisien x.";f.dataset.state="error"}
 });
 $("labNext").addEventListener("click",nextEquation);
