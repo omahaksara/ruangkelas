@@ -190,3 +190,6 @@
 
 /* E-Rapor CSV import and mapping */
 .report-import-panel{margin:0 0 18px}.report-csv-mapping{margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:11px;background:var(--bg)}.report-csv-mapping .field{display:grid;gap:7px}.report-csv-mapping label{font-size:11px;font-weight:700;color:var(--muted)}.report-csv-mapping select{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--panel);color:var(--ink);font:inherit;font-size:12px}.report-csv-preview{margin-top:15px}.report-csv-preview .attendance-stats{margin:12px 0}.report-csv-preview .table-wrap{margin:12px 0}.report-csv-preview table{min-width:650px}
+
+/* Bukti jurnal pada rekap penilaian */
+.grade-evidence{min-width:145px;max-width:280px}.grade-evidence summary{cursor:pointer;color:var(--primary);font-size:11px;font-weight:700}.grade-evidence article{padding:9px 0;border-top:1px solid var(--line);white-space:normal}.grade-evidence article:first-of-type{margin-top:8px}.grade-evidence article p{margin:5px 0;font-size:11px;line-height:1.5;color:var(--muted)}.grade-evidence article strong{font-size:11px}
