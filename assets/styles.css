@@ -310,3 +310,15 @@ button.flow-node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,
 .grade-stats .attendance-stat:nth-child(3):after{background:#c58b36}
 .grade-stats .attendance-stat:nth-child(4):after{background:#8270d8}
 @media(max-width:760px){.grade-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Uraian CP dan fokus kebahasaan dari pemetaan tema Bahasa Indonesia */
+.curriculum-detailed-cp{margin-top:16px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.curriculum-detailed-cp h3{font-size:12px;margin:0 0 11px}
+.curriculum-detailed-cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.curriculum-detailed-cp-grid article{padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--panel)}
+.curriculum-detailed-cp-grid strong{font-size:11px}
+.curriculum-detailed-cp-grid p{font-size:11px;line-height:1.7;color:var(--muted);margin:6px 0 0}
+.curriculum-detailed-cp>small{display:block;font-size:9px;line-height:1.5;color:var(--muted);margin-top:10px}
+.curriculum-language-tags{margin-bottom:12px}
+@media(max-width:520px){.curriculum-detailed-cp-grid{grid-template-columns:1fr}}
+@media print{body:has(#page-cp-tp.active) .curriculum-detailed-cp-grid{grid-template-columns:1fr 1fr}body:has(#page-cp-tp.active) .curriculum-detailed-cp,body:has(#page-cp-tp.active) .curriculum-detailed-cp-grid article{break-inside:avoid}}
