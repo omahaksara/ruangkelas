@@ -236,3 +236,11 @@ Angka ini adalah ringkasan navigasi, bukan penilaian kinerja siswa. Jurnal yang 
 Modul Jurnal Mengajar menampilkan total jurnal tersimpan, jumlah jurnal pada periode aktif, jumlah catatan yang tertaut ke siswa, dan catatan tingkat kelas. Pengolahan Nilai menampilkan jumlah siswa aktif, jumlah yang sudah memiliki nilai pada mapel/periode terpilih, jumlah yang belum dinilai, serta rata-rata nilai akhir.
 
 Angka ringkasan dihitung dari data yang sudah tersimpan dan mengikuti filter konteks modul. Ringkasan tidak membuat atau mengubah rekaman nilai/jurnal. Jika guru mengganti mapel atau periode, ringkasan penilaian mengikuti konteks aktif saat modul dirender.
+
+## 12. Cetak daftar E-Rapor
+
+- Tombol **Cetak daftar rapor** membuka tampilan cetak khusus E-Rapor, bukan halaman absensi.
+- Format cetak dioptimalkan untuk kertas A4 lanskap: identitas sekolah/periode, ringkasan jumlah siswa/draf/rapor terkunci/nilai, lalu tabel rekap per siswa.
+- Navigasi, impor CSV, panduan kerja, dan tombol tindakan disembunyikan saat mencetak. Catatan wali kelas tetap ditampilkan sebagai teks; kolom yang belum diisi tetap kosong untuk pemeriksaan.
+- Cetak daftar adalah rekap administrasi kelas, bukan pengganti lembar rapor individual resmi. Pastikan identitas sekolah dan isi catatan sudah benar sebelum mencetak.
+- Status draf dan snapshot terkunci tidak diubah oleh proses cetak. Snapshot terkunci tetap tidak dapat diedit; data pembinaan privat dan isi jurnal tidak ditambahkan ke hasil cetak.
