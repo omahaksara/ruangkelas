@@ -102,4 +102,7 @@ RuangKelas dirancang sebagai satu alur kerja: CP/TP → perangkat ajar (RPP/Modu
 - Pusat kesiapan dokumen guru akan menampilkan kelengkapan, periode, sumber data, dan status verifikasi agar dokumen yang diminta sewaktu-waktu mudah ditemukan.
 - AI hanya membantu menyusun draf. Guru memeriksa sumber, isi, nilai, dan mengesahkan dokumen.
 - Rancangan data dan aturan integrasi: [docs/PETA-EKOSISTEM.md](docs/PETA-EKOSISTEM.md).
-- Fitur E-Rapor penuh, penguncian snapshot, impor XLSX, autentikasi, database cloud, dan sinkronisasi belum aktif sampai implementasi serta pengujiannya selesai.
+- E-Rapor tahap awal sudah tersedia: draf per siswa, catatan wali kelas, snapshot terkunci, cetak daftar kelas, dan impor nilai CSV dengan pemetaan/pratinjau. Ini belum merupakan rapor final lengkap.
+- Impor XLSX langsung, bobot asesmen fleksibel, deskripsi capaian berbasis bukti CP/TP, revisi snapshot/audit trail, ekstrakurikuler/prestasi, dan cetak individual final belum tersedia.
+- Pusat Data Terpadu membaca sumber data lokal yang sama; ini bukan sinkronisasi cloud atau lintas perangkat.
+- Semua modul tetap dipertahankan dalam arah produk workspace pribadi guru yang siap dikembangkan menjadi platform sekolah. Detail status dan kontrak data: [docs/ARSITEKTUR.md](docs/ARSITEKTUR.md).
