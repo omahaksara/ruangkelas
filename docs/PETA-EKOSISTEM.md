@@ -135,3 +135,12 @@ Referensi eksternal boleh dipelajari sesuai izin dan lisensi yang berlaku. Catat
 - Pengolahan nilai kini memisahkan rekaman berdasarkan periode aktif.
 - Cetak daftar rapor tersedia melalui dialog cetak browser. Format ini masih kerangka awal, bukan pengganti format rapor resmi sekolah.
 - Belum tersedia revisi snapshot terkunci, impor XLSX/CSV rapor, komponen bobot fleksibel, deskripsi capaian berbasis CP/TP, serta cetak PDF individual final.
+
+
+### Impor nilai E-Rapor (tahap awal)
+- E-Rapor kini menyediakan impor nilai berbasis CSV dengan pemetaan kolom nama siswa/NISN, mata pelajaran, dan nilai.
+- Sistem menampilkan pratinjau, jumlah baris siap impor, dan baris yang dilewati sebelum konfirmasi.
+- Pencocokan siswa menggunakan nama atau kode/NISN yang sama persis; nilai harus 0–100.
+- Rekaman nilai yang sudah ada pada siswa, mapel, dan periode yang sama tidak ditimpa. Baris duplikat/invalid dilewati.
+- XLSX langsung, pemetaan nilai berbobot, dan uji browser masih menjadi pekerjaan berikutnya. Untuk file Excel, simpan/ekspor dahulu sebagai CSV UTF-8.
+- Data tetap tersimpan lokal di browser; lakukan cadangan data sebelum impor besar.
