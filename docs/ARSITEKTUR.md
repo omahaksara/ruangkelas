@@ -192,4 +192,6 @@ Form Jurnal Mengajar kini memiliki pilihan siswa terkait yang bersifat opsional.
 
 Riwayat siswa menggabungkan catatan pembinaan dan jurnal yang ditautkan langsung kepada siswa. Jurnal kelas umum tidak otomatis disalin ke riwayat setiap siswa. Ini mencegah bukti belajar kelas dianggap sebagai bukti individual tanpa verifikasi guru.
 
-Jurnal terkait siswa merupakan catatan bukti deskriptif, bukan nilai angka otomatis. Guru tetap menentukan apakah hasil belajar tersebut layak menjadi bukti asesmen dan memasukkannya ke Penilaian.
+Jurnal terkait siswa merupakan catatan bukti deskriptif, bukan nilai angka otomatis. Modul Pengolahan Nilai kini menampilkan jurnal yang terkait dengan siswa pada periode aktif dan mapel yang sama (jurnal tanpa mapel dapat menjadi konteks umum). Guru dapat membuka isi jurnal sebagai bahan pertimbangan, lalu tetap memasukkan atau mengubah nilai secara manual. Jurnal tanpa relasi siswa, tanpa metadata periode, atau dari periode lain tidak otomatis ditampilkan sebagai bukti individual pada rekap nilai.
+
+E-Rapor menampilkan jumlah bukti jurnal terkait sebagai informasi tinjauan. Saat draf dibuat, jumlah tersebut disimpan sebagai `learningEvidenceCount` pada snapshot draf; ketika rapor dikunci, nilainya ikut menjadi bagian dari snapshot. Isi jurnal, refleksi pribadi, dan catatan pembinaan tidak disalin otomatis ke rapor. Draf yang sudah ada tidak dihitung ulang diam-diam setelah jurnal berubah; buat revisi/draf baru melalui alur yang sesuai bila ringkasan bukti perlu diperbarui.
