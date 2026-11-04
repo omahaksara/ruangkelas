@@ -73,6 +73,57 @@
   function reportAttendance(s){const p=activeReportPeriod(),y=Number(String(p.academicYear).split("/")[0])||new Date().getFullYear(),from=p.semester==="2"?new Date(y+1,0,1):new Date(y,6,1),to=p.semester==="2"?new Date(y+1,6,1):new Date(y+1,0,1),c={Hadir:0,Izin:0,Sakit:0,Alpa:0};Object.entries(s.attendance||{}).forEach(([d,r])=>{const x=new Date(d+"T00:00:00");if(x>=from&&x<to&&Object.prototype.hasOwnProperty.call(c,r.status))c[r.status]++;});return c;}
   function reportScores(s,p){return data.gradeRecords.filter(r=>String(r.studentId)===String(s.id)&&r.periodId===p.id&&r.raw!==""&&r.raw!=null).map(r=>({subject:r.subject,raw:Number(r.raw)}));}
   function renderReportCards(){const p=activeReportPeriod(),put=(id,v)=>{const e=$("#"+id);if(e)e.textContent=v||"—";};put("reportSchool",p.school||"Belum diatur");put("reportClass",p.className);put("reportYear",p.academicYear);put("reportSemester",p.semester==="2"?"Genap":"Ganjil");put("reportTeacher",p.teacher);put("reportPrincipal",p.principal);put("reportPeriodLabel",p.academicYear+" · Semester "+p.semester);const active=data.students.filter(s=>!s.archived),cards=data.reportCards.filter(r=>r.periodId===p.id);put("reportStudentCount",active.length);put("reportDraftCount",cards.filter(r=>r.status==="draft").length);put("reportLockedCount",cards.filter(r=>r.status==="locked").length);put("reportScoreCount",data.gradeRecords.filter(r=>r.periodId===p.id&&r.raw!==""&&r.raw!=null).length);$("#reportCardBody").innerHTML=active.map(s=>{const r=cards.find(x=>String(x.studentId)===String(s.id)),scores=r?r.scores:reportScores(s,p),avg=scores.length?(scores.reduce((n,x)=>n+Number(x.raw||0),0)/scores.length).toFixed(1):"—",att=r?r.attendance:reportAttendance(s),note=r?r.homeroomNote:"";return '<tr><td>'+escapeHtml(s.name)+'</td><td>'+scores.length+'</td><td>'+avg+'</td><td>H '+att.Hadir+' · I '+att.Izin+' · S '+att.Sakit+' · A '+att.Alpa+'</td><td><textarea class="report-note-input" data-report-note="'+escapeHtml(s.id)+'" rows="2" '+(r&&r.status==="locked"?"disabled":"")+' placeholder="Catatan faktual dan membangun">'+escapeHtml(note)+'</textarea></td><td><span class="status-pill">'+(r?(r.status==="locked"?"Terkunci":"Draf"):"Belum dibuat")+'</span></td><td>'+(r?(r.status==="locked"?"Snapshot tersimpan":'<button class="table-action" data-lock-report="'+escapeHtml(s.id)+'">Periksa &amp; kunci</button>'):"Buat draf")+'</td></tr>';}).join("")||'<tr><td colspan="7">Belum ada siswa aktif.</td></tr>';const legacy=data.gradeRecords.filter(r=>!r.periodId&&r.raw!==""&&r.raw!=null).length;$("#reportStatus").textContent=legacy?legacy+" nilai lama belum terikat ke periode dan tidak dimasukkan otomatis.": "Nilai rapor memakai rekaman pada periode aktif.";}
+  let pendingReportCsv=null;
+  function reportCsvOptions(id,selected,allowBlank){
+    const el=$("#"+id);if(!el)return;
+    el.innerHTML=(allowBlank?'<option value="">Gunakan mapel aktif</option>':"")+pendingReportCsv.headers.map((h,i)=>'<option value="'+i+'" '+(String(i)===String(selected)?"selected":"")+'>'+escapeHtml(h||("Kolom "+(i+1)))+'</option>').join("");
+  }
+  function reportCsvHeaderIndex(headers,aliases){return headers.findIndex(h=>aliases.includes(csvHeaderKey(h)));}
+  function readReportCsv(file){
+    const reader=new FileReader();reader.onload=()=>{
+      try{
+        const rows=parseCsvRows(String(reader.result||""));if(rows.length<2)throw new Error("CSV harus memiliki header dan minimal satu baris data.");
+        const headers=rows[0].map(x=>String(x||"").trim());if(headers.length<2)throw new Error("CSV harus memiliki beberapa kolom.");
+        const name=reportCsvHeaderIndex(headers,["nama","namasiswa","namalengkap","namapesertadidik","name","fullname","nisn","nis"]);
+        const subject=reportCsvHeaderIndex(headers,["mapel","matapelajaran","subject","pelajaran"]);
+        const score=reportCsvHeaderIndex(headers,["nilai","nilairaw","skor","score","rawscore"]);
+        pendingReportCsv={headers,rows:rows.slice(1),mapping:{student:name>=0?name:0,subject:subject>=0?subject:"",score:score>=0?score:Math.min(1,headers.length-1)}};
+        $("#reportCsvFileName").textContent=file.name+" · "+(rows.length-1)+" baris";
+        reportCsvOptions("reportCsvStudentCol",pendingReportCsv.mapping.student,false);
+        reportCsvOptions("reportCsvSubjectCol",pendingReportCsv.mapping.subject,true);
+        reportCsvOptions("reportCsvScoreCol",pendingReportCsv.mapping.score,false);
+        $("#reportCsvMapping").hidden=false;$("#reportCsvPreview").hidden=true;$("#reportCsvPreview").innerHTML="";
+        showToast("File dibaca. Cocokkan kolom sebelum pratinjau.");
+      }catch(err){pendingReportCsv=null;$("#reportCsvMapping").hidden=true;showToast("CSV gagal dibaca: "+err.message);}
+      finally{$("#reportCsvFile").value="";}
+    };reader.onerror=()=>showToast("File CSV gagal dibaca.");reader.readAsText(file,"UTF-8");
+  }
+  function previewReportCsvImport(){
+    if(!pendingReportCsv)return;
+    const m={student:Number($("#reportCsvStudentCol").value),subject:$("#reportCsvSubjectCol").value===""?null:Number($("#reportCsvSubjectCol").value),score:Number($("#reportCsvScoreCol").value)};
+    if(m.student===m.score||(m.subject!==null&&(m.subject===m.student||m.subject===m.score))){showToast("Pilih kolom siswa, mapel, dan nilai yang berbeda.");return;}
+    pendingReportCsv.mapping=m;const p=activeReportPeriod(),defaultSubject=($("#subjectName").value||"Mata Pelajaran").trim(),seen=new Set();
+    pendingReportCsv.prepared=pendingReportCsv.rows.map((row,i)=>{
+      const studentValue=String(row[m.student]||"").trim(),subject=m.subject===null?defaultSubject:String(row[m.subject]||"").trim(),rawText=String(row[m.score]||"").trim().replace(",",".");
+      const score=Number(rawText),student=data.students.find(s=>!s.archived&&(String(s.name||"").trim().toLocaleLowerCase("id-ID")===studentValue.toLocaleLowerCase("id-ID")||(s.code&&String(s.code).trim().toLowerCase()===studentValue.toLowerCase())));
+      const key=student?String(student.id)+"::"+subject.toLowerCase():"";
+      let status="Siap";if(!studentValue||!student)status="Siswa tidak ditemukan";else if(!subject)status="Mapel kosong";else if(rawText===""||!Number.isFinite(score)||score<0||score>100)status="Nilai tidak valid";else if(data.gradeRecords.some(r=>String(r.studentId)===String(student.id)&&r.subject===subject&&r.periodId===p.id)||seen.has(key))status="Sudah ada / duplikat";
+      if(status==="Siap")seen.add(key);
+      return {line:i+2,studentId:student?student.id:null,studentName:student?student.name:studentValue,subject,raw:score,status};
+    });
+    const ready=pendingReportCsv.prepared.filter(x=>x.status==="Siap").length;
+    const summary={total:pendingReportCsv.prepared.length,ready,skipped:pendingReportCsv.prepared.length-ready};
+    $("#reportCsvPreview").hidden=false;
+    $("#reportCsvPreview").innerHTML='<div class="attendance-stats"><article class="attendance-stat"><span>Total baris</span><strong>'+summary.total+'</strong></article><article class="attendance-stat"><span>Siap diimpor</span><strong>'+summary.ready+'</strong></article><article class="attendance-stat"><span>Dilewati</span><strong>'+summary.skipped+'</strong></article></div><div class="table-wrap"><table><thead><tr><th>Baris</th><th>Siswa</th><th>Mapel</th><th>Nilai</th><th>Status</th></tr></thead><tbody>'+pendingReportCsv.prepared.slice(0,100).map(x=>'<tr><td>'+x.line+'</td><td>'+escapeHtml(x.studentName)+'</td><td>'+escapeHtml(x.subject)+'</td><td>'+escapeHtml(x.raw)+'</td><td>'+escapeHtml(x.status)+'</td></tr>').join("")+'</tbody></table></div>'+(summary.total>100?'<p class="muted-note">Pratinjau dibatasi 100 baris pertama.</p>':"")+'<button class="button button-primary" id="confirmReportCsv" type="button" '+(ready?"":"disabled")+'>Impor '+ready+' nilai</button>';
+  }
+  function confirmReportCsvImport(){
+    if(!pendingReportCsv||!pendingReportCsv.prepared)return;
+    const ready=pendingReportCsv.prepared.filter(x=>x.status==="Siap");if(!ready.length)return;
+    if(!confirm("Impor "+ready.length+" nilai ke periode "+activeReportPeriod().academicYear+" semester "+activeReportPeriod().semester+"? Nilai yang sudah ada tidak akan ditimpa."))return;
+    const periodId=activeReportPeriod().id;ready.forEach(x=>data.gradeRecords.push({studentId:x.studentId,subject:x.subject,raw:x.raw,periodId,importedAt:new Date().toISOString(),source:"csv"}));
+    pendingReportCsv=null;$("#reportCsvMapping").hidden=true;$("#reportCsvPreview").hidden=true;$("#reportCsvPreview").innerHTML="";$("#reportCsvFileName").textContent="Impor selesai.";
+    save();renderGrades();renderReportCards();showToast(ready.length+" nilai berhasil diimpor. Data yang sudah ada dipertahankan.");
+  }
   function renderDataHub(){
     syncWorkspaceMaster();const p=data.workspace.profile||{};
     const set=(id,value)=>{const el=$("#"+id);if(el)el.textContent=value||"—";};
@@ -439,6 +490,10 @@ if(input.value===""){data.gradeRecords=data.gradeRecords.filter(r=>!(r.studentId
 const raw=Number(input.value);if(!Number.isFinite(raw)||raw<0||raw>100){showToast("Nilai mentah harus 0 sampai 100.");renderGrades();return;}
 let rec=data.gradeRecords.find(r=>r.studentId===studentId&&r.subject===subject&&r.periodId===activeReportPeriod().id);if(!rec){rec={studentId,subject,raw,periodId:activeReportPeriod().id};data.gradeRecords.push(rec);}else{rec.raw=raw;rec.periodId=activeReportPeriod().id;}save();renderGrades();renderReportCards();showToast("Nilai "+subject+" disimpan.");
 });
+  $("#chooseReportCsv").addEventListener("click",()=>$("#reportCsvFile").click());
+  $("#reportCsvFile").addEventListener("change",e=>{const file=e.target.files&&e.target.files[0];if(file)readReportCsv(file);});
+  $("#previewReportCsv").addEventListener("click",previewReportCsvImport);
+  $("#reportCsvPreview").addEventListener("click",e=>{if(e.target.closest("#confirmReportCsv"))confirmReportCsvImport();});
   $("#createReportDrafts").addEventListener("click",()=>{const p=activeReportPeriod(),active=data.students.filter(s=>!s.archived),existing=data.reportCards.filter(r=>r.periodId===p.id);if(!active.length){showToast("Tambahkan siswa terlebih dahulu.");return;}let n=0;active.forEach(s=>{if(existing.some(r=>String(r.studentId)===String(s.id)))return;data.reportCards.push({id:"rap-"+s.id+"-"+p.id,studentId:s.id,studentKey:s.studentKey||"stu-"+s.id,studentName:s.name,periodId:p.id,period:{school:p.school,className:p.className,academicYear:p.academicYear,semester:p.semester,teacher:p.teacher,principal:p.principal},scores:reportScores(s,p),attendance:reportAttendance(s),homeroomNote:"",status:"draft",createdAt:new Date().toISOString(),revision:1});n++;});save();renderReportCards();showToast(n+" draf rapor dibuat.");});
   $("#reportCardBody").addEventListener("change",e=>{const el=e.target.closest("[data-report-note]");if(!el)return;const p=activeReportPeriod(),r=data.reportCards.find(x=>x.periodId===p.id&&String(x.studentId)===String(el.dataset.reportNote)&&x.status==="draft");if(r){r.homeroomNote=el.value.trim();r.updatedAt=new Date().toISOString();save();}});
   $("#reportCardBody").addEventListener("click",e=>{const b=e.target.closest("[data-lock-report]");if(!b)return;const p=activeReportPeriod(),r=data.reportCards.find(x=>x.periodId===p.id&&String(x.studentId)===String(b.dataset.lockReport)&&x.status==="draft");if(!r)return;if(!r.scores||!r.scores.length){showToast("Belum ada nilai periode ini. Lengkapi atau periksa nilai sebelum mengunci.");return;}if(!confirm("Kunci snapshot rapor "+r.studentName+" untuk "+p.academicYear+" semester "+p.semester+"?"))return;r.status="locked";r.lockedAt=new Date().toISOString();r.lockedBy=p.teacher;save();renderReportCards();showToast("Snapshot rapor dikunci.");});
