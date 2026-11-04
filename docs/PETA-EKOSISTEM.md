@@ -244,3 +244,12 @@ Angka ringkasan dihitung dari data yang sudah tersimpan dan mengikuti filter kon
 - Navigasi, impor CSV, panduan kerja, dan tombol tindakan disembunyikan saat mencetak. Catatan wali kelas tetap ditampilkan sebagai teks; kolom yang belum diisi tetap kosong untuk pemeriksaan.
 - Cetak daftar adalah rekap administrasi kelas, bukan pengganti lembar rapor individual resmi. Pastikan identitas sekolah dan isi catatan sudah benar sebelum mencetak.
 - Status draf dan snapshot terkunci tidak diubah oleh proses cetak. Snapshot terkunci tetap tidak dapat diedit; data pembinaan privat dan isi jurnal tidak ditambahkan ke hasil cetak.
+
+## 13. CP dan pemetaan tema Bahasa Indonesia kelas VI
+
+- Data Bahasa Indonesia Fase C memuat tiga uraian elemen yang disalin dari bahan guru: Menyimak, Membaca dan Memirsa, serta Berbicara dan Mempresentasikan. Uraian elemen ketiga berhenti pada kalimat “logis, sistematis, efektif” karena sumber yang dikirim terpotong; aplikasi menandai keterbatasan itu dan tidak mengarang kelanjutannya.
+- Ringkasan CP acuan tetap menampilkan empat elemen, termasuk Menulis, berdasarkan ringkasan CP Fase C yang sudah ada di data kurikulum. Uraian lengkap Menulis tidak ditambahkan karena tidak ada dalam potongan bahan yang dikirim.
+- Pemetaan tema Bahasa Indonesia kini mencakup Bab I sampai Bab V. Fokus kebahasaan Bab I–IV mengikuti daftar guru; Bab V memuat dua fokus yang tersedia, yaitu peta berpikir dan menulis alur/kutipan tokoh.
+- Bab V baru memiliki pengantar tema yang terpotong. Karena itu deskripsi tema dan TP Bab V di aplikasi diberi status sebagai ringkasan kerja sementara, bukan kutipan lengkap dari buku.
+- Fokus kebahasaan tampil terpisah dari TP/urutan tujuan dan materi pokok. Pencarian kurikulum juga mencakup fokus kebahasaan agar guru dapat menemukan bab berdasarkan istilah materi.
+- Penambahan ini hanya memperkaya referensi CP/TP lokal kelas VI. Tidak mengubah nilai, rapor, absensi, jurnal, maupun data siswa. Guru tetap dapat menyunting TP dan pemetaan elemen CP sesuai ATP/KOSP sekolah.
