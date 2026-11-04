@@ -98,13 +98,13 @@ const kkm=clamp(Number($("#kkm").value)||75,0,100),max=clamp(Number($("#maxGrade
 $("#kkm").value=kkm;$("#maxGrade").value=max;
 const students=data.students.filter(s=>!s.archived).slice().sort((a,b)=>a.name.localeCompare(b.name,"id"));
 $("#gradeBody").innerHTML=students.map((s,i)=>{
-const rec=data.gradeRecords.find(r=>r.studentId===s.id&&r.subject===subject),raw=rec&&rec.raw!==""&&rec.raw!=null?Number(rec.raw):null;
+const rec=data.gradeRecords.find(r=>r.studentId===s.id&&r.subject===subject&&r.periodId===activeReportPeriod().id),raw=rec&&rec.raw!==""&&rec.raw!=null?Number(rec.raw):null;
 const final=raw===null?null:Math.round(kkm+(Math.max(0,Math.min(100,raw))*(max-kkm)/100));
 const status=final===null?"Belum dinilai":(final<kkm?"Perlu tindak lanjut":"Mencapai KKM");
 return '<tr><td>'+(i+1)+'</td><td>'+escapeHtml(s.name)+'</td><td><input class="attendance-edit-input grade-raw-input" type="number" min="0" max="100" step="1" inputmode="numeric" data-grade-student="'+s.id+'" aria-label="Nilai mentah '+escapeHtml(s.name)+'" value="'+(raw===null?"":raw)+'" placeholder="0–100"></td><td><strong>'+(final===null?"—":final)+'</strong></td><td><span class="status-pill">'+status+'</span></td></tr>';
 }).join("")||'<tr><td colspan="5" class="attendance-empty">Belum ada siswa aktif. Tambahkan daftar siswa melalui menu Absensi &amp; Siswa.</td></tr>';
-const scored=students.filter(s=>data.gradeRecords.some(r=>r.studentId===s.id&&r.subject===subject&&r.raw!==""&&r.raw!=null));
-const finals=scored.map(s=>{const r=data.gradeRecords.find(x=>x.studentId===s.id&&x.subject===subject);return Math.round(kkm+(Math.max(0,Math.min(100,Number(r.raw)||0))*(max-kkm)/100));});
+const scored=students.filter(s=>data.gradeRecords.some(r=>r.studentId===s.id&&r.subject===subject&&r.periodId===activeReportPeriod().id&&r.raw!==""&&r.raw!=null));
+const finals=scored.map(s=>{const r=data.gradeRecords.find(x=>x.studentId===s.id&&x.subject===subject&&x.periodId===activeReportPeriod().id);return Math.round(kkm+(Math.max(0,Math.min(100,Number(r.raw)||0))*(max-kkm)/100));});
 const avg=finals.length?finals.reduce((a,b)=>a+b,0)/finals.length:0;
 $("#gradeSummary").textContent=students.length+" siswa aktif · "+scored.length+" sudah dinilai · "+(scored.length?"Rata-rata nilai akhir: "+avg.toFixed(1)+" · ":"")+"KKM: "+kkm+" · Mapel: "+(subject||"belum diisi");
 $("#countAjar").textContent=data.ajar.length;$("#countAssessment").textContent=data.assessments.length;$("#countMaterials").textContent=data.materials.length;
@@ -437,7 +437,7 @@ $("#exportIncidents").addEventListener("click",exportIncidents);$("#printInciden
 const input=e.target.closest("[data-grade-student]");if(!input)return;const studentId=Number(input.dataset.gradeStudent),subject=($("#subjectName").value||"Mata Pelajaran").trim();
 if(input.value===""){data.gradeRecords=data.gradeRecords.filter(r=>!(r.studentId===studentId&&r.subject===subject));save();renderGrades();showToast("Nilai dikosongkan.");return;}
 const raw=Number(input.value);if(!Number.isFinite(raw)||raw<0||raw>100){showToast("Nilai mentah harus 0 sampai 100.");renderGrades();return;}
-let rec=data.gradeRecords.find(r=>r.studentId===studentId&&r.subject===subject);if(!rec){rec={studentId,subject,raw,periodId:activeReportPeriod().id};data.gradeRecords.push(rec);}else{rec.raw=raw;rec.periodId=activeReportPeriod().id;}save();renderGrades();renderReportCards();showToast("Nilai "+subject+" disimpan.");
+let rec=data.gradeRecords.find(r=>r.studentId===studentId&&r.subject===subject&&r.periodId===activeReportPeriod().id);if(!rec){rec={studentId,subject,raw,periodId:activeReportPeriod().id};data.gradeRecords.push(rec);}else{rec.raw=raw;rec.periodId=activeReportPeriod().id;}save();renderGrades();renderReportCards();showToast("Nilai "+subject+" disimpan.");
 });
   $("#createReportDrafts").addEventListener("click",()=>{const p=activeReportPeriod(),active=data.students.filter(s=>!s.archived),existing=data.reportCards.filter(r=>r.periodId===p.id);if(!active.length){showToast("Tambahkan siswa terlebih dahulu.");return;}let n=0;active.forEach(s=>{if(existing.some(r=>String(r.studentId)===String(s.id)))return;data.reportCards.push({id:"rap-"+s.id+"-"+p.id,studentId:s.id,studentKey:s.studentKey||"stu-"+s.id,studentName:s.name,periodId:p.id,period:{school:p.school,className:p.className,academicYear:p.academicYear,semester:p.semester,teacher:p.teacher,principal:p.principal},scores:reportScores(s,p),attendance:reportAttendance(s),homeroomNote:"",status:"draft",createdAt:new Date().toISOString(),revision:1});n++;});save();renderReportCards();showToast(n+" draf rapor dibuat.");});
   $("#reportCardBody").addEventListener("change",e=>{const el=e.target.closest("[data-report-note]");if(!el)return;const p=activeReportPeriod(),r=data.reportCards.find(x=>x.periodId===p.id&&String(x.studentId)===String(el.dataset.reportNote)&&x.status==="draft");if(r){r.homeroomNote=el.value.trim();r.updatedAt=new Date().toISOString();save();}});
