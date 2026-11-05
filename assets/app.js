@@ -432,8 +432,95 @@ function renderAiCurriculumOptions(){
     catch(e){const area=document.createElement("textarea");area.value=value;area.setAttribute("readonly","");area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();let copied=false;try{copied=document.execCommand("copy");}catch(err){}area.remove();showToast(copied?label+" berhasil disalin.":"Clipboard tidak tersedia; salin melalui browser yang mendukung clipboard.");}
   }
 
+  // Bank Soal Digital: penyimpanan terpisah, CP/TP dibaca sebagai referensi.
+  const BANK_SOAL_KEY="ruangkelas-bank-soal-v1";
+  let bankSoalItems=[];
+  let bankSoalSelected=new Set();
+  let bankSoalEditingId="";
+  try{const raw=localStorage.getItem(BANK_SOAL_KEY);bankSoalItems=raw?JSON.parse(raw):[];if(!Array.isArray(bankSoalItems))bankSoalItems=[];}catch(e){bankSoalItems=[];}
+  function saveBankSoal(){try{localStorage.setItem(BANK_SOAL_KEY,JSON.stringify(bankSoalItems));return true;}catch(e){showToast("Penyimpanan penuh. Ekspor cadangan sebelum menambah soal.");return false;}}
+  function bankSoalRows(){return typeof curriculumAllRows==="function"?curriculumAllRows():[];}
+  function bankSoalMeta(item){const row=bankSoalRows().find(r=>r.key===item.tpKey);return row||null;}
+  function renderBankSoalOptions(){
+    const subject=$("#bsSubject"),goal=$("#bsGoal");if(!subject||!goal)return;
+    const subjects=curriculumData();const oldSubject=subject.value;
+    subject.innerHTML=subjects.map(s=>'<option value="'+escapeHtml(s.mapel)+'">'+escapeHtml(s.mapel)+'</option>').join("");
+    if(subjects.some(s=>s.mapel===oldSubject))subject.value=oldSubject;
+    const rows=bankSoalRows().filter(r=>r.subject===subject.value);
+    const oldGoal=goal.value;
+    goal.innerHTML=rows.map(r=>'<option value="'+escapeHtml(r.key)+'">'+escapeHtml(r.chapter+' — '+r.objective)+'</option>').join("")||'<option value="">Belum ada TP</option>';
+    if(rows.some(r=>r.key===oldGoal))goal.value=oldGoal;
+    renderBankSoalMeta();
+  }
+  function renderBankSoalMeta(){
+    const key=$("#bsGoal")&&$("#bsGoal").value,row=bankSoalRows().find(r=>r.key===key),el=$("#bsCurriculumMeta");if(!el)return;
+    if(!row){el.innerHTML="<span>Fase · Kelas · Elemen CP</span><strong>Pilih mata pelajaran dan TP</strong>";return;}
+    const subject=curriculumData().find(s=>s.mapel===row.subject),element=subject?inferCurriculumElement(subject,{judul:row.title,tentang:""},row.objective):"";
+    el.innerHTML="<span>"+escapeHtml("Fase "+row.phase+" · Kelas "+row.grade+" · "+(element||"Elemen belum terpetakan"))+"</span><strong>"+escapeHtml(row.chapter+" — "+row.title)+"</strong>";
+  }
+  function resetBankSoalForm(){bankSoalEditingId="";$("#bankSoalForm").reset();$("#bsType").value="PG";$("#bsCognitive").value="C2";$("#bsDifficulty").value="Sedang";$("#bsSaveButton").textContent="Simpan soal";$("#bsCancelEdit").hidden=true;$("#bsFormStatus").textContent="";$("#bsOptionsWrap").hidden=false;["bsA","bsB","bsC","bsD"].forEach(id=>$("#"+id).required=true);renderBankSoalOptions();}
+  function renderBankSoal(){
+    if(!$("#bsQuestionBody"))return;
+    const subjectOptions=curriculumData().map(s=>'<option value="'+escapeHtml(s.mapel)+'">'+escapeHtml(s.mapel)+'</option>').join("");
+    const subjectFilter=$("#bsFilterSubject"),prev=subjectFilter.value;subjectFilter.innerHTML='<option value="">Semua mapel</option>'+subjectOptions;if(curriculumData().some(s=>s.mapel===prev))subjectFilter.value=prev;
+    const classes=[...new Set(curriculumData().map(s=>"Kelas "+s.kelas+" / Fase "+s.fase))];$("#bsFilterClass").innerHTML='<option value="">Semua kelas</option>'+classes.map(x=>'<option>'+escapeHtml(x)+'</option>').join("");
+    const q=($("#bsSearch").value||"").toLowerCase(),sf=subjectFilter.value,cf=$("#bsFilterClass").value,tf=$("#bsFilterType").value,lf=$("#bsFilterCognitive").value;
+    const filtered=bankSoalItems.filter(x=>{const m=bankSoalMeta(x),txt=[x.question,x.answer,x.discussion,x.tags,x.subject,x.objective].join(" ").toLowerCase();return (!q||txt.includes(q))&&(!sf||x.subject===sf)&&(!cf||"Kelas "+x.grade+" / Fase "+x.phase===cf)&&(!tf||x.type===tf)&&(!lf||x.cognitive===lf);}).sort((a,b)=>(b.updatedAt||b.createdAt||"").localeCompare(a.updatedAt||a.createdAt||""));
+    $("#bankSoalCount").textContent=bankSoalItems.length+" soal tersimpan";
+    $("#bsQuestionBody").innerHTML=filtered.map(x=>'<tr><td><input type="checkbox" data-bs-select="'+escapeHtml(x.id)+'" '+(bankSoalSelected.has(x.id)?"checked":"")+'></td><td><strong>'+escapeHtml(x.question.slice(0,180))+'</strong><small>'+escapeHtml(x.tags||"Tanpa tag")+'</small></td><td>'+escapeHtml(x.chapter+" · Kelas "+x.grade)+'<small>'+escapeHtml(x.objective)+'</small></td><td><span class="soft-label">'+escapeHtml(x.type)+'</span></td><td>'+escapeHtml(x.cognitive+" · "+x.difficulty)+'</td><td><button class="text-button" data-bs-edit="'+escapeHtml(x.id)+'">Edit</button> <button class="text-button" data-bs-delete="'+escapeHtml(x.id)+'">Hapus</button></td></tr>').join("")||'<tr><td colspan="6"><div class="empty-state">Belum ada soal yang cocok. Tambahkan soal melalui formulir.</div></td></tr>';
+    $("#bsSelectedCount").textContent=bankSoalSelected.size+" soal dipilih";
+    $("#bsSelectAll").checked=filtered.length>0&&filtered.every(x=>bankSoalSelected.has(x.id));
+  }
+  function saveBankSoalForm(event){
+    event.preventDefault();const row=bankSoalRows().find(r=>r.key===$("#bsGoal").value);if(!row){showToast("Pilih TP yang tersedia pada kurikulum.");return;}
+    const type=$("#bsType").value,question=$("#bsQuestion").value.trim(),options=type==="PG"?["A","B","C","D","E"].map(k=>({key:k,text:$("#bs"+k).value.trim()})).filter(x=>x.text):[];
+    if(!question){showToast("Pertanyaan wajib diisi.");return;}
+    if(type==="PG"&&(options.length<4||!["A","B","C","D","E"].includes($("#bsAnswer").value.trim().toUpperCase()))){showToast("Soal PG memerlukan minimal empat opsi dan kunci A–E.");return;}
+    const normalized=normalizeCurriculumText(question),duplicate=bankSoalItems.find(x=>x.id!==bankSoalEditingId&&x.subject===$("#bsSubject").value&&normalizeCurriculumText(x.question)===normalized);
+    if(duplicate&&!confirm("Pertanyaan yang sama/serupa secara teks sudah ada. Tetap simpan sebagai soal berbeda?"))return;
+    const now=new Date().toISOString(),existing=bankSoalItems.find(x=>x.id===bankSoalEditingId);
+    const item={id:existing?existing.id:"bs-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),subject:row.subject,phase:row.phase,grade:row.grade,element:(inferCurriculumElement(curriculumData().find(s=>s.mapel===row.subject),{judul:row.title,tentang:""},row.objective)||""),tpKey:row.key,chapter:row.chapter,title:row.title,objective:row.objective,type,question,options,answer:$("#bsAnswer").value.trim(),discussion:$("#bsDiscussion").value.trim(),cognitive:$("#bsCognitive").value,difficulty:$("#bsDifficulty").value,tags:$("#bsTags").value.trim(),createdAt:existing?existing.createdAt:now,updatedAt:now};
+    if(existing)bankSoalItems=bankSoalItems.map(x=>x.id===existing.id?item:x);else bankSoalItems.unshift(item);
+    if(!saveBankSoal())return;resetBankSoalForm();renderBankSoal();showToast(existing?"Soal diperbarui.":"Soal disimpan ke Bank Soal.");
+  }
+  function editBankSoal(id){
+    const x=bankSoalItems.find(q=>q.id===id);if(!x)return;
+    $("#bsSubject").value=x.subject;renderBankSoalOptions();$("#bsGoal").value=x.tpKey;renderBankSoalMeta();$("#bsType").value=x.type;$("#bsQuestion").value=x.question;
+    ["A","B","C","D","E"].forEach(k=>$("#bs"+k).value=(x.options.find(o=>o.key===k)||{}).text||"");
+    $("#bsAnswer").value=x.answer;$("#bsDiscussion").value=x.discussion;$("#bsCognitive").value=x.cognitive;$("#bsDifficulty").value=x.difficulty;$("#bsTags").value=x.tags||"";
+    $("#bsOptionsWrap").hidden=x.type!=="PG";["bsA","bsB","bsC","bsD"].forEach(id=>$("#"+id).required=x.type==="PG");
+    bankSoalEditingId=id;$("#bsSaveButton").textContent="Simpan perubahan";$("#bsCancelEdit").hidden=false;$("#bsFormStatus").textContent="Mengedit soal tersimpan.";$("#bankSoalForm").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function exportBankSoalCsv(){
+    const head=["Mapel","Fase","Kelas","Elemen CP","Bab","TP","Jenis","Pertanyaan","Pilihan A","Pilihan B","Pilihan C","Pilihan D","Pilihan E","Kunci","Pembahasan","Kognitif","Kesulitan","Tag"];
+    const rows=bankSoalItems.map(x=>[x.subject,x.phase,x.grade,x.element,x.chapter,x.objective,x.type,x.question,...["A","B","C","D","E"].map(k=>(x.options.find(o=>o.key===k)||{}).text||""),x.answer,x.discussion,x.cognitive,x.difficulty,x.tags]);
+    const csv=[head,...rows].map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+    downloadBlob("\ufeff"+csv,"text/csv;charset=utf-8","ruangkelas-bank-soal.csv");showToast("Ekspor CSV Bank Soal disiapkan.");
+  }
+  function buildBankSoalPackage(){
+    const chosen=bankSoalItems.filter(x=>bankSoalSelected.has(x.id));if(!chosen.length){showToast("Pilih minimal satu soal pada tabel.");return;}
+    const title="Paket Asesmen "+(new Date().toLocaleDateString("id-ID"));const render=(withKey)=>chosen.map((x,i)=>'<article class="bs-print-question"><p><b>'+(i+1)+'.</b> '+escapeHtml(x.question)+'</p>'+(x.type==="PG"?'<ol type="A">'+x.options.map(o=>'<li>'+escapeHtml(o.text)+'</li>').join("")+'</ol>':'<div class="bs-answer-space"></div>')+(withKey?'<p class="bs-print-key"><b>Kunci:</b> '+escapeHtml(x.answer)+'<br><b>Pembahasan:</b> '+escapeHtml(x.discussion||"—")+'</p>':"")+'</article>').join("");
+    $("#bsPackagePreview").hidden=false;$("#bsPackagePreview").innerHTML='<div class="package-toolbar"><div><strong>'+escapeHtml(title)+'</strong><small>'+chosen.length+' soal · '+escapeHtml(chosen[0].subject)+'</small></div><div><button class="button button-secondary" id="bsPrintQuestions">Cetak soal</button><button class="button button-primary" id="bsPrintKey">Cetak soal + kunci</button></div></div><div id="bsPrintArea"><h2>'+escapeHtml(title)+'</h2><p>'+escapeHtml((data.settings.schoolName||data.classInfo.schoolName||"Nama Sekolah")+" · "+(data.settings.className||"Kelas"))+'</p>'+render(false)+'<div class="bs-key-page"><h2>Kunci Jawaban &amp; Pembahasan</h2>'+render(true)+'</div></div>';
+    $("#bsPrintQuestions").addEventListener("click",()=>printBankSoal(false));$("#bsPrintKey").addEventListener("click",()=>printBankSoal(true));$("#bsPackagePreview").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function printBankSoal(withKey){
+    const area=$("#bsPrintArea");if(!area)return;const win=window.open("","_blank");if(!win){showToast("Izinkan pop-up untuk mencetak paket.");return;}
+    const content=withKey?area.innerHTML:area.innerHTML.replace(/<div class="bs-key-page">[\s\S]*?<\/div>\s*<\/div>$/,"</div>");
+    win.document.write('<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Paket Soal RuangKelas</title><style>body{font:12pt Arial,sans-serif;color:#111;margin:22mm;line-height:1.5}h2{text-align:center}.bs-print-question{margin:0 0 18px;break-inside:avoid}.bs-print-question ol{margin:6px 0 0 24px}.bs-answer-space{height:70px;border-bottom:1px dotted #aaa}.bs-print-key{background:#f4f4f4;padding:8px}.bs-key-page{break-before:page;page-break-before:always} @page{size:A4;margin:18mm}</style></head><body>'+content+'</body></html>');win.document.close();win.focus();win.print();
+  }
+  function initBankSoal(){
+    if(!$("#bankSoalForm"))return;renderBankSoalOptions();renderBankSoal();
+    $("#bsSubject").addEventListener("change",renderBankSoalOptions);$("#bsGoal").addEventListener("change",renderBankSoalMeta);
+    $("#bsType").addEventListener("change",()=>{const pg=$("#bsType").value==="PG";$("#bsOptionsWrap").hidden=!pg;["bsA","bsB","bsC","bsD"].forEach(id=>$("#"+id).required=pg);$("#bsAnswer").placeholder=pg?"Kunci PG: A/B/C/D/E":"Pedoman jawaban atau rubrik";});
+    $("#bankSoalForm").addEventListener("submit",saveBankSoalForm);$("#bsCancelEdit").addEventListener("click",resetBankSoalForm);
+    ["bsSearch","bsFilterSubject","bsFilterClass","bsFilterType","bsFilterCognitive"].forEach(id=>$("#"+id).addEventListener(id==="bsSearch"?"input":"change",renderBankSoal));
+    $("#bsQuestionBody").addEventListener("change",e=>{const el=e.target.closest("[data-bs-select]");if(!el)return;el.checked?bankSoalSelected.add(el.dataset.bsSelect):bankSoalSelected.delete(el.dataset.bsSelect);renderBankSoal();});
+    $("#bsSelectAll").addEventListener("change",e=>{$("#bsQuestionBody [data-bs-select]").forEach(el=>e.target.checked?bankSoalSelected.add(el.dataset.bsSelect):bankSoalSelected.delete(el.dataset.bsSelect));renderBankSoal();});
+    $("#bsQuestionBody").addEventListener("click",e=>{const edit=e.target.closest("[data-bs-edit]");if(edit){editBankSoal(edit.dataset.bsEdit);return;}const del=e.target.closest("[data-bs-delete]");if(del){const x=bankSoalItems.find(q=>q.id===del.dataset.bsDelete);if(x&&confirm("Hapus soal ini dari bank soal?")){bankSoalItems=bankSoalItems.filter(q=>q.id!==x.id);bankSoalSelected.delete(x.id);saveBankSoal();renderBankSoal();showToast("Soal dihapus.");}}});
+    $("#bsBuildPackage").addEventListener("click",buildBankSoalPackage);$("#bsExportCsv").addEventListener("click",exportBankSoalCsv);
+  }
   function renderPrintHeaders(){const s=data.settings||{},c=data.classInfo||{},school=s.schoolName||c.schoolName||"Nama Sekolah belum diisi",teacher=s.teacherName||c.teacherName||"Nama Guru belum diisi",principal=s.principalName||c.principalName||"Nama Kepala Sekolah belum diisi",nip=s.teacherNip||"",pnip=s.principalNip||"",cls=s.className||c.className||"VI",semester=(s.semester||c.semester)==="2"?"Genap":"Ganjil",year=s.academicYear||c.academicYear||"Tahun ajaran belum diisi";const block='<div class="print-school-name">'+escapeHtml(school)+'</div><div class="print-school-meta">Kelas '+escapeHtml(cls)+' · Semester '+semester+' · Tahun Ajaran '+escapeHtml(year)+'</div><div class="print-school-signatures"><span>Guru Kelas<br><b>'+escapeHtml(teacher)+'</b>'+(nip?'<br>NIP. '+escapeHtml(nip):"")+'</span><span>Kepala Sekolah<br><b>'+escapeHtml(principal)+'</b>'+(pnip?'<br>NIP. '+escapeHtml(pnip):"")+'</span></div>';["printHeaderAttendance","printHeaderIncidents","printHeaderJournal"].forEach(id=>{const el=$("#"+id);if(el)el.innerHTML=block;});}
-  function renderAll(){renderPrintHeaders();renderDataHub();renderReportCards();renderAjar();renderAssessments();renderMaterials();renderCurriculum();renderSchedule();renderNotes();renderGrades();renderAttendance();renderClassInfo();renderIncidents();renderJournal();renderJournalTpOptions();$$("[data-task]").forEach(el=>el.checked=!!data.tasks[Number(el.dataset.task)]);$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";$("#teacherName").value=data.settings.teacherName||data.classInfo.teacherName||"Guru";$("#teacherNip").value=data.settings.teacherNip||"";$("#schoolName").value=data.settings.schoolName||data.classInfo.schoolName||"";$("#classNameSetting").value=data.settings.className||data.classInfo.className||"VI";$("#semesterSetting").value=data.settings.semester||data.classInfo.semester||"1";$("#principalNameSetting").value=data.settings.principalName||data.classInfo.principalName||"";$("#principalNipSetting").value=data.settings.principalNip||"";$("#curriculum").value=data.settings.curriculum||"Kurikulum Merdeka";$("#academicYear").value=data.settings.academicYear||data.classInfo.academicYear||"2026/2027";const name=data.settings.teacherName||"Guru";$$(".profile-mini strong").forEach(el=>el.textContent=name);$$(".user-chip span:nth-child(2)").forEach(el=>el.textContent=name);}
+  function renderAll(){renderPrintHeaders();renderBankSoal();renderDataHub();renderReportCards();renderAjar();renderAssessments();renderMaterials();renderCurriculum();renderSchedule();renderNotes();renderGrades();renderAttendance();renderClassInfo();renderIncidents();renderJournal();renderJournalTpOptions();$$("[data-task]").forEach(el=>el.checked=!!data.tasks[Number(el.dataset.task)]);$("#taskCount").textContent=data.tasks.filter(Boolean).length+"/4";$("#teacherName").value=data.settings.teacherName||data.classInfo.teacherName||"Guru";$("#teacherNip").value=data.settings.teacherNip||"";$("#schoolName").value=data.settings.schoolName||data.classInfo.schoolName||"";$("#classNameSetting").value=data.settings.className||data.classInfo.className||"VI";$("#semesterSetting").value=data.settings.semester||data.classInfo.semester||"1";$("#principalNameSetting").value=data.settings.principalName||data.classInfo.principalName||"";$("#principalNipSetting").value=data.settings.principalNip||"";$("#curriculum").value=data.settings.curriculum||"Kurikulum Merdeka";$("#academicYear").value=data.settings.academicYear||data.classInfo.academicYear||"2026/2027";const name=data.settings.teacherName||"Guru";$$(".profile-mini strong").forEach(el=>el.textContent=name);$$(".user-chip span:nth-child(2)").forEach(el=>el.textContent=name);}
   function openDialog(type){currentDialogType=type;const titles={ajar:"Tambah perangkat ajar",assessment:"Tambah perangkat penilaian",material:"Tambah materi",note:"Tambah catatan kelas"};$("#dialogTitle").textContent=titles[type]||"Tambah item";$("#dialogCopy").textContent=type==="note"?"Tambahkan catatan singkat untuk mengingat ide atau tindak lanjut.":"Tambahkan item baru ke workspace Anda. Item tersimpan lokal di browser ini.";$("#itemName").value="";$("#itemDescription").value="";$("#itemCategory").value=type==="assessment"?"Evaluasi":type==="material"?"Bahan ajar":type==="note"?"Catatan":"Perencanaan";$("#itemCategory").closest(".field").style.display=type==="note"?"none":"grid";$("#itemDialog").showModal();setTimeout(()=>$("#itemName").focus(),60);}
   function addItem(e){e.preventDefault();const name=$("#itemName").value.trim();if(!name)return;const description=$("#itemDescription").value.trim();const category=$("#itemCategory").value;const id=Date.now();if(currentDialogType==="note"){data.notes.unshift({id,name,description:description||"Catatan baru."});renderNotes();}else{const item={id,name,category,description:description||"Item baru yang bisa disesuaikan.",icon:currentDialogType==="material"?"▣":currentDialogType==="assessment"?"✓":"▤"};if(currentDialogType==="assessment")data.assessments.unshift(item);else if(currentDialogType==="material")data.materials.unshift(item);else data.ajar.unshift(item);renderAll();}save();$("#itemDialog").close();showToast("Item tersimpan di browser ini.");}
   function deleteItem(id,kind){let key=kind==="assessmentGrid"?"assessments":kind==="materialGrid"?"materials":"ajar";const item=data[key].find(x=>x.id===id);if(!item||!confirm('Hapus "'+item.name+'" dari data lokal?'))return;data[key]=data[key].filter(x=>x.id!==id);save();renderAll();showToast("Item dihapus.");}
@@ -455,6 +542,7 @@ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.cre
   try{if(localStorage.getItem("ruangkelas-dark")==="1")document.body.classList.add("dark");}catch(e){}
   $("#profileButton").addEventListener("click",()=>route("pengaturan"));
   $(".notice-close").addEventListener("click",()=>$(".notice").remove());
+  initBankSoal();
   $("#globalSearch").addEventListener("keydown",e=>{if(e.key!=="Enter")return;const q=e.target.value.trim().toLowerCase();if(!q)return;const pages=[["perangkat-ajar",data.ajar],["penilaian",data.assessments],["pusat-materi",data.materials],[ "pengembangan-profesi",[{name:"Workshop Peningkatan Layanan Disabilitas",description:"Pemateri Ridwan pendidikan inklusif PDPD modul akomodasi Dapodik PBS refleksi rencana tindak lanjut"}] ],["laboratorium-media",[{name:"Laboratorium Media",description:"game edukasi media interaktif numerasi PLSV persamaan algoritma debugging Mathquest MPI"}]],["data-kelas",data.schedules],["cp-tp",curriculumData().flatMap(s=>[s.mapel,s.cpAcuan,...s.babList.flatMap(b=>[b.judul,...b.atp,...b.materiPokok])].map(name=>({name,description:"CP TP Fase C"})))]];const match=pages.find(entry=>entry[1].some(x=>(x.name+" "+(x.description||"")+" "+(x.category||"")).toLowerCase().includes(q)));if(match){route(match[0]);showToast("Bagian terkait dibuka.");}else showToast("Belum ada hasil. Coba kata kunci lain.");});
   $("#curriculumSubject").addEventListener("change",renderCurriculum);$("#curriculumSearch").addEventListener("input",renderCurriculum);
   $("#curriculumAddToggle").addEventListener("click",()=>{const form=$("#curriculumAddForm");form.hidden=!form.hidden;if(!form.hidden){curriculumChapterOptions();$("#curriculumAddGoal").focus();}});
