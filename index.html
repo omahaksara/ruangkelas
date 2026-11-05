@@ -22,6 +22,7 @@
         <a class="nav-link" href="#cp-tp" data-page="cp-tp"><span>◎</span> CP &amp; TP</a>
         <a class="nav-link" href="#studio-ai" data-page="studio-ai"><span>✦</span> Studio AI Guru</a>
         <a class="nav-link" href="#penilaian" data-page="penilaian"><span>✓</span> Penilaian</a>
+        <a class="nav-link" href="#bank-soal" data-page="bank-soal"><span>▤</span> Bank Soal Digital</a>
         <a class="nav-link" href="#data-kelas" data-page="data-kelas"><span>♧</span> Data Kelas</a>
         <a class="nav-link" href="#absensi-siswa" data-page="absensi-siswa"><span>☷</span> Absensi &amp; Siswa</a>
         <a class="nav-link" href="#jurnal-mengajar" data-page="jurnal-mengajar"><span>✎</span> Jurnal Mengajar</a>
@@ -138,6 +139,43 @@
       <section class="page" id="page-penilaian" data-title="Penilaian">
         <div class="page-heading"><div><div class="eyebrow">EVALUASI PEMBELAJARAN</div><h1>Penilaian</h1><p>Rancang asesmen, bank soal, kisi-kisi, dan rubrik dalam satu tempat.</p></div><button class="button button-primary" id="addAssessment">＋ Tambah perangkat</button></div>
         <div class="toolbar"><label class="search-box page-search"><span>⌕</span><input id="assessmentSearch" placeholder="Cari perangkat penilaian..." type="search"></label><span class="soft-label">Contoh dokumen · dapat disesuaikan</span></div><div class="resource-grid" id="assessmentGrid"></div>
+      </section>
+      <section class="page" id="page-bank-soal" data-title="Bank Soal Digital">
+        <div class="page-heading"><div><div class="eyebrow">ASESMEN · REPOSITORI SOAL</div><h1>Bank Soal Digital</h1><p>Soal tersimpan rapi, terhubung dengan CP &amp; TP, dan siap dirakit menjadi paket asesmen.</p></div><span class="soft-label" id="bankSoalCount">0 soal tersimpan</span></div>
+        <div class="notice"><span class="notice-icon">i</span><div><strong>Terhubung otomatis dengan kurikulum RuangKelas</strong><p>Pilih mata pelajaran dan tujuan pembelajaran. Fase, kelas, elemen CP, dan bab akan terisi dari referensi CP &amp; TP. Data soal disimpan terpisah dari nilai dan data pribadi siswa.</p></div></div>
+        <div class="bank-soal-layout">
+          <section class="panel bank-soal-form-panel"><div class="panel-heading"><div><h3>Tambah soal</h3><p>Soal pilihan ganda atau uraian.</p></div></div>
+            <form id="bankSoalForm" class="settings-form">
+              <div class="field"><label for="bsSubject">Mata pelajaran</label><select id="bsSubject" required></select></div>
+              <div class="field"><label for="bsGoal">Tujuan pembelajaran (TP)</label><select id="bsGoal" required></select></div>
+              <div class="curriculum-auto-map" id="bsCurriculumMeta"><span>Fase · Kelas · Elemen CP</span><strong>Pilih tujuan pembelajaran</strong></div>
+              <div class="field"><label for="bsType">Bentuk soal</label><select id="bsType"><option value="PG">Pilihan ganda</option><option value="Uraian">Uraian</option></select></div>
+              <div class="field"><label for="bsQuestion">Pertanyaan / stimulus</label><textarea id="bsQuestion" rows="4" maxlength="5000" required placeholder="Tulis soal dengan jelas..."></textarea></div>
+              <div id="bsOptionsWrap" class="bank-options-grid">
+                <div class="field"><label for="bsA">Pilihan A</label><input id="bsA" maxlength="1000" required></div>
+                <div class="field"><label for="bsB">Pilihan B</label><input id="bsB" maxlength="1000" required></div>
+                <div class="field"><label for="bsC">Pilihan C</label><input id="bsC" maxlength="1000" required></div>
+                <div class="field"><label for="bsD">Pilihan D</label><input id="bsD" maxlength="1000" required></div>
+                <div class="field"><label for="bsE">Pilihan E (opsional)</label><input id="bsE" maxlength="1000"></div>
+              </div>
+              <div class="field"><label for="bsAnswer">Kunci jawaban / pedoman jawaban</label><textarea id="bsAnswer" rows="2" maxlength="2000" required placeholder="Kunci PG: A/B/C/D/E atau pedoman uraian"></textarea></div>
+              <div class="field"><label for="bsDiscussion">Pembahasan</label><textarea id="bsDiscussion" rows="2" maxlength="3000" placeholder="Alasan jawaban benar / rubrik ringkas"></textarea></div>
+              <div class="bank-meta-grid">
+                <div class="field"><label for="bsCognitive">Level kognitif</label><select id="bsCognitive"><option>C1</option><option>C2</option><option>C3</option><option>C4</option><option>C5</option><option>C6</option></select></div>
+                <div class="field"><label for="bsDifficulty">Kesulitan</label><select id="bsDifficulty"><option>Mudah</option><option selected>Sedang</option><option>Sulit</option></select></div>
+                <div class="field"><label for="bsTags">Tag tambahan</label><input id="bsTags" maxlength="160" placeholder="mis. literasi, HOTS"></div>
+              </div>
+              <div class="settings-actions"><button class="button button-primary" type="submit" id="bsSaveButton">Simpan soal</button><button class="button button-secondary" type="button" id="bsCancelEdit" hidden>Batal edit</button></div>
+              <p class="settings-note" id="bsFormStatus" role="status"></p>
+            </form>
+          </section>
+          <section class="panel bank-soal-list-panel"><div class="panel-heading"><div><h3>Koleksi soal</h3><p>Cari, saring, dan pilih soal untuk paket.</p></div><button class="button button-secondary" id="bsExportCsv" type="button">Ekspor CSV</button></div>
+            <div class="bank-soal-filters"><input id="bsSearch" type="search" placeholder="Cari pertanyaan, TP, tag..."><select id="bsFilterSubject"><option value="">Semua mapel</option></select><select id="bsFilterClass"><option value="">Semua kelas</option></select><select id="bsFilterType"><option value="">Semua bentuk</option><option>PG</option><option>Uraian</option></select><select id="bsFilterCognitive"><option value="">Semua level</option><option>C1</option><option>C2</option><option>C3</option><option>C4</option><option>C5</option><option>C6</option></select></div>
+            <div class="bank-soal-table-wrap"><table class="bank-soal-table"><thead><tr><th><input type="checkbox" id="bsSelectAll" aria-label="Pilih semua hasil"></th><th>Soal</th><th>TP / Kelas</th><th>Jenis</th><th>Level</th><th>Aksi</th></tr></thead><tbody id="bsQuestionBody"></tbody></table></div>
+            <div class="bank-soal-package"><div><strong id="bsSelectedCount">0 soal dipilih</strong><small>Pilih soal pada tabel, lalu susun paket.</small></div><button class="button button-primary" id="bsBuildPackage" type="button">Buat paket soal</button></div>
+            <div id="bsPackagePreview" class="bank-package-preview" hidden></div>
+          </section>
+        </div>
       </section>
       <section class="page" id="page-data-kelas" data-title="Data Kelas">
         <div class="page-heading"><div><div class="eyebrow">PENGELOLAAN KELAS</div><h1>Data Kelas</h1><p>Catat rencana kelas menggunakan data contoh terlebih dahulu.</p></div><button class="button button-primary" id="addClassNote">＋ Catatan kelas</button></div>
