@@ -348,3 +348,5 @@ button.flow-node:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,
 .bs-print-key{padding:10px;background:var(--surface-soft,rgba(120,130,150,.07));border-radius:8px}
 @media(max-width:1050px){.bank-soal-layout{grid-template-columns:1fr}.bank-soal-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.bank-options-grid,.bank-meta-grid,.bank-soal-filters{grid-template-columns:1fr}.bank-soal-package,.package-toolbar{align-items:flex-start;flex-direction:column}}
+
+.bank-soal-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:0 0 14px}.bank-stat{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.bank-stat strong{font-size:20px;color:var(--primary)}.bank-stat span{font-size:11px;color:var(--muted);line-height:1.4}
