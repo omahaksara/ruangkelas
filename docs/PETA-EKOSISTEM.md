@@ -263,3 +263,15 @@ Angka ringkasan dihitung dari data yang sudah tersimpan dan mengikuti filter kon
 - Pemetaan elemen CP menggunakan aturan kata kunci sesuai mata pelajaran. Hasilnya rekomendasi awal, bukan keputusan kurikulum final. Pemetaan manual lama yang tersimpan tetap dihormati sebagai override; guru tetap meninjau kesesuaian dengan ATP/KOSP.
 - Kartu kurikulum bukan dokumen hasil AI dan tidak otomatis disimpan sebagai dokumen final. Kartu membuka Studio AI untuk menyusun prompt; keluaran AI tetap perlu ditinjau dan disimpan oleh guru.
 - Integrasi ini tidak membaca atau menyalin catatan pembinaan, identitas siswa, nilai individual, absensi, maupun snapshot rapor. Tidak ada perubahan pada kontrak data siswa/penilaian/rapor.
+
+
+## Integrasi Bank Soal Digital (2026-11-05)
+
+- Bank Soal Digital ditambahkan sebagai modul navigasi tersendiri di RuangKelas.
+- Referensi mapel, fase, kelas, bab, dan TP dibaca langsung dari dataset CP/TP dan TP tambahan lokal; pemetaan elemen CP mengikuti fungsi inferensi yang sudah digunakan aplikasi.
+- Form soal mendukung pilihan ganda dan uraian, pilihan A–E, kunci/pedoman jawaban, pembahasan, level kognitif C1–C6, tingkat kesulitan, dan tag tambahan.
+- Pencarian serta filter mapel, kelas/fase, bentuk soal, dan level kognitif tersedia. Pemeriksaan duplikasi membandingkan teks pertanyaan yang dinormalisasi dalam mapel yang sama dan meminta konfirmasi bila ditemukan kecocokan.
+- Soal dapat diedit/dihapus, dipilih dari tabel, dirakit menjadi paket, lalu dicetak sebagai lembar soal atau soal beserta halaman kunci/pembahasan terpisah.
+- Statistik jumlah soal per TP ditampilkan pada modul. Ekspor CSV tersedia.
+- Penyimpanan soal menggunakan kunci lokal terpisah `ruangkelas-bank-soal-v1`; tidak menautkan soal ke identitas siswa, nilai, absensi, atau catatan pembinaan. Backup penuh RuangKelas yang menyalin seluruh kunci `ruangkelas-*` turut mencakup data Bank Soal.
+- Batas tahap ini: data masih lokal pada browser, belum tersimpan di Google Sheets, belum ada sinkronisasi antarperangkat/role multi-guru, dan cetak paket memakai dialog cetak browser (bukan pembuatan Google Docs otomatis). Sumber CP/TP tetap perlu diverifikasi guru.
